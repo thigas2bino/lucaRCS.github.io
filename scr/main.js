@@ -1,6 +1,7 @@
 const canvas = document.getElementById('canva1')
 const cxt = canvas.getContext('2d')
-import {room,fundo1parte1,fundo1parte2,fundo2,fundo3parte1,fundo3parte2,Dialogardo} from "./places.js"
+import {room,quarto,cozinha,banheiro,sala,Dialogardo} from "./places.js"
+import { HitBoxes } from "./Colision.js"
 let pressingM = [false,false,false,false,1]
 let introJumper = false
 let interaction = false
@@ -10,21 +11,11 @@ let textBOX = ['armario','geladeira']
 let BOXes = {
     'quarto':true,
     'banheiro':false,
-    'cozinha':false
+    'cozinha':false,
+    'sala':false
 }
 if(localStorage.getItem('player')!== null){
     BOXes = JSON.parse(localStorage.getItem('player')).Caixas
-}
-function CheckColisao(square1,square2){
-    if (square1.point1!==undefined&&square1.point2!==undefined&&square1.point3!==undefined&&square1.point4!==undefined&&square2.point1!==undefined&&square2.point2!==undefined&&square2.point3!==undefined&&square2.point4!==undefined) {
-        if(square1.point2[0]<square2.point1[0]||square1.point2[1]>square2.point4[1]||square1.point3[1]<square2.point1[1]||square1.point1[0]>square2.point2[0]){
-            return false
-        }else{
-            return true
-        }
-    }else{
-        console.log(square2)
-    }
 }
 const screenW = document.documentElement.scrollWidth
 const screenH = document.documentElement.scrollHeight
@@ -73,7 +64,7 @@ let estabilizador2 = 18
 const personagem = new Image()
 let personagemX = 0
 let personagemY = 270
-let personagemSpeed = 2
+let personagemSpeed = 3
 if(localStorage.getItem('player')!== null){
     personagemX = JSON.parse(localStorage.getItem('player')).peX
     personagemY = JSON.parse(localStorage.getItem('player')).peY
@@ -86,47 +77,173 @@ let player = {
 personagem.onload = function(){
     function animation(){
         cxt.clearRect(0,0,y,x)
-        if (room[0]) {
-            cxt.drawImage(fundo1parte1,0,0,y,x)
-            cxt.drawImage(fundo1parte2,0,0,y,x)
-        }if(room[1]){
-            cxt.drawImage(fundo2,0,0,270,170,0,0,y,x)
-        }if(room[2]){
-            cxt.drawImage(fundo3parte1,0,0,y,x)
-            cxt.drawImage(fundo3parte2,0,0,y,x)
-        }
+        quarto.animeteImg()
+        banheiro.animeteImg()
+        cozinha.animeteImg()
+        sala.animeteImg()
         cxt.fillStyle = 'rgba(0, 0, 0, 0)'
         cxt.fillRect(personagemX+100,personagemY+230,75,40)
         //hitbox info
-        let HitboxInfo = {
-            'point1':[personagemX+100,personagemY+230],
-            'point2':[personagemX+175,personagemY+230],
-            'point3':[personagemX+175,personagemY+270],
-            'point4':[personagemX+100,personagemY+270]
+        let HitboxInfo = new HitBoxes(personagemX+100,personagemY+230,75,40)
+        if(room[0]||room[1]||room[2]||room[3]){
+            cxt.fillStyle = 'rgba(0, 0, 0, 0)'
+            cxt.fillRect(130,478,1100,20)
+            let Quarto_parede = new HitBoxes(130,478,1100,20)
+            if (HitboxInfo.Collider(Quarto_parede)) {
+                pressingM[2] = false;
+            }
+        }
+        if(room[0]){
+            cxt.fillStyle = 'rgba(0,0,0,0)'
+            cxt.fillRect(408,483,210,150)
+            let Quarto_cama = new HitBoxes(408,483,210,150)
+
+
+            cxt.fillStyle = 'rgba(0,0,0,0)'
+            cxt.fillRect(167,240,210,310)
+            let Quarto_ropa = new HitBoxes(167,240,210,310)
+
+            cxt.fillStyle = 'rgba(0,0,0,0)'
+            cxt.fillRect(625,440,100,100)
+            let Quarto_banquinho = new HitBoxes(625,440,100,100)
+
+            cxt.fillStyle = 'rgba(0,0,0,0)'
+            cxt.fillRect(845,417,350,130)
+            let Quarto_escrivaninha = new HitBoxes(845,417,350,130)
+            switch (HitboxInfo.Sider(Quarto_cama)) {
+                case 'esquerda':
+                    pressingM[1] = false;
+                    break;
+                case 'direita':
+                    pressingM[0] = false;
+                    break;
+                case 'topo':
+                    pressingM[3] = false;
+                    break;
+                case 'baixo':
+                    pressingM[2] = false;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (HitboxInfo.Sider(Quarto_escrivaninha)) {
+                case 'esquerda':
+                    pressingM[1] = false;
+                    break;
+                case 'direita':
+                    pressingM[0] = false;
+                    break;
+                case 'topo':
+                    pressingM[3] = false;
+                    break;
+                case 'baixo':
+                    pressingM[2] = false;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (HitboxInfo.Sider(Quarto_ropa)) {
+                case 'esquerda':
+                    pressingM[1] = false;
+                    break;
+                case 'direita':
+                    pressingM[0] = false;
+                    break;
+                case 'topo':
+                    pressingM[3] = false;
+                    break;
+                case 'baixo':
+                    pressingM[2] = false;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (HitboxInfo.Sider(Quarto_banquinho)) {
+                case 'esquerda':
+                    pressingM[1] = false;
+                    break;
+                case 'direita':
+                    pressingM[0] = false;
+                    break;
+                case 'topo':
+                    pressingM[3] = false;
+                    break;
+                case 'baixo':
+                    pressingM[2] = false;
+                    break;
+                default:
+                    break;
+            }
+        }
+        if(room[1]){
+            cxt.fillStyle = 'rgba(0,0,0,0)'
+            cxt.fillRect(175,400,220,150)
+            let cozinha_geladeira = new HitBoxes(175,400,220,150)
+
+            cxt.fillStyle = 'rgba(0,0,0,0)'
+            cxt.fillRect(405,390,730,150)
+            let cozinha_pia_fogao = new HitBoxes(405,390,730,150)
+
+            switch (HitboxInfo.Sider(cozinha_geladeira)) {
+                case 'esquerda':
+                    pressingM[1] = false;
+                    break;
+                case 'direita':
+                    pressingM[0] = false;
+                    break;
+                case 'topo':
+                    pressingM[3] = false;
+                    break;
+                case 'baixo':
+                    pressingM[2] = false;
+                    break;
+                default:
+                    break;
+            }
+
+            switch (HitboxInfo.Sider(cozinha_pia_fogao)) {
+                case 'esquerda':
+                    pressingM[1] = false;
+                    break;
+                case 'direita':
+                    pressingM[0] = false;
+                    break;
+                case 'topo':
+                    pressingM[3] = false;
+                    break;
+                case 'baixo':
+                    pressingM[2] = false;
+                    break;
+                default:
+                    break;
+            }
         }
         cxt.drawImage(personagem,120*(frameX+frameM),0,120,120,personagemX,personagemY,280,280)
         for (let index = 0; index < personagemSpeed; index++) {
             if (dialogs[0]!==true) {
-                if (personagemX<=y&&pressingM[0]!==true) {
-                    if (pressingM[1]) {
-                        frameM = 0
-                        personagemX+=1
-                    }
-                }if (personagemX>=-60&&pressingM[1]!==true) {
-                    if (pressingM[0]) {
-                        frameM = 18                       
-                        personagemX-=1
-                    }
-                }
-                if (personagemY>=0&&pressingM[0]!==true&&pressingM[1]!==true&&pressingM[3]!==true) {
+                if (personagemY>=0) {
                     if (pressingM[2]) {
                         frameM = 12
                         personagemY-=1
                     }
-                }if (personagemY<=x&&pressingM[0]!==true&&pressingM[1]!==true&&pressingM[2]!==true) {
+                }if (personagemY<=x) {
                     if (pressingM[3]) {
                         frameM = 6 
                         personagemY+=1
+                    }
+                }
+                if (personagemX<=y) {
+                    if (pressingM[1]) {
+                        frameM = 0
+                        personagemX+=1
+                    }
+                }if (personagemX>=-60) {
+                    if (pressingM[0]) {
+                        frameM = 18                       
+                        personagemX-=1
                     }
                 }
             }
@@ -173,6 +290,12 @@ personagem.onload = function(){
             personagemX = y-201
             BOXes.cozinha = false
             BOXes.quarto = true
+        }if(personagemX>= y-200 && room[1]){
+            room[1] = false
+            room[3] = true
+            personagemX = -54
+            BOXes.cozinha = true
+            BOXes.sala = false
         }
         //banheiro
         if(personagemX>= y-200 && room[2]){
@@ -182,21 +305,25 @@ personagem.onload = function(){
             BOXes.banheiro = false
             BOXes.quarto = true
         }
-        
+        //sala
+        if(personagemX<=-55 && room[3]){
+            room[1] = true
+            room[3] = false
+            personagemX = y-201
+            BOXes.cozinha = true
+            BOXes.sala = true
+        }
+
         if(BOXes.quarto){
+            cxt.fillStyle = 'rgba(0,0,0,0)'
             cxt.fillRect(160,530,220,60)
-            let QuartoArmario = {
-            'point1':[160,530],
-            'point2':[380,530],
-            'point3':[380,590],
-            'point4':[160,590]
-            }
-            if(CheckColisao(HitboxInfo,QuartoArmario)&&pressingM[4]%2===0&&dialogs[0]&&interaction){
+            let QuartoArmario = new HitBoxes(160,530,220,60)
+            if(HitboxInfo.Collider(QuartoArmario)&&pressingM[4]%2===0&&dialogs[0]&&interaction){
                 dialogs[0]=false
                 dialogs[1]=false
                 interaction = false
             }
-            if(CheckColisao(HitboxInfo,QuartoArmario)&&pressingM[4]%2===0&&dialogs[0]!==true&&interaction){
+            if(HitboxInfo.Collider(QuartoArmario)&&pressingM[4]%2===0&&dialogs[0]!==true&&interaction){
                 dialogs[0]=true
                 dialogs[1]=true
                 interaction = false

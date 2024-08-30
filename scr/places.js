@@ -1,51 +1,51 @@
 const canvas = document.getElementById('canva1')
 const cxt = canvas.getContext('2d')
-//quarto,cozinha,banheiro
-let room = [true,false,false]
-let x = 765
-let y = 1360
+//quarto,cozinha,banheiro,sala
+let room = [true,false,false,false]
+let y = 765
+let x = 1360
 if(localStorage.getItem('player')!== null){
     room = JSON.parse(localStorage.getItem('player')).ro
 }
-let fundo1parte1 = new Image()
-let fundo1parte2 = new Image()
-fundo1parte1.onload = function(){
-    if (room[0]) {
-        cxt.drawImage(fundo1parte1,0,0,y,x)
+class Places {
+    constructor(src,ro,dx,dy,w,h) {
+        this.src = src
+        this.image = new Image()
+        this.ro = ro
+        this.dx = dx
+        this.dy = dy 
+        this.w = w
+        this.h = h
+    }
+    createImg(){
+        this.image.onload = () => {
+            if (room[this.ro]) {
+                cxt.drawImage(this.image,this.dx,this.dy,this.w,this.h)
+            }
+        }
+        this.image.src = this.src
+    }
+    animeteImg(){
+        if(room[this.ro]){
+            cxt.drawImage(this.image,this.dx,this.dy,this.w,this.h)
+        }
     }
 }
-fundo1parte1.src = 'images/quarto-fundo.png'
-fundo1parte2.onload = function(){
-    if (room[0]) {
-        cxt.drawImage(fundo1parte2,0,0,y,x)
-    }
-}
-fundo1parte2.src = 'images/quarto-chao.png'
-console.log(fundo1parte1+'  '+fundo1parte2)
-let fundo2 = new Image()
-fundo2.onload = function(){
-    if(room[1]){
-        cxt.drawImage(fundo2,0,0,270,170,0,0,y,x)
-    }
-}
-fundo2.src = 'images/animacão-cozinha.png'
-let fundo3parte1 = new Image()
-let fundo3parte2 = new Image()
-fundo3parte1.onload = function(){
-    if(room[2]){
-        cxt.drawImage(fundo3parte1,0,0,y,x)
-    }
-}
-fundo3parte1.src = 'images/banheiro-fundo.png'
-fundo3parte2.onload = function(){
-    if(room[2]){
-        cxt.drawImage(fundo3parte2,0,0,y,x)
-    }
-}
-fundo3parte2.src = 'images/banheiro-chao.png'
+let quarto = new Places('images/quarto.png',0,0,0,x,y)
+let cozinha = new Places('images/cozinha.png',1,0,0,x,y)
+let banheiro = new Places('images/banheiro.png',2,0,0,x,y)
+let sala = new Places('images/Sala.png',3,0,0,x,y)
+
 let Dialogardo = new Image()
 Dialogardo.onload = function(){
     cxt.drawImage(Dialogardo,500,500)
 }
 Dialogardo.src = 'images/caixa-de-dialogo.png'
-export {room,fundo1parte1,fundo1parte2,fundo2,fundo3parte1,fundo3parte2,Dialogardo}
+
+
+
+quarto.createImg()
+cozinha.createImg()
+banheiro.createImg()
+sala.createImg()
+export {room,quarto,cozinha,banheiro,sala,Dialogardo}
