@@ -8,14 +8,19 @@ if(localStorage.getItem('player')!== null){
     room = JSON.parse(localStorage.getItem('player')).ro
 }
 class Places {
-    constructor(src,ro,dx,dy,w,h) {
+    constructor(src,ro,dx,dy,w,h,nFrames,sizeX,sizeY) {
         this.src = src
         this.image = new Image()
         this.ro = ro
         this.dx = dx
         this.dy = dy 
-        this.w = w
-        this.h = h
+        if (w!==0&&h!==0) {
+            this.w = w
+            this.h = h
+        }
+        this.nFrames = nFrames
+        this.sizeX = sizeX
+        this.sizeY = sizeY
     }
     createImg(){
         this.image.onload = () => {
@@ -42,10 +47,14 @@ Dialogardo.onload = function(){
 }
 Dialogardo.src = 'images/caixa-de-dialogo.png'
 
-
+let trasicoes = [new Image(),new Image()]
+trasicoes[0].onload = () => {}
+trasicoes[0].src = 'images/transi-direita.png'
+trasicoes[1].onload = () => {}
+trasicoes[1].src = 'images/transi-esquerda.png'
 
 quarto.createImg()
 cozinha.createImg()
 banheiro.createImg()
 sala.createImg()
-export {room,quarto,cozinha,banheiro,sala,Dialogardo}
+export {room,quarto,cozinha,banheiro,sala,Dialogardo,trasicoes}

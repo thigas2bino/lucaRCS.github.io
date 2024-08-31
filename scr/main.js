@@ -1,10 +1,12 @@
 const canvas = document.getElementById('canva1')
 const cxt = canvas.getContext('2d')
-import {room,quarto,cozinha,banheiro,sala,Dialogardo} from "./places.js"
+import {room,quarto,cozinha,banheiro,sala,Dialogardo,trasicoes} from "./places.js"
 import { HitBoxes } from "./Colision.js"
 let pressingM = [false,false,false,false,1]
 let introJumper = false
 let interaction = false
+
+let trasiType = 0
 //check dialog,armario,geladeira
 let dialogs = [false,false,false]
 let textBOX = ['armario','geladeira']
@@ -60,6 +62,8 @@ let frameM = 0
 let frameFalse = 0
 let estabilizador = 7
 let estabilizador2 = 18
+let frameT = 0
+let frameFalseT = 0
 
 const personagem = new Image()
 let personagemX = 0
@@ -223,7 +227,7 @@ personagem.onload = function(){
         }
         cxt.drawImage(personagem,120*(frameX+frameM),0,120,120,personagemX,personagemY,280,280)
         for (let index = 0; index < personagemSpeed; index++) {
-            if (dialogs[0]!==true) {
+            if (dialogs[0]!==true&&trasiType===0) {
                 if (personagemY>=0) {
                     if (pressingM[2]) {
                         frameM = 12
@@ -269,49 +273,55 @@ personagem.onload = function(){
         }
         frameFalse++
         //quarto
-        if(personagemX>= y-200 && room[0]){
+        if(personagemX>= y-200 && room[0]&&trasiType===0){
             room[0] = false
             room[1] = true
             personagemX = -54
             BOXes.cozinha = true
             BOXes.quarto = false
+            trasiType = 1
         }
-        if(personagemX<=-55 && room[0]){
+        if(personagemX<=-55 && room[0]&&trasiType===0){
             room[2] = true
             room[0] = false
             personagemX = y-201
             BOXes.banheiro = true
             BOXes.quarto = false
+            trasiType = 2
         }
         //cozinha
-        if(personagemX<=-55 && room[1]){
+        if(personagemX<=-55 && room[1]&&trasiType===0){
             room[0] = true
             room[1] = false
             personagemX = y-201
             BOXes.cozinha = false
             BOXes.quarto = true
-        }if(personagemX>= y-200 && room[1]){
+            trasiType = 2
+        }if(personagemX>= y-200 && room[1]&&trasiType===0){
             room[1] = false
             room[3] = true
             personagemX = -54
             BOXes.cozinha = true
             BOXes.sala = false
+            trasiType = 1
         }
         //banheiro
-        if(personagemX>= y-200 && room[2]){
+        if(personagemX>= y-200 && room[2]&&trasiType===0){
             room[2] = false
             room[0] = true
-            personagemX = -54
+            personagemX = -30
             BOXes.banheiro = false
             BOXes.quarto = true
+            trasiType = 1
         }
         //sala
-        if(personagemX<=-55 && room[3]){
+        if(personagemX<=-55 && room[3]&&trasiType===0){
             room[1] = true
             room[3] = false
             personagemX = y-201
             BOXes.cozinha = true
             BOXes.sala = true
+            trasiType = 2
         }
 
         if(BOXes.quarto){
@@ -336,6 +346,20 @@ personagem.onload = function(){
                         cxt.font = '23px comic Sans'
                         cxt.fillText(textBOX[i-1],355,765-200)
                     }
+                }
+            }
+            if (trasiType === 1 || trasiType === 2) {
+                const imgIndex = trasiType - 1; // Define qual imagem de transição usar
+                if (frameFalseT % 1 === 0) {
+                    cxt.drawImage(trasicoes[imgIndex], 544 * frameT, 0, 544, 306, 0, 0, y, x);
+                    frameT++;
+                }
+                if (frameT >= 31) {
+                    trasiType = 0; // Resetando trasiType após a transição
+                    frameFalseT = 0;
+                    frameT = 0;
+                } else {
+                    frameFalseT++;
                 }
             }
         }

@@ -6,36 +6,29 @@ class HitBoxes {
         this.baixo = y + dy;
     }
 
-    // Verifica se há colisão com outra caixa
-    Collider(caixa1) {
-        return !(this.direita < caixa1.esquerda ||
-                 this.topo > caixa1.baixo ||
-                 this.esquerda > caixa1.direita ||
-                 this.baixo < caixa1.topo);
+// Verifica se há colisão com outra caixa
+Collider(caixa1) {
+    return !(this.direita < caixa1.esquerda ||
+             this.topo > caixa1.baixo ||
+             this.esquerda > caixa1.direita ||
+             this.baixo < caixa1.topo);
+}
+
+// Determina o lado da colisão
+Sider(caixa1) {
+    if (this.Collider(caixa1)) {
+        const distancias = {
+            esquerda: this.direita - caixa1.esquerda,
+            direita: caixa1.direita - this.esquerda,
+            topo: this.baixo - caixa1.topo,
+            baixo: caixa1.baixo - this.topo
+        };
+        
+        return Object.keys(distancias).reduce((prev, curr) => 
+            distancias[curr] < distancias[prev] ? curr : prev
+        );
     }
-
-    // Determina o lado da colisão
-    Sider(caixa1) {
-        if (this.Collider(caixa1)) {
-            const distEsquerda = this.direita - caixa1.esquerda;
-            const distDireita = caixa1.direita - this.esquerda;
-            const distTopo = this.baixo - caixa1.topo;
-            const distBaixo = caixa1.baixo - this.topo;
-
-            // Calcula a penetração mínima
-            const minDist = Math.min(distBaixo, distDireita, distEsquerda, distTopo);
-
-            if (minDist === distEsquerda) {
-                return 'esquerda';
-            } else if (minDist === distDireita) {
-                return 'direita';
-            } else if (minDist === distTopo) {
-                return 'topo';
-            } else if (minDist === distBaixo) {
-                return 'baixo';
-            }
-        }
-        return null; // Retorna null se não houver colisão
-    }
+    return null; // Retorna null se não houver colisão
+}
 }
 export {HitBoxes}
