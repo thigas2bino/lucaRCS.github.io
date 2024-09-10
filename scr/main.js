@@ -1,15 +1,68 @@
 const canvas = document.getElementById('canva1')
 const cxt = canvas.getContext('2d')
-import {room,quarto,cozinha,banheiro,sala,Dialogardo,trasicoes} from "./places.js"
+import {room,quarto,cozinha,banheiro,sala} from "./places.js"
 import { HitBoxes } from "./Colision.js"
+import { Criador_de_falas} from "./talk.js"
 let pressingM = [false,false,false,false,1]
 let introJumper = false
 let interaction = false
+let interaction_jumper = false
+let integrante = 0
+let Falas_Geral = {
+    Falas_Segunda : {
+        Falas_Banheiro : new Criador_de_falas(['banheiro na segunda'],0,'banheiro'),
+        Falas_Quarto : new Criador_de_falas(['quarto na segunda'],0,'quarto'),
+        Falas_Cozinha : new Criador_de_falas([],0,'cozinha'),
+        Falas_Sala : new Criador_de_falas([],0,'sala'),
+        Falas_Jardin : new Criador_de_falas([],0,'jardin'),
+    },
+    Falas_Terca : {
+        Falas_Banheiro : new Criador_de_falas(['banheiro na terça'],1,'banheiro'),
+        Falas_Quarto : new Criador_de_falas(['quarto na terça'],1,'quarto'),
+        Falas_Cozinha : new Criador_de_falas([],1,'cozinha'),
+        Falas_Sala : new Criador_de_falas([],1,'sala'),
+        Falas_Jardin : new Criador_de_falas([],1,'jardin'),
+    },
+    Falas_Quarta : {
+        Falas_Banheiro : new Criador_de_falas([],2,'banheiro'),
+        Falas_Quarto : new Criador_de_falas([],2,'quarto'),
+        Falas_Cozinha : new Criador_de_falas([],2,'cozinha'),
+        Falas_Sala : new Criador_de_falas([],2,'sala'),
+        Falas_Jardin : new Criador_de_falas([],2,'jardin'),
+    },
+    Falas_Quinta : {
+        Falas_Banheiro : new Criador_de_falas([],3,'banheiro'),
+        Falas_Quarto : new Criador_de_falas([],3,'quarto'),
+        Falas_Cozinha : new Criador_de_falas([],3,'cozinha'),
+        Falas_Sala : new Criador_de_falas([],3,'sala'),
+        Falas_Jardin : new Criador_de_falas([],3,'jardin'),
+    },
+    Falas_Sexta : {
+        Falas_Banheiro : new Criador_de_falas([],4,'banheiro'),
+        Falas_Quarto : new Criador_de_falas([],4,'quarto'),
+        Falas_Cozinha : new Criador_de_falas([],4,'cozinha'),
+        Falas_Sala : new Criador_de_falas([],4,'sala'),
+        Falas_Jardin : new Criador_de_falas([],4,'jardin'),
+    },
+    Falas_Sabado : {
+        Falas_Banheiro : new Criador_de_falas([],5,'banheiro'),
+        Falas_Quarto : new Criador_de_falas([],5,'quarto'),
+        Falas_Cozinha : new Criador_de_falas([],5,'cozinha'),
+        Falas_Sala : new Criador_de_falas([],5,'sala'),
+        Falas_Jardin : new Criador_de_falas([],5,'jardin'),
+    },
+    Falas_Domigo : {
+        Falas_Banheiro : new Criador_de_falas([],6,'banheiro'),
+        Falas_Quarto : new Criador_de_falas([],6,'quarto'),
+        Falas_Cozinha : new Criador_de_falas([],6,'cozinha'),
+        Falas_Sala : new Criador_de_falas([],6,'sala'),
+        Falas_Jardin : new Criador_de_falas([],6,'jardin'),
+    }
+}
 
 let trasiType = 0
 //check dialog,armario,geladeira
 let dialogs = [false,false,false]
-let textBOX = ['armario','geladeira']
 let BOXes = {
     'quarto':true,
     'banheiro':false,
@@ -23,6 +76,7 @@ const screenW = document.documentElement.scrollWidth
 const screenH = document.documentElement.scrollHeight
 let x = 765
 let y = 1360
+export {x,y}
 canvas.height = x-20
 canvas.width = y-20
 const pressin = document.addEventListener('keydown',function(event){
@@ -36,11 +90,12 @@ const pressin = document.addEventListener('keydown',function(event){
         pressingM[3] = true
     }if(event.key === ' '){
         introJumper = true
-    }if (pressingM[4]%2!==0) {
-        if(event.key==='i'){
-            pressingM[4]++
-            interaction = true
+        if (interaction) {
+            interaction_jumper = true
         }
+    }
+    if(event.key==='e'){
+        interaction = true
     }
 })
 
@@ -53,8 +108,8 @@ const upping = document.addEventListener('keyup',function(event){
         pressingM[2] = false
     }if(event.key ==='s'){
         pressingM[3] = false
-    }if(event.key==='i'){
-        pressingM[4]++
+    }if (event.key === ' ') {
+        interaction_jumper = false
     }
 })
 let frameX = 1
@@ -62,8 +117,6 @@ let frameM = 0
 let frameFalse = 0
 let estabilizador = 7
 let estabilizador2 = 18
-let frameT = 0
-let frameFalseT = 0
 
 const personagem = new Image()
 let personagemX = 0
@@ -114,6 +167,49 @@ personagem.onload = function(){
             cxt.fillStyle = 'rgba(0,0,0,0)'
             cxt.fillRect(845,417,350,130)
             let Quarto_escrivaninha = new HitBoxes(845,417,350,130)
+
+            cxt.fillStyle = 'rgba'
+            cxt.fillRect(75,400,100,170)
+            let Quarto_quina1 = new HitBoxes(75,400,100,170)
+
+            switch (HitboxInfo.Sider(Quarto_quina1)) {
+                case 'esquerda':
+                    pressingM[1] = false;
+                    break;
+                case 'direita':
+                    pressingM[0] = false;
+                    break;
+                case 'topo':
+                    pressingM[3] = false;
+                    break;
+                case 'baixo':
+                    pressingM[2] = false;
+                    break;
+                default:
+                    break;
+            }
+
+            cxt.fillStyle = 'rgba'
+            cxt.fillRect(1200,400,100,170)
+            let Quarto_quina2 = new HitBoxes(1200,400,100,170)
+
+            switch (HitboxInfo.Sider(Quarto_quina2)) {
+                case 'esquerda':
+                    pressingM[1] = false;
+                    break;
+                case 'direita':
+                    pressingM[0] = false;
+                    break;
+                case 'topo':
+                    pressingM[3] = false;
+                    break;
+                case 'baixo':
+                    pressingM[2] = false;
+                    break;
+                default:
+                    break;
+            }
+
             switch (HitboxInfo.Sider(Quarto_cama)) {
                 case 'esquerda':
                     pressingM[1] = false;
@@ -184,12 +280,55 @@ personagem.onload = function(){
         }
         if(room[1]){
             cxt.fillStyle = 'rgba(0,0,0,0)'
-            cxt.fillRect(175,400,220,150)
-            let cozinha_geladeira = new HitBoxes(175,400,220,150)
+            cxt.fillRect(175,400,220,140)
+            let cozinha_geladeira = new HitBoxes(175,400,220,140)
 
             cxt.fillStyle = 'rgba(0,0,0,0)'
             cxt.fillRect(405,390,730,150)
             let cozinha_pia_fogao = new HitBoxes(405,390,730,150)
+
+            cxt.fillStyle = 'rgba'
+            cxt.fillRect(75,400,100,170)
+            let cozinha_quina1 = new HitBoxes(75,400,100,170)
+
+            switch (HitboxInfo.Sider(cozinha_quina1)) {
+                case 'esquerda':
+                    pressingM[1] = false;
+                    break;
+                case 'direita':
+                    pressingM[0] = false;
+                    break;
+                case 'topo':
+                    pressingM[3] = false;
+                    break;
+                case 'baixo':
+                    pressingM[2] = false;
+                    break;
+                default:
+                    break;
+            }
+
+            cxt.fillStyle = 'rgba'
+            cxt.fillRect(1200,400,100,170)
+            let cozinha_quina2 = new HitBoxes(1200,400,100,170)
+            
+
+            switch (HitboxInfo.Sider(cozinha_quina2)) {
+                case 'esquerda':
+                    pressingM[1] = false;
+                    break;
+                case 'direita':
+                    pressingM[0] = false;
+                    break;
+                case 'topo':
+                    pressingM[3] = false;
+                    break;
+                case 'baixo':
+                    pressingM[2] = false;
+                    break;
+                default:
+                    break;
+            }
 
             switch (HitboxInfo.Sider(cozinha_geladeira)) {
                 case 'esquerda':
@@ -225,9 +364,96 @@ personagem.onload = function(){
                     break;
             }
         }
+        if(room[2]){
+            cxt.fillStyle = 'rgba'
+            cxt.fillRect(1122,403,110,134)
+            let banheiro_planta = new HitBoxes(1122,403,110,134)
+
+            switch (HitboxInfo.Sider(banheiro_planta)) {
+                case 'esquerda':
+                    pressingM[1] = false;
+                    break;
+                case 'direita':
+                    pressingM[0] = false;
+                    break;
+                case 'topo':
+                    pressingM[3] = false;
+                    break;
+                case 'baixo':
+                    pressingM[2] = false;
+                    break;
+                default:
+                    break;
+            }
+
+            cxt.fillStyle = 'rgba(0,0,0,0)'
+            cxt.fillRect(1200,400,200,170)
+            let sala_quina2 = new HitBoxes(1200,400,200,170)
+
+            switch (HitboxInfo.Sider(sala_quina2)) {
+                case 'esquerda':
+                    pressingM[1] = false;
+                    break;
+                case 'direita':
+                    pressingM[0] = false;
+                    break;
+                case 'topo':
+                    pressingM[3] = false;
+                    break;
+                case 'baixo':
+                    pressingM[2] = false;
+                    break;
+                default:
+                    break;
+            }
+        }
+        if(room[3]){
+            cxt.fillStyle = 'rgba'
+            cxt.fillRect(75,400,100,135)
+            let sala_quina1 = new HitBoxes(75,400,100,135)
+
+            switch (HitboxInfo.Sider(sala_quina1)) {
+                case 'esquerda':
+                    pressingM[1] = false;
+                    break;
+                case 'direita':
+                    pressingM[0] = false;
+                    break;
+                case 'topo':
+                    pressingM[3] = false;
+                    break;
+                case 'baixo':
+                    pressingM[2] = false;
+                    break;
+                default:
+                    break;
+            }
+
+            cxt.fillStyle = 'rgba'
+            cxt.fillRect(1200,400,100,170)
+            let sala_quina2 = new HitBoxes(1200,400,100,170)
+            
+
+            switch (HitboxInfo.Sider(sala_quina2)) {
+                case 'esquerda':
+                    pressingM[1] = false;
+                    break;
+                case 'direita':
+                    pressingM[0] = false;
+                    break;
+                case 'topo':
+                    pressingM[3] = false;
+                    break;
+                case 'baixo':
+                    pressingM[2] = false;
+                    break;
+                default:
+                    break;
+            }
+        }
         cxt.drawImage(personagem,120*(frameX+frameM),0,120,120,personagemX,personagemY,280,280)
         for (let index = 0; index < personagemSpeed; index++) {
-            if (dialogs[0]!==true&&trasiType===0) {
+            if (dialogs[0]!==true) {
                 if (personagemY>=0) {
                     if (pressingM[2]) {
                         frameM = 12
@@ -279,7 +505,6 @@ personagem.onload = function(){
             personagemX = -54
             BOXes.cozinha = true
             BOXes.quarto = false
-            trasiType = 1
         }
         if(personagemX<=-55 && room[0]&&trasiType===0){
             room[2] = true
@@ -287,7 +512,6 @@ personagem.onload = function(){
             personagemX = y-201
             BOXes.banheiro = true
             BOXes.quarto = false
-            trasiType = 2
         }
         //cozinha
         if(personagemX<=-55 && room[1]&&trasiType===0){
@@ -296,14 +520,12 @@ personagem.onload = function(){
             personagemX = y-201
             BOXes.cozinha = false
             BOXes.quarto = true
-            trasiType = 2
         }if(personagemX>= y-200 && room[1]&&trasiType===0){
             room[1] = false
             room[3] = true
             personagemX = -54
-            BOXes.cozinha = true
-            BOXes.sala = false
-            trasiType = 1
+            BOXes.cozinha = false
+            BOXes.sala = true
         }
         //banheiro
         if(personagemX>= y-200 && room[2]&&trasiType===0){
@@ -312,7 +534,6 @@ personagem.onload = function(){
             personagemX = -30
             BOXes.banheiro = false
             BOXes.quarto = true
-            trasiType = 1
         }
         //sala
         if(personagemX<=-55 && room[3]&&trasiType===0){
@@ -320,49 +541,21 @@ personagem.onload = function(){
             room[3] = false
             personagemX = y-201
             BOXes.cozinha = true
-            BOXes.sala = true
-            trasiType = 2
+            BOXes.sala = false
         }
-
-        if(BOXes.quarto){
-            cxt.fillStyle = 'rgba(0,0,0,0)'
-            cxt.fillRect(160,530,220,60)
-            let QuartoArmario = new HitBoxes(160,530,220,60)
-            if(HitboxInfo.Collider(QuartoArmario)&&pressingM[4]%2===0&&dialogs[0]&&interaction){
-                dialogs[0]=false
-                dialogs[1]=false
-                interaction = false
-            }
-            if(HitboxInfo.Collider(QuartoArmario)&&pressingM[4]%2===0&&dialogs[0]!==true&&interaction){
-                dialogs[0]=true
-                dialogs[1]=true
-                interaction = false
-            }
-            if(dialogs[0]){
-                for (let i = 1; i < dialogs.length; i++) {
-                    if (dialogs[i]) {
-                        cxt.drawImage(Dialogardo,300,765-275,700,250)
-                        cxt.fillStyle = 'white'
-                        cxt.font = '23px comic Sans'
-                        cxt.fillText(textBOX[i-1],355,765-200)
-                    }
-                }
-            }
-            if (trasiType === 1 || trasiType === 2) {
-                const imgIndex = trasiType - 1; // Define qual imagem de transição usar
-                if (frameFalseT % 1 === 0) {
-                    cxt.drawImage(trasicoes[imgIndex], 544 * frameT, 0, 544, 306, 0, 0, y, x);
-                    frameT++;
-                }
-                if (frameT >= 31) {
-                    trasiType = 0; // Resetando trasiType após a transição
-                    frameFalseT = 0;
-                    frameT = 0;
-                } else {
-                    frameFalseT++;
+        
+        let active = () => {
+            for (const i in BOXes) {
+                if(BOXes[i] === true){
+                   return i
                 }
             }
         }
+        if(interaction_jumper){
+            interaction = false
+        }
+        Falas_Geral.Falas_Segunda.Falas_Banheiro.escrita(active(),interaction,integrante)
+        Falas_Geral.Falas_Segunda.Falas_Quarto.escrita(active(),interaction,integrante)
         player.Caixas = BOXes
         player.ro = room
         player.peX = personagemX

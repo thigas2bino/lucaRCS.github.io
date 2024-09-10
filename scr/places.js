@@ -41,20 +41,8 @@ let cozinha = new Places('images/cozinha.png',1,0,0,x,y)
 let banheiro = new Places('images/banheiro.png',2,0,0,x,y)
 let sala = new Places('images/Sala.png',3,0,0,x,y)
 
-let Dialogardo = new Image()
-Dialogardo.onload = function(){
-    cxt.drawImage(Dialogardo,500,500)
-}
-Dialogardo.src = 'images/caixa-de-dialogo.png'
-
-let trasicoes = [new Image(),new Image()]
-trasicoes[0].onload = () => {}
-trasicoes[0].src = 'images/transi-direita.png'
-trasicoes[1].onload = () => {}
-trasicoes[1].src = 'images/transi-esquerda.png'
-
 quarto.createImg()
 cozinha.createImg()
 banheiro.createImg()
 sala.createImg()
-export {room,quarto,cozinha,banheiro,sala,Dialogardo,trasicoes}
+export {room,quarto,cozinha,banheiro,sala}
