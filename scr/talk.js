@@ -1,5 +1,6 @@
 import { HitBoxes } from "./Colision.js"
 import { x,y } from "./main.js"
+import {text,escritaText} from './main.js'
 const canvas = document.getElementById('canva1')
 const cxt = canvas.getContext('2d')
 let caixa = new Image()
@@ -13,19 +14,18 @@ class Criador_de_falas{
         this.semana = semana
         this.place = place
     }
-    escrita(place,but,semaena){
+    escrita(place,but,semaena,helper,x){
         if(this.place===place&&but&&semaena===this.semana){
-            let text = ''
             cxt.drawImage(caixa,300,600)
             cxt.fillStyle = 'white'
             cxt.font = '23px comic Sans'
-            for(let i in this.fala){
-                for (let Lt in this.fala[i]) {
-                    text+=this.fala[i][Lt]
-                    cxt.fillText(text,300,600)
-                }
+            if (this.fala[x][helper]!==undefined) {
+                escritaText(this.fala,x,helper)
             }
+            cxt.fillText(text,350,650)
+            return true
         }
+        return false
     }
 }
 export {Criador_de_falas}

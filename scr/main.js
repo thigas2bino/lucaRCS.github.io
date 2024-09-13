@@ -3,6 +3,12 @@ const cxt = canvas.getContext('2d')
 import {room,quarto,cozinha,banheiro,sala} from "./places.js"
 import { HitBoxes } from "./Colision.js"
 import { Criador_de_falas} from "./talk.js"
+
+let text = ''
+let help = 0
+let xbet = 0
+const delay = 5
+let escritaD = 0 
 let pressingM = [false,false,false,false,1]
 let introJumper = false
 let interaction = false
@@ -131,6 +137,15 @@ let player = {
     peX:personagemX,
     peY:personagemY,
 }
+function escritaText(ObjetoDeFala,xes,help){
+    if(escritaD%delay===0){
+        if (ObjetoDeFala[xes]!==undefined) {
+            text+=ObjetoDeFala[xes][help]
+            console.log(text)
+        }
+    }
+}
+export{text,escritaText}
 personagem.onload = function(){
     function animation(){
         cxt.clearRect(0,0,y,x)
@@ -554,8 +569,16 @@ personagem.onload = function(){
         if(interaction_jumper){
             interaction = false
         }
-        Falas_Geral.Falas_Segunda.Falas_Banheiro.escrita(active(),interaction,integrante)
-        Falas_Geral.Falas_Segunda.Falas_Quarto.escrita(active(),interaction,integrante)
+        if (Falas_Geral.Falas_Segunda.Falas_Banheiro.escrita(active(),interaction,integrante,help,xbet)||Falas_Geral.Falas_Segunda.Falas_Quarto.escrita(active(),interaction,integrante,help,xbet)) {
+            if (escritaD%delay===0) {
+                help++
+            }escritaD++
+        }else{
+            if (Falas_Geral.Falas_Segunda.Falas_Banheiro.escrita(active(),interaction,integrante,help,xbet)!==0&&Falas_Geral.Falas_Segunda.Falas_Quarto.escrita(active(),interaction,integrante,help,xbet)!==0) {
+                help = 0
+                text = ''
+            }
+        }
         player.Caixas = BOXes
         player.ro = room
         player.peX = personagemX
