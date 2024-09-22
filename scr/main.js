@@ -2,9 +2,15 @@ const canvas = document.getElementById('canva1')
 const cxt = canvas.getContext('2d')
 import {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica, quarto_cama} from "./places.js"
 import { HitBoxes } from "./Colision.js"
-import { Criador_de_falas,chageMd,chager,choice,colaboration} from "./talk.js"
+import { Criador_de_falas,DECISIONS,chageMd,chager,choice,colaboration, escritaMD, escritaTermina} from "./talk.js"
 
 let currentFala
+
+
+//segunda acorda,cozinha
+let cronologia = [true,false]
+let cronos = false
+let cronoslogos = [false,false]
 
 let text = ''
 let help = 0
@@ -18,95 +24,95 @@ let interaction_jumper = false
 let semana = 0
 let Falas_Geral = {
     Falas_Segunda : {
-        Falas_Banheiro : new Criador_de_falas(['pia do banheiro','privada'],0),
-        Falas_Quarto : new Criador_de_falas(['cama','guarda-roupa','escrivania'],0),
-        Falas_Cozinha : new Criador_de_falas(['geladeira','pia da cozinha','fogão','filtro'],0),
-        Falas_Sala : new Criador_de_falas([],0),
-        Falas_Jardin : new Criador_de_falas([],0),
-        Falas_Ponto : new Criador_de_falas([],0),
-        Falas_Fabrica_Frente : new Criador_de_falas([],0),
-        Falas_Fabrica_Recepcao : new Criador_de_falas([],0),
-        Falas_Fabrica_Corredor : new Criador_de_falas([],0),
-        Falas_Fabrica_Escritorio : new Criador_de_falas([],0),
-        Falas_Fabrica_Cozinha : new Criador_de_falas([],0),
+        Falas_Banheiro : new Criador_de_falas(['lavar o rosto?','estou atrasado,não posso ficar parando agora','ja lavei meu rosto'],0,[true,false]),
+        Falas_Quarto : new Criador_de_falas(['estou atrasado,não posso ficar parando agora','estou atrasado,não posso ficar parando agora','estou atrasado,não posso ficar parando agora','voltar a dormir?','É, acho que vou ter que ir, não consigo dormir',"e lá vamos nós para um maravilhoso dia"],0,[false,false,false,true,false,false]),
+        Falas_Cozinha : new Criador_de_falas(['estou atrasado,não posso ficar parando agora','estou atrasado,não posso ficar parando agora','estou atrasado,não posso ficar parando agora','estou atrasado,não posso ficar parando agora','devo tomar cafe da manhã'],0,[false,false,false,false,true]),
+        Falas_Sala : new Criador_de_falas([],0,[]),
+        Falas_Jardin : new Criador_de_falas([],0,[]),
+        Falas_Ponto : new Criador_de_falas([],0,[]),
+        Falas_Fabrica_Frente : new Criador_de_falas([],0,[]),
+        Falas_Fabrica_Recepcao : new Criador_de_falas([],0,[]),
+        Falas_Fabrica_Corredor : new Criador_de_falas([],0,[]),
+        Falas_Fabrica_Escritorio : new Criador_de_falas([],0,[]),
+        Falas_Fabrica_Cozinha : new Criador_de_falas([],0,[]),
     },
     Falas_Terca : {
-        Falas_Banheiro : new Criador_de_falas(['banheiro na terça'],1),
-        Falas_Quarto : new Criador_de_falas(['quarto na terça'],1),
-        Falas_Cozinha : new Criador_de_falas([],1),
-        Falas_Sala : new Criador_de_falas([],1),
-        Falas_Jardin : new Criador_de_falas([],1),
-        Falas_Ponto : new Criador_de_falas([],1),
-        Falas_Fabrica_Frente : new Criador_de_falas([],1),
-        Falas_Fabrica_Recepcao : new Criador_de_falas([],1),
-        Falas_Fabrica_Corredor : new Criador_de_falas([],1),
-        Falas_Fabrica_Escritorio : new Criador_de_falas([],1),
-        Falas_Fabrica_Cozinha : new Criador_de_falas([],1),
+        Falas_Banheiro : new Criador_de_falas(['banheiro na terça'],1,[]),
+        Falas_Quarto : new Criador_de_falas(['quarto na terça'],1,[]),
+        Falas_Cozinha : new Criador_de_falas([],1,[]),
+        Falas_Sala : new Criador_de_falas([],1,[]),
+        Falas_Jardin : new Criador_de_falas([],1,[]),
+        Falas_Ponto : new Criador_de_falas([],1,[]),
+        Falas_Fabrica_Frente : new Criador_de_falas([],1,[]),
+        Falas_Fabrica_Recepcao : new Criador_de_falas([],1,[]),
+        Falas_Fabrica_Corredor : new Criador_de_falas([],1,[]),
+        Falas_Fabrica_Escritorio : new Criador_de_falas([],1,[]),
+        Falas_Fabrica_Cozinha : new Criador_de_falas([],1,[]),
     },
     Falas_Quarta : {
-        Falas_Banheiro : new Criador_de_falas([],2),
-        Falas_Quarto : new Criador_de_falas([],2),
-        Falas_Cozinha : new Criador_de_falas([],2),
-        Falas_Sala : new Criador_de_falas([],2),
-        Falas_Jardin : new Criador_de_falas([],2),
-        Falas_Ponto : new Criador_de_falas([],2),
-        Falas_Fabrica_Frente : new Criador_de_falas([],2),
-        Falas_Fabrica_Recepcao : new Criador_de_falas([],2),
-        Falas_Fabrica_Corredor : new Criador_de_falas([],2),
-        Falas_Fabrica_Escritorio : new Criador_de_falas([],2),
-        Falas_Fabrica_Cozinha : new Criador_de_falas([],2),
+        Falas_Banheiro : new Criador_de_falas([],2,[]),
+        Falas_Quarto : new Criador_de_falas([],2,[]),
+        Falas_Cozinha : new Criador_de_falas([],2,[]),
+        Falas_Sala : new Criador_de_falas([],2,[]),
+        Falas_Jardin : new Criador_de_falas([],2,[]),
+        Falas_Ponto : new Criador_de_falas([],2,[]),
+        Falas_Fabrica_Frente : new Criador_de_falas([],2,[]),
+        Falas_Fabrica_Recepcao : new Criador_de_falas([],2,[]),
+        Falas_Fabrica_Corredor : new Criador_de_falas([],2,[]),
+        Falas_Fabrica_Escritorio : new Criador_de_falas([],2,[]),
+        Falas_Fabrica_Cozinha : new Criador_de_falas([],2,[]),
     },
     Falas_Quinta : {
-        Falas_Banheiro : new Criador_de_falas([],3),
-        Falas_Quarto : new Criador_de_falas([],3),
-        Falas_Cozinha : new Criador_de_falas([],3),
-        Falas_Sala : new Criador_de_falas([],3),
-        Falas_Jardin : new Criador_de_falas([],3),
-        Falas_Ponto : new Criador_de_falas([],3),
-        Falas_Fabrica_Frente : new Criador_de_falas([],3),
-        Falas_Fabrica_Recepcao : new Criador_de_falas([],3),
-        Falas_Fabrica_Corredor : new Criador_de_falas([],3),
-        Falas_Fabrica_Escritorio : new Criador_de_falas([],3),
-        Falas_Fabrica_Cozinha : new Criador_de_falas([],3),
+        Falas_Banheiro : new Criador_de_falas([],3,[]),
+        Falas_Quarto : new Criador_de_falas([],3,[]),
+        Falas_Cozinha : new Criador_de_falas([],3,[]),
+        Falas_Sala : new Criador_de_falas([],3,[]),
+        Falas_Jardin : new Criador_de_falas([],3,[]),
+        Falas_Ponto : new Criador_de_falas([],3,[]),
+        Falas_Fabrica_Frente : new Criador_de_falas([],3,[]),
+        Falas_Fabrica_Recepcao : new Criador_de_falas([],3,[]),
+        Falas_Fabrica_Corredor : new Criador_de_falas([],3,[]),
+        Falas_Fabrica_Escritorio : new Criador_de_falas([],3,[]),
+        Falas_Fabrica_Cozinha : new Criador_de_falas([],3,[]),
     },
     Falas_Sexta : {
-        Falas_Banheiro : new Criador_de_falas([],4),
-        Falas_Quarto : new Criador_de_falas([],4),
-        Falas_Cozinha : new Criador_de_falas([],4),
-        Falas_Sala : new Criador_de_falas([],4),
-        Falas_Jardin : new Criador_de_falas([],4,),
-        Falas_Ponto : new Criador_de_falas([],4),
-        Falas_Fabrica_Frente : new Criador_de_falas([],4),
-        Falas_Fabrica_Recepcao : new Criador_de_falas([],4),
-        Falas_Fabrica_Corredor : new Criador_de_falas([],4),
-        Falas_Fabrica_Escritorio : new Criador_de_falas([],4),
-        Falas_Fabrica_Cozinha : new Criador_de_falas([],4),
+        Falas_Banheiro : new Criador_de_falas([],4,[]),
+        Falas_Quarto : new Criador_de_falas([],4,[]),
+        Falas_Cozinha : new Criador_de_falas([],4,[]),
+        Falas_Sala : new Criador_de_falas([],4,[]),
+        Falas_Jardin : new Criador_de_falas([],4,[]),
+        Falas_Ponto : new Criador_de_falas([],4,[]),
+        Falas_Fabrica_Frente : new Criador_de_falas([],4,[]),
+        Falas_Fabrica_Recepcao : new Criador_de_falas([],4,[]),
+        Falas_Fabrica_Corredor : new Criador_de_falas([],4,[]),
+        Falas_Fabrica_Escritorio : new Criador_de_falas([],4,[]),
+        Falas_Fabrica_Cozinha : new Criador_de_falas([],4,[]),
     },
     Falas_Sabado : {
-        Falas_Banheiro : new Criador_de_falas([],5),
-        Falas_Quarto : new Criador_de_falas([],5),
-        Falas_Cozinha : new Criador_de_falas([],5),
-        Falas_Sala : new Criador_de_falas([],5),
-        Falas_Jardin : new Criador_de_falas([],5),
-        Falas_Ponto : new Criador_de_falas([],5),
-        Falas_Fabrica_Frente : new Criador_de_falas([],5),
-        Falas_Fabrica_Recepcao : new Criador_de_falas([],5),
-        Falas_Fabrica_Corredor : new Criador_de_falas([],5),
-        Falas_Fabrica_Escritorio : new Criador_de_falas([],5),
-        Falas_Fabrica_Cozinha : new Criador_de_falas([],5),
+        Falas_Banheiro : new Criador_de_falas([],5,[]),
+        Falas_Quarto : new Criador_de_falas([],5,[]),
+        Falas_Cozinha : new Criador_de_falas([],5,[]),
+        Falas_Sala : new Criador_de_falas([],5,[]),
+        Falas_Jardin : new Criador_de_falas([],5,[]),
+        Falas_Ponto : new Criador_de_falas([],5,[]),
+        Falas_Fabrica_Frente : new Criador_de_falas([],5,[]),
+        Falas_Fabrica_Recepcao : new Criador_de_falas([],5,[]),
+        Falas_Fabrica_Corredor : new Criador_de_falas([],5,[]),
+        Falas_Fabrica_Escritorio : new Criador_de_falas([],5,[]),
+        Falas_Fabrica_Cozinha : new Criador_de_falas([],5,[]),
     },
     Falas_Domigo : {
-        Falas_Banheiro : new Criador_de_falas([],6),
-        Falas_Quarto : new Criador_de_falas([],6),
-        Falas_Cozinha : new Criador_de_falas([],6),
-        Falas_Sala : new Criador_de_falas([],6),
-        Falas_Jardin : new Criador_de_falas([],6),
-        Falas_Ponto : new Criador_de_falas([],6),
-        Falas_Fabrica_Frente : new Criador_de_falas([],6),
-        Falas_Fabrica_Recepcao : new Criador_de_falas([],6),
-        Falas_Fabrica_Corredor : new Criador_de_falas([],6),
-        Falas_Fabrica_Escritorio : new Criador_de_falas([],6),
-        Falas_Fabrica_Cozinha : new Criador_de_falas([],6),
+        Falas_Banheiro : new Criador_de_falas([],6,[]),
+        Falas_Quarto : new Criador_de_falas([],6,[]),
+        Falas_Cozinha : new Criador_de_falas([],6,[]),
+        Falas_Sala : new Criador_de_falas([],6,[]),
+        Falas_Jardin : new Criador_de_falas([],6,[]),
+        Falas_Ponto : new Criador_de_falas([],6,[]),
+        Falas_Fabrica_Frente : new Criador_de_falas([],6,[]),
+        Falas_Fabrica_Recepcao : new Criador_de_falas([],6,[]),
+        Falas_Fabrica_Corredor : new Criador_de_falas([],6,[]),
+        Falas_Fabrica_Escritorio : new Criador_de_falas([],6,[]),
+        Falas_Fabrica_Cozinha : new Criador_de_falas([],6,[]),
     }
 }
 
@@ -180,8 +186,8 @@ let estabilizador = 7
 let estabilizador2 = 18
 
 const personagem = new Image()
-let personagemX = 0
-let personagemY = 270
+let personagemX = 528
+let personagemY = 320
 let personagemSpeed = 5
 if(localStorage.getItem('player')!== null){
     personagemX = JSON.parse(localStorage.getItem('player')).peX
@@ -196,7 +202,6 @@ function escritaText(ObjetoDeFala,xes,helpea){
     if(escritaD%delay===0){
         if (ObjetoDeFala[xes]!==undefined&&text!==ObjetoDeFala[xes]) {
             text+=ObjetoDeFala[xes][helpea]
-            console.log(text+'   '+ObjetoDeFala[xes])
         }
         help++
     }
@@ -330,7 +335,7 @@ personagem.onload = function(){
         if (room[7]) {
             colliderArson(7,mesa_fabrica_cozinha)
         }
-        if (interaction!==true) {
+        if (interaction!==true&&cronos&&cronoslogos[0]&&cronoslogos[1]) {
             for (let index = 0; index < personagemSpeed; index++) {
                 if (dialogs[0]!==true) {
                     if (personagemY>=0) {
@@ -531,7 +536,6 @@ personagem.onload = function(){
             }
         }
         cxt.drawImage(personagem,40*(frameX+frameM),0,40,40,personagemX,personagemY,280,280)
-        console.log(personagem)
         if(interaction_jumper||colaboration){
             interaction = false
             chager(false)
@@ -562,22 +566,79 @@ personagem.onload = function(){
                 case 2:
                     week().Falas_Banheiro.escrita(interaction,help,currentFala)
                     break;
+                //sala
+                case 3:
+                    week().Falas_Sala.escrita(interaction,help,currentFala)
+                    break;
+                //jardin
+                case 4:
+                    week().Falas_Jardin.escrita(interaction,help,currentFala)
+                    break;
+                //ponto
+                case 5:
+                    week().Falas_Ponto.escrita(interaction,help,currentFala)
+                    break;
+                //fora fabrica
+                case 6:
+                    week().Falas_Fabrica_Frente.escrita(interaction,help,currentFala)
+                    break;
+                //cozinha fabrica
+                case 7:
+                    week().Falas_Fabrica_Cozinha.escrita(interaction,help,currentFala)
+                    break;
+                //fabrica recepção
+                case 8:
+                    week().Falas_Fabrica_Recepcao.escrita(interaction,help,currentFala)
+                    break;
+                //corredor fabrica
+                case 9:
+                    week().Falas_Fabrica_Corredor.escrita(interaction,help,currentFala)
+                    break;
                 default:
                     break;
             }
         }else{
             interaction = false
         }
-        if (interaction!==true) {
+        if (interaction!==true&&cronos) {
             help = 0
             text = ''
             chageMd(false)
+            escritaMD(false)
         }
-        player.Caixas = BOXes
+
+        if (cronologia[0]) {
+            week().Falas_Quarto.escrita(true,help,3)
+            if (DECISIONS[0]!==undefined) {
+                cronologia[0] = false
+                cronos = true
+                cronoslogos[0] = true
+            }
+        }else{
+            if (cronoslogos[0]&&cronoslogos[1]!==true&&cronologia[1]!==true) {
+                if (DECISIONS[0]) {
+                    week().Falas_Quarto.escrita(true,help,5)
+                    cronos = false
+                    if (escritaTermina) {
+                        cronoslogos[1] = true
+                        cronos = true
+                    }
+                }else{
+                    week().Falas_Quarto.escrita(true,help,4)
+                    cronos = false
+                    if (escritaTermina) {
+                        cronoslogos[1] = true
+                        cronos = true
+                    }
+                }
+            }
+        }
+        /*player.Caixas = BOXes
         player.ro = room
         player.peX = personagemX
         player.peY = personagemY
         localStorage.setItem('player',JSON.stringify(player))
+        */
     }
     let introHelper = 0
     let falseFrame = 0

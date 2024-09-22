@@ -1,6 +1,10 @@
 import { HitBoxes } from "./Colision.js"
 import { interaction, x,y } from "./main.js"
 import {text,escritaText,pressingM} from './main.js'
+
+//decisions
+let DECISIONS = []
+
 const canvas = document.getElementById('canva1')
 const cxt = canvas.getContext('2d')
 const maxWidth = 490
@@ -9,7 +13,10 @@ let xPos = 350
 let yPos = 650
 let choice = false
 let yes = false
-let what = ''
+
+let escritaTermina = false
+
+let what
 let colaboration = false
 let chager = (booleandes) => {colaboration = booleandes}
 function wrapText(context, text, x, y, maxWidth, lineHeight) {
@@ -38,9 +45,10 @@ caixa.onload = function (){
 }
 caixa.src = 'images/CaixaDialogo.png'
 class Criador_de_falas{
-    constructor(fala,semana){
+    constructor(fala,semana,SINO){
         this.fala = fala
         this.semana = semana
+        this.sino = SINO
     }
     escrita(but,helper,x){
         if(but){
@@ -51,9 +59,14 @@ class Criador_de_falas{
                 escritaText(this.fala,x,helper)
                 yes = true
             }else{
-                choice = true
+                if (this.sino[x]) {
+                    choice = true
+                }
+                if (pressingM[5]) {
+                    escritaTermina = true
+                }
             }
-            wrapText(cxt, text, xPos, yPos, maxWidth, lineHeight);
+           wrapText(cxt, text, xPos, yPos, maxWidth, lineHeight);
             if (choice) {
                 cxt.fillText('sim                                                      não',370,720)
                 if(yes){
@@ -68,9 +81,10 @@ class Criador_de_falas{
                     yes = true
                 }
                 if (pressingM[5]) {
-                    what = yes
+                    DECISIONS.push(yes)
                     choice = false
                     colaboration = true
+                    escritaTermina = false
                 }
             }
             return true
@@ -79,4 +93,5 @@ class Criador_de_falas{
     }
 }
 let chageMd = (bool) =>{choice = bool}
-export {Criador_de_falas,colaboration,chager,choice,chageMd}
+let escritaMD = (bool) =>{escritaTermina = bool}
+export {Criador_de_falas,colaboration,chager,choice,chageMd,DECISIONS,escritaTermina,escritaMD}
