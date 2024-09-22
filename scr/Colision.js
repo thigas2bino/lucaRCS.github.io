@@ -1,9 +1,11 @@
 class HitBoxes {
-    constructor(x, y, dx, dy) {
+    constructor(x, y, dx, dy,room,num) {
         this.esquerda = x;
         this.direita = x + dx;
         this.topo = y;
         this.baixo = y + dy;
+        this.room = room
+        this.num = num
     }
 
 // Verifica se há colisão com outra caixa
