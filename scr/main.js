@@ -600,4 +600,4 @@ personagem.onload = function(){
     intro.src = 'images/intro.png'
     animation()
 }
-personagem.src = "https://lucarcs.github.io/images/Personagem-andando.png"
+personagem.src = "https://lucarcs.github.io/images/personagem-andando.png"
