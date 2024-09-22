@@ -531,6 +531,7 @@ personagem.onload = function(){
             }
         }
         cxt.drawImage(personagem,40*(frameX+frameM),0,40,40,personagemX,personagemY,280,280)
+        console.log(personagem)
         if(interaction_jumper||colaboration){
             interaction = false
             chager(false)
