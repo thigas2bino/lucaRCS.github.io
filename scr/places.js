@@ -1,7 +1,7 @@
 const canvas = document.getElementById('canva1')
 const cxt = canvas.getContext('2d')
-//quarto,cozinha,banheiro,sala,jardin,ponto,fora fabrica,cozinha fabrica,fabrica recepção,corredo fabrica
-let room = [true,false,false,false,false,false,false,false,false,false]
+//quarto,cozinha,banheiro,sala,jardin,ponto,fora fabrica,cozinha fabrica,fabrica recepção,corredo fabrica,escritorio einar
+let room = [true,false,false,false,false,false,false,false,false,false,false]
 let y = 765
 let x = 1360
 if(localStorage.getItem('player')!== null){
@@ -47,6 +47,7 @@ let fora_fabrica = new Places('images/fora_fabrica.png',6,0,0,x,y)
 let cozinha_fabrica = new Places('images/cozinha_fabrica.png',7,0,0,x,y)
 let fabrica_recepcao = new Places('images/fabrica_recepcao.png',8,0,0,x,y)
 let corredor_fabrica = new Places('images/corredor_fabrica.png',9,0,0,x,y)
+let escritorio_Einar = new Places('images/escritorio.png',10,0,0,x,y)
 
 quarto.createImg()
 cozinha.createImg()
@@ -59,5 +60,6 @@ cozinha_fabrica.createImg()
 fabrica_recepcao.createImg()
 corredor_fabrica.createImg()
 quarto_cama.createImg()
+escritorio_Einar.createImg()
 
-export {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica,quarto_cama}
+export {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica,quarto_cama,escritorio_Einar}

@@ -4,6 +4,9 @@ import {text,escritaText,pressingM} from './main.js'
 
 //decisions
 let DECISIONS = []
+if(localStorage.getItem('player')!== null){
+    DECISIONS = JSON.parse(localStorage.getItem('player')).decisions
+}
 
 const canvas = document.getElementById('canva1')
 const cxt = canvas.getContext('2d')
@@ -16,7 +19,6 @@ let yes = false
 
 let escritaTermina = false
 
-let what
 let colaboration = false
 let chager = (booleandes) => {colaboration = booleandes}
 function wrapText(context, text, x, y, maxWidth, lineHeight) {
@@ -82,6 +84,9 @@ class Criador_de_falas{
                 }
                 if (pressingM[5]) {
                     DECISIONS.push(yes)
+                    if (DECISIONS[1]===false) {
+                        DECISIONS[2]=false
+                    }
                     choice = false
                     colaboration = true
                     escritaTermina = false
