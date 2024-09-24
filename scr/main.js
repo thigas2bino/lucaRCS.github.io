@@ -22,7 +22,7 @@ if(localStorage.getItem('player')!== null){
 let text = ''
 let help = 0
 let xbet = 0
-const delay = 5
+const delay = 3
 let escritaD = 0 
 let pressingM = [false,false,false,false,1,false]
 let introJumper = false
