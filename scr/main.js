@@ -668,7 +668,6 @@ personagem.onload = function(){
             if(element.room === current()){
                 if(element.Collider(HitboxInfo)){
                     currentFala = element.num
-                    console.log('test ')
                     break
                 }else{
                     currentFala = null
@@ -740,7 +739,7 @@ personagem.onload = function(){
             escritaMD(false)
         }
 
-        if (cronologia[0]&&semana===0) {
+        if (cronologia&&cronologia[0]&&semana===0) {
             week().Falas_Quarto.escrita(true,help,3)
             if (DECISIONS[0]!==undefined) {
                 cronologia[0] = false
