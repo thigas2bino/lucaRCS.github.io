@@ -4,6 +4,8 @@ const cxt = canvas.getContext('2d')
 let room = [true,false,false,false,false,false,false,false,false,false,false]
 let y = 765
 let x = 1360
+let helperN= 1
+let ani = 0
 if(localStorage.getItem('player')!== null){
     room = JSON.parse(localStorage.getItem('player')).ro
 }
@@ -35,7 +37,34 @@ class Places {
             cxt.drawImage(this.image,this.dx,this.dy,this.w,this.h)
         }
     }
+    NPC(type1,type2){
+        if (type2!==0) {
+            if (ani%7===0) {
+                if (type1>=helperN&&helperN>=type2) {
+                    helperN++
+                } else {
+                    helperN = type2
+                }
+                ani++
+            }else{
+                ani++
+            }
+        } else {
+            if (ani%18===0) {
+                if (type1>helperN&&helperN>=type2) {
+                    helperN++
+                } else {
+                    helperN = type2
+                }
+                ani++
+            }else{
+                ani++
+            }
+        }
+        cxt.drawImage(this.image,this.sizeX*(helperN),0,this.sizeX,this.sizeY,this.dx,this.dy,this.w,this.h)
+    }
 }
+
 let quarto = new Places('images/quarto.png',0,0,0,x,y)
 let quarto_cama= new Places('images/cama_quarto.png',0,0,0,x,y)
 let cozinha = new Places('images/cozinha.png',1,0,0,x,y)
@@ -62,4 +91,4 @@ corredor_fabrica.createImg()
 quarto_cama.createImg()
 escritorio_Einar.createImg()
 
-export {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica,quarto_cama,escritorio_Einar}
+export {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica,quarto_cama,escritorio_Einar,Places}

@@ -57,6 +57,9 @@ class Criador_de_falas{
             cxt.drawImage(caixa,300,600)
             cxt.fillStyle = 'white'
             cxt.font = '23px comic Sans'
+            if(this.fala[x]===undefined){
+                return false
+            }
             if (this.fala[x][helper]!==undefined) {
                 escritaText(this.fala,x,helper)
                 yes = true
@@ -83,13 +86,18 @@ class Criador_de_falas{
                     yes = true
                 }
                 if (pressingM[5]) {
-                    DECISIONS.push(yes)
+                    if (DECISIONS[3]!==true&&DECISIONS[2]!==undefined) {
+                        DECISIONS[3] = yes
+                    } else {
+                        DECISIONS.push(yes)
+                    }
                     if (DECISIONS[1]===false) {
                         DECISIONS[2]=false
                     }
                     choice = false
                     colaboration = true
                     escritaTermina = false
+                    console.log(DECISIONS)
                 }
             }
             return true
