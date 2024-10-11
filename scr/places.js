@@ -6,6 +6,7 @@ let y = 765
 let x = 1360
 let helperN= 1
 let ani = 0
+let animation_end = false
 if(localStorage.getItem('player')!== null){
     room = JSON.parse(localStorage.getItem('player')).ro
 }
@@ -37,8 +38,9 @@ class Places {
             cxt.drawImage(this.image,this.dx,this.dy,this.w,this.h)
         }
     }
-    NPC(type1,type2){
-        if (type2!==0) {
+    NPC(type1,type2,type3){
+        if (type2!==0&&type3===undefined) {
+            animation_end = false
             if (ani%7===0) {
                 if (type1>=helperN&&helperN>=type2) {
                     helperN++
@@ -55,6 +57,9 @@ class Places {
                     helperN++
                 } else {
                     helperN = type2
+                    if (type3!==undefined) {
+                        animation_end = true
+                    }
                 }
                 ani++
             }else{
@@ -91,4 +96,4 @@ corredor_fabrica.createImg()
 quarto_cama.createImg()
 escritorio_Einar.createImg()
 
-export {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica,quarto_cama,escritorio_Einar,Places}
+export {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica,quarto_cama,escritorio_Einar,Places,animation_end}

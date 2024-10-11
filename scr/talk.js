@@ -1,7 +1,6 @@
 import { HitBoxes } from "./Colision.js"
 import { interaction, x,y } from "./main.js"
 import {text,escritaText,pressingM} from './main.js'
-
 //decisions
 let DECISIONS = []
 if(localStorage.getItem('player')!== null){
@@ -89,10 +88,22 @@ class Criador_de_falas{
                     if (DECISIONS[3]!==true&&DECISIONS[2]!==undefined) {
                         DECISIONS[3] = yes
                     } else {
-                        DECISIONS.push(yes)
+                        if (DECISIONS[8]!==undefined&&DECISIONS[8]===false) {
+                            DECISIONS[8] = yes
+                        }else{
+                            DECISIONS.push(yes)
+                        }
                     }
                     if (DECISIONS[1]===false) {
                         DECISIONS[2]=false
+                    }
+                    if (DECISIONS[6]===false) {
+                        DECISIONS[7]=false
+                    }
+                    if (DECISIONS[10]===false) {
+                        DECISIONS[11]=true
+                    }if (DECISIONS[11]===true) {
+                        DECISIONS[12]=false
                     }
                     choice = false
                     colaboration = true

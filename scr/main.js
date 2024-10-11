@@ -1,6 +1,6 @@
 const canvas = document.getElementById('canva1')
 const cxt = canvas.getContext('2d')
-import {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica, quarto_cama, escritorio_Einar,Places} from "./places.js"
+import {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica, quarto_cama, escritorio_Einar,Places, animation_end} from "./places.js"
 import { HitBoxes } from "./Colision.js"
 import { Criador_de_falas,DECISIONS,chageMd,chager,choice,colaboration, escritaMD, escritaTermina} from "./talk.js"
 
@@ -9,7 +9,7 @@ let currentFala
 
 let c = false
 
-let pilha = [true,true,true,true,true]
+let pilha = [true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true]
 if(localStorage.getItem('player')!== null){
     pilha = JSON.parse(localStorage.getItem('player')).pilhas
     
@@ -19,9 +19,14 @@ if(localStorage.getItem('player')!== null){
 let nemo_pos = [0,0,function(x,y){nemo_pos[x]=y}]
 let nemo = new Places('images/nemo-andando.png',10,nemo_pos[0],nemo_pos[1],330,330,27,240,240)
 nemo.createImg()
-
+//semanaes
+let stop = true
+let semanaes_trick = [false,false,false,false,false,false,false]
+let semanaes = {
+    segunda: new Places('images/segunda.png',0,0,0,1360,765,34,544,306)
+}
 //segunda acorda,cozinha,nemo,fumar uma
-let cronologia = [true,false,false,false]
+let cronologia = [true,false,false,false,false]
 let cronos = false
 let cronoslogos = [false,false]
 let countdown = true
@@ -54,18 +59,24 @@ let enterPlace = false
 
 let interaction_jumper = false
 let semana = 0
-
+if(localStorage.getItem('player')!== null){
+    semana = JSON.parse(localStorage.getItem('player')).SEMANA
+}
 let dialogos = {
     dialog1: new Criador_de_falas(['Nemo: Oi, Einar, como vc, tá?','Einar: o de sempre, e você?','Nemo: Estou bem, super bem, tive um excelente final de semana. Viajei bastante. E você, foi visitar a mamãe harpy hare como sempre?','Einar: Quê?','Nemo: Só quero puxar assunto mesmo, mas então, eu no sábado fui numa feira de antiguidades em outra cidade, foi incrível, até comprei algumas decorações para casa, também passei em uma livraria, até mesmo encontrei um novo livro para você.','Einar: sério mesmo? Qual livro você comprou?','Nemo: O mito de Sísifo, é de filosofia, fala um pouco sobre a falta de sentido na vida e na rotina, e como ou por que devemos continuar a viver apesar dessa falta','Einar: Não curto muito filosofia, mas parece interessante.','Nemo: Eu já cheguei a ler e é super a sua cara curte esse tipo de coisa, bem eu espero, se isso acontecer vou finalmente descobrir qual gênero de livro você gosta.','Einar: ah, mas eu nem sou chato pra esse tipo de coisa, você que não recomenda algo realmente bom, tipo aquele Diário de um banana','Nemo: Bém, acho que vou procurar algo nesse estilo, mas ainda vou tentar ampliar seu repertório, talvez você gostasse de ´´As vantagens de ser invisível´´','Einar: Já assisti o filme, só não sei se é a mesma coisa','Nemo: Eu acho o filme adaptado bem mais ou menos, mas já dá uma boa ideia do que se trata do livro','Einar: entendo, talvez eu leia, mas só talvez.','Nemo: Eu prometo a você, Einar , que um dia iria fazer você gostar de ler, juro pelo Zirgwè que tentarei isso.','Einar: boa sorte Nemo Santos'],0,[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]),
     dialog2: new Criador_de_falas(['Nemo: Ei cara, está tudo bem? Você não foi na cozinha hoje','Einar: Ah, sim, é que eu esqueci a marmita, por isso não passei lá','Nemo: Nossa é horrível quando isso acontece, mas não se preocupe, eu por acaso trouxe uma marmita a mais','Einar: por acaso? Sei','Nemo: Eu gosto de cozinhar e por acaso trouxe algumas comidinhas para dividir com o pessoal, toma aqui(Você recebe uma marmita)','Einar: uou, muito obrigado, já estava ficando com fome para ser sincero você sempre me salva nessas horas','Nemo: Não tem problema Einar, amigos são para isso, sempre pode contar comigo para qualquer coisa','Einar: Valeu, é bom ter um amigo como você.','Nemo: Então, como foi sua visita à mamãe harpy hare?','Einar: Harpy o que?','Nemo: Nada não, esquece. Te falta um pouco de cultura às vezes, Einar','Einar: Entendi. Inclusive, só avisando que vou ficar até mais tarde hoje','Nemo: Eita, você teve problemas com o chefinho? ','Einar: sim, digamos que eu cheguei um pouco atrasado hoje e ele não gostou muito.','Nemo: Eu tenho uma teoria que o chefinho só gosta de dinheiro e dele mesmo, qualquer coisa que foge disso ele odeia','Nemo: Tenho que ir, tchau el hermano','Einar; Tchau, até a próxima','Nemo: quase esqueci de falar, mas comprei um livro para tu(Você recebe um livro)'],0,[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,]),
-    fumando: new Criador_de_falas(['Mamãe Harpy hare? Conhecendo o Nemo, ele deve ter pego esse nome de alguma música ou livro.','*dá um trago no cigarro','De qualquer forma, se ele relacionou isso a ela, não deve ser coisa boa.'],0,[false,false,false])
+    fumando: new Criador_de_falas(['Mamãe Harpy hare? Conhecendo o Nemo, ele deve ter pego esse nome de alguma música ou livro.','*dá um trago no cigarro','De qualquer forma, se ele relacionou isso a ela, não deve ser coisa boa.'],0,[false,false,false]),
+    dialog3: new Criador_de_falas(['Nemo: E aí, Einar? Tô vendo que hoje você trouxe sua marmita. A minha comida é tão ruim assim???','Einar: Ei, fica tranquilo, só acordei mais cedo hoje, aí fiz minha marmita para você não esquentar a cabeça comigo.','Nemo: Einar, eu gosto de cozinhar, então eu já acabo trazendo comida a mais sempre, e não me importo nem um pouco em dividir com você, especialmente se significar que você vai poder dormir mais, porque dá pra ver de longe essas suas olheiras','Einar: bom, obrigado, eu acho','Nemo: Cara, acho que você tá muito desanimado esses dias, a gente tem que marcar de sair pra levantar esse ânimo seu aí. Tá livre amanhã depois do trabalho?','Einar: Mas eu tô o mesmo de sempre, e precisa ser amanhã? Queria muito terminar de zerar o Terraria.','Nemo: Não, você não tá, eu tô sentindo, e olha que eu tenho propriedade pra falar isso depois de tantos anos te aturando. E claro que precisa ser amanhã! Já esqueceu que dia é amanhã?','Einar: se você diz.Mas o que tem amanhã de tão importante?','Nemo: O nosso encontro, claro!','Einar: …Tá bom então','Nemo: Então tá marcado, te vejo amanhã no almoço e depois do trabalho. Só lembra que já não estamos mais em 2024, então sem cigarros no nosso passeio de amanhã!','Einar: eu sei, mas nada me impede de fumar antes de ir, ninguém vai falar nada mesmo.','Nemo: Claro que vão, provavelmente vão nos barrar, eu sabia que você estava chegando bem antes de você entrar só sentindo o cheiro do seu cigarro.','Einar: não é pra tanto né, sei que fica um pouco do cheiro, mas não no nível que você tá falando','Nemo: Enfim, falou, Einar, te vejo amanhã','Einar: Até, tchau.'],1,[false]),
+    dialog4: new Criador_de_falas(['Nemo: E aí, Einar, não te vi hoje na cozinha hoje, o que aconteceu?','Einar: só esqueci a marmita, mas acho que consigo aguentar, não tô com tanta fome.','Nemo: Cara, é sério isso? Depois de tantos anos de amizade e você vai mentir na cara dura?Não se preocupa que eu acabei me empolgando e trouxe mais comida hoje, toma aqui sua parte','Einar: Acho que não é empolgação, você quase sempre faz isso na verdade, mas bom, eu agradeço muito','Nemo: Não faço isso quase sempre… Só acontece de ser sempre que você esquece sua marmita.','Einar: então você faz mais por que sabe que eu esqueço?','Nemo: Já disse, tudo coincidência. E outra, eu também gosto de ajudar como posso, então se eu tô ajudando quando preparo seu almoço, com certeza vou continuar com isso. Aí você vai poder se concentrar em outras coisas, como dormir mais. Afinal essas suas olheiras já estão me dando pesadelos de tão grandes que elas estão!','Einar: Sei, coincidência. Mas enfim, muito obrigado, de novo. E sobre as olheiras, não é pra tanto vai.','Nemo: Claro que é, amanhã a gente vai sair depois do trabalho e você vai ver como as criancinhas saem correndo quando te veem','Einar: E desde quando que a gente vai sair que eu não to sabendo?','Nemo: Ora, desde agora, acabamos de combinar','Einar: ah… Odeio quando você faz isso.','Nemo: Se odiasse mesmo você não apareceria. Enfim, te vejo amanhã no almoço e depois do trabalho então, só lembra que já não estamos mais em 2024, então sem cigarros no nosso passeio de amanhã!','Einar: eu sei, mas nada me impede de fumar antes de ir, ninguém vai falar nada mesmo','Nemo: Claro que vão, provavelmente vão nos barrar, eu sabia que você estava chegando bem antes de você entrar só sentindo o cheiro do seu cigarro.','Einar: não é pra tanto né, sei que fica um pouco do cheiro, mas não no nível que você tá falando','Nemo: Enfim, falou, Einar, te vejo amanhã','Einar: Até, tchau.'],1,[false]),
+    reflexao: new Criador_de_falas(['Bom, o passeio é só amanhã, então acho que não tem problema fumar agora','*dá um trago','Passeio… não poder fumar é o único problema de ter que sair, mas acho que dar uma pausa por um momento não é tão ruim, afinal, é pelo Nemo.','*se mantém fumando em silêncio'],1,[false]),
+    insonia: new Criador_de_falas(['Mas que droga, não consigo pegar no sono.','*tenta dormir de novo','Eu tô tão cansado, só queria dormir um pouco…É, acho que as noites de jogatina tiveram seu preço.','*Tenta dormir até o horário que normalmente levanta.'],1,[false])
 }
 
 let Falas_Geral = {
     Falas_Segunda : {
         Falas_Banheiro : new Criador_de_falas(['estou atrasado,não posso ficar parando agora','estou atrasado,não posso ficar parando agora'],0,[false,false]),
         Falas_Quarto : new Criador_de_falas(['estou atrasado,não posso ficar parando agora','estou atrasado,não posso ficar parando agora','estou atrasado,não posso ficar parando agora','voltar a dormir?','É, acho que vou ter que ir, não consigo dormir',"e lá vamos nós para um maravilhoso dia"],0,[false,false,false,true,false,false]),
-        Falas_Cozinha : new Criador_de_falas(['estou atrasado,não posso ficar parando agora','estou atrasado,não posso ficar parando agora','estou atrasado,não posso ficar parando agora','estou atrasado,não posso ficar parando agora','Einar está atrasado.Parar para tomar cafe da manhã?','Vou pegar algo rápido na geladeira, e já aproveito para preparar minha marmita','Preciso me apressar, não dá tempo de parar para comer agora','fazer marmita'],0,[false,false,false,false,true,false,false,true]),
+        Falas_Cozinha : new Criador_de_falas(['estou atrasado,não posso ficar parando agora','estou atrasado,não posso ficar parando agora','estou atrasado,não posso ficar parando agora','estou atrasado,não posso ficar parando agora3','Einar está atrasado.Parar para tomar cafe da manhã?','Vou pegar algo rápido na geladeira, e já aproveito para preparar minha marmita','Preciso me apressar, não dá tempo de parar para comer agora','fazer marmita'],0,[false,false,false,false,true,false,false,true]),
         Falas_Sala : new Criador_de_falas(['estou atrasado,não posso ficar parando agora','fumar alguns cigarros?','jogar um pouco?','jogar um pouquinho não mata ninguem né'],0,[false,true,true,false]),
         Falas_Jardin : new Criador_de_falas([],0,[]),
         Falas_Ponto : new Criador_de_falas([],0,[]),
@@ -76,16 +87,16 @@ let Falas_Geral = {
         Falas_Fabrica_Cozinha : new Criador_de_falas([],0,[]),
     },
     Falas_Terca : {
-        Falas_Banheiro : new Criador_de_falas(['banheiro na terça'],1,[]),
-        Falas_Quarto : new Criador_de_falas(['quarto na terça'],1,[]),
-        Falas_Cozinha : new Criador_de_falas([],1,[]),
-        Falas_Sala : new Criador_de_falas([],1,[]),
+        Falas_Banheiro : new Criador_de_falas(['1','2'],1,[false,false]),
+        Falas_Quarto : new Criador_de_falas(['1','2','3','dormir?'],1,[false,false,false,true]),
+        Falas_Cozinha : new Criador_de_falas(['Fazer marmita','2','3','Parar para tomar café da manhã?','não estou com fome','ja fiz a marmita'],1,[true,false,false,true,false,false]),
+        Falas_Sala : new Criador_de_falas(['1','E lá vamos nós para mais um dia maravilhoso','Droga, não devia ter fumado, agora tenho que aguentar essa tosse maldita','Virar a noite jogando pode não ter sido uma boa, mas quem liga?','Tô acabado, mas acho que valeu a pena','jogar um pouco?'],1,[false,false,false,false,false,true]),
         Falas_Jardin : new Criador_de_falas([],1,[]),
         Falas_Ponto : new Criador_de_falas([],1,[]),
         Falas_Fabrica_Frente : new Criador_de_falas([],1,[]),
         Falas_Fabrica_Recepcao : new Criador_de_falas([],1,[]),
         Falas_Fabrica_Corredor : new Criador_de_falas([],1,[]),
-        Falas_Fabrica_Escritorio : new Criador_de_falas([],1,[]),
+        Falas_Fabrica_Escritorio : new Criador_de_falas(['trabalhar?','Vou para a copa, pelo menos não vai precisar dividir comigo dessa vez','Se eu for para a copa, o Nemo vai se sentir obrigado a dividir o almoço comigo. Melhor eu ficar por aqui mesmo.','acender um cigarro?'],1,[true,false,false,true]),
         Falas_Fabrica_Cozinha : new Criador_de_falas([],1,[]),
     },
     Falas_Quarta : {
@@ -253,14 +264,16 @@ let player = {
     Cronologia:cronologia,
     Cronoslogos:cronoslogos,
     Cronos:cronos,
+    SEMANA:semana,
 }
 function escritaText(ObjetoDeFala,xes,helpea){
     if(escritaD%delay===0){
         if (ObjetoDeFala[xes]!==undefined&&text!==ObjetoDeFala[xes]) {
             text+=ObjetoDeFala[xes][helpea]
-            console.log(ObjetoDeFala[xes][helpea])
+            console.log(ObjetoDeFala[xes])
         }
         help++
+        console.log(help)
     }
     escritaD++
 }
@@ -274,18 +287,20 @@ personagem.onload = function(){
             console.log(personagemY)
         }
 
-        quarto.animeteImg()
-        quarto_cama.animeteImg()
-        banheiro.animeteImg()
-        cozinha.animeteImg()
-        sala.animeteImg()
-        jardin.animeteImg()
-        ponto_de_onibus.animeteImg()
-        fora_fabrica.animeteImg()
-        cozinha_fabrica.animeteImg()
-        fabrica_recepcao.animeteImg()
-        corredor_fabrica.animeteImg()
-        escritorio_Einar.animeteImg()
+        if (stop) {
+            quarto.animeteImg()
+            quarto_cama.animeteImg()
+            banheiro.animeteImg()
+            cozinha.animeteImg()
+            sala.animeteImg()
+            jardin.animeteImg()
+            ponto_de_onibus.animeteImg()
+            fora_fabrica.animeteImg()
+            cozinha_fabrica.animeteImg()
+            fabrica_recepcao.animeteImg()
+            corredor_fabrica.animeteImg()
+            escritorio_Einar.animeteImg()
+        }
 
         function colliderArson(roomT,which) {
             if (room[roomT]) {
@@ -557,6 +572,9 @@ personagem.onload = function(){
             BOXes.jardin = false
             countdown = false
             setTimeout(function(){countdown = true},1000)
+            if (semana===1&&DECISIONS[8]) {
+                pilha[15]=false
+            }
         }
         if(personagemX>= y-200 && room[4]&&trasiType===0&&countdown){
             room[5] = true
@@ -697,12 +715,16 @@ personagem.onload = function(){
                 xbet++
             }
         }
-        cxt.drawImage(personagem,242*(frameX+frameM),0,242,242,personagemX,personagemY,330,330)
+        if (stop) {
+            cxt.drawImage(personagem,242*(frameX+frameM),0,242,242,personagemX,personagemY,330,330)
+        }
         if(interaction_jumper||colaboration){
             interaction = false
             chager(false)
         }
-        nemo.createImg()
+        if (stop) {
+            nemo.createImg()
+        }
         for (const a in Ponts_interest) {
             const element = Ponts_interest[a]
             if(element.room === current()){
@@ -716,23 +738,46 @@ personagem.onload = function(){
                 currentFala = null
             }
         }
-        
+
         if(currentFala!==null){
             switch (current()) {
                 //quarto
                 case 0:
+                    if (semana===1&&currentFala===0&&pilha[17]===false&&DECISIONS[12]!==true) {
+                        week().Falas_Quarto.escrita(interaction,help,3)
+                    }
                     week().Falas_Quarto.escrita(interaction,help,currentFala)
                     break;
                 //cozinha
                 case 1:
-                    if (currentFala===0) {
-                        if (DECISIONS[1]&&DECISIONS[2]===undefined) {
-                            week().Falas_Cozinha.escrita(interaction,help,7)
-                        } else {
-                            week().Falas_Cozinha.escrita(interaction,help,currentFala)
+                    if (semana===0) {
+                        if (currentFala===0) {
+                            if (DECISIONS[1]&&DECISIONS[2]===undefined) {
+                                week().Falas_Cozinha.escrita(interaction,help,7)
+                                break
+                            } else {
+                                week().Falas_Cozinha.escrita(interaction,help,currentFala)
+                                break
+                            }
                         }
-                    } else {
-                        week().Falas_Cozinha.escrita(interaction,help,currentFala)
+                    }
+                    if (semana===1) {
+
+                        if (currentFala===0&&DECISIONS[7]===undefined) {
+                            if (DECISIONS[6]) {
+                                week().Falas_Cozinha.escrita(interaction,help,currentFala)
+                                break
+                            } else {
+                                week().Falas_Cozinha.escrita(interaction,help,4)
+                                break
+                            }
+                        }if (DECISIONS[7]===true&&currentFala===0) {
+                            week().Falas_Cozinha.escrita(interaction,help,5)
+                            break
+                        }else{
+                            week().Falas_Cozinha.escrita(interaction,help,currentFala)
+                            break
+                        }
                     }
                     break;
                 //banheiro
@@ -769,14 +814,17 @@ personagem.onload = function(){
                     break;
                 //escritorio
                 case 10:
-                    if (currentFala===0&&DECISIONS[3]!==undefined&&pilha[0]) {
+                    if (currentFala===0&&DECISIONS[3]!==undefined&&pilha[0]&&semana===0) {
                         interaction = false
                         heppen.nemo = true
                         pilha[0] = false
                         break;
                     }
-                    if(currentFala===0&&DECISIONS[3]===true){
+                    if(currentFala===0&&DECISIONS[3]===true&&semana===0){
                         break;
+                    }
+                    if (currentFala===0&&DECISIONS[7]&&semana===1&&DECISIONS[8]===true) {
+                        break
                     }
                     week().Falas_Fabrica_Escritorio.escrita(interaction,help,currentFala)
                     break;
@@ -801,7 +849,7 @@ personagem.onload = function(){
                 cronoslogos[0] = true
             }
         }else{
-            if (cronoslogos[0]&&cronoslogos[1]!==true&&cronologia[1]!==true) {
+            if (cronoslogos[0]&&cronoslogos[1]!==true&&cronologia[1]!==true&&semana===0) {
                 console.log(cronologia[1]!==true)
                 if (DECISIONS[0]) {
                     week().Falas_Quarto.escrita(true,help,4)
@@ -821,14 +869,18 @@ personagem.onload = function(){
             }
         }
 
-        if (cronologia[1]&&cronoslogos[0]===false) {
+        if (cronologia[1]&&cronoslogos[0]!==true&&semana===0) {
             week().Falas_Cozinha.escrita(true,help,4)
             if (DECISIONS[1]!==undefined) {
                 cronos = true
+                help = 0
+                text = ''
+                chageMd(false)
+                escritaMD(false)
                 cronoslogos[0] = true
             }
         }else{
-            if (cronoslogos[0]&&cronoslogos[1]!==true&&DECISIONS[1]!==undefined&&cronologia[2]===false) {
+            if (cronoslogos[0]&&cronoslogos[1]!==true&&DECISIONS[1]!==undefined&&cronologia[2]===false&&semana===0) {
                 if (DECISIONS[1]) {
                     week().Falas_Cozinha.escrita(true,help,5)
                     cronos = false
@@ -846,7 +898,7 @@ personagem.onload = function(){
                 }
             }
         }
-        if(DECISIONS[3]&&heppen.chego){
+        if(DECISIONS[3]&&heppen.chego&&semana===0){
             if (DECISIONS[2]) {
                 week().Falas_Fabrica_Escritorio.escrita(interaction,help,1)
                 cronologia[2] = 0
@@ -856,7 +908,7 @@ personagem.onload = function(){
                 heppen.trabalhoS = false
             }
         }
-        if (cronologia[2]===0&&heppen.nemo) {
+        if (cronologia[2]===0&&heppen.nemo&&semana===0) {
             if (room[7]&&personagemX>=300&&heppen.nemo) {
                 if (heppen.chego) {
                     nemo_pos[0] = -40
@@ -895,7 +947,7 @@ personagem.onload = function(){
                 }
             }
         }
-        if (cronologia[2]===1&&heppen.nemo) {
+        if (cronologia[2]===1&&heppen.nemo&&semana===0) {
             if (room[10]&&heppen.nemo) {
                 if (heppen.chego) {
                     nemo_pos[0] = -40
@@ -910,7 +962,7 @@ personagem.onload = function(){
                 }
                 cronos = false
             }
-            if (heppen.batipapo) {
+            if (heppen.batipapo&&semana===0) {
                 dialogos.dialog2.escrita(true,help,dialogoHelper)
                 if (dialogoHelper<dialogos.dialog2.fala.length&&pressingM[5]&&escritaTermina&&dialogos.dialog2.fala[dialogoHelper]!==undefined) {
                     dialogoHelper++
@@ -952,10 +1004,10 @@ personagem.onload = function(){
                     setTimeout(function(){countdown = true},1000)
                     pilha[2] = false
                 }else{
-                    dialogos.fumando.escrita(true,help,dialogoHelper)
+                    dialogos.fumando.escrita(true,help,dialogoHelper-1)
                     if (pressingM[5]) {
                         console.log(dialogoHelper)
-                        if (dialogoHelper<2) {
+                        if (dialogoHelper<3) {
                             dialogoHelper++
                             help = 0
                             text = ''
@@ -975,7 +1027,7 @@ personagem.onload = function(){
                 }
             }
         }
-        if (heppen.trabalhoS===false&&pilha[1]&&current()===3&&pilha[3]) {
+        if (heppen.trabalhoS===false&&pilha[1]&&current()===3&&pilha[3]&&semana===0) {
             Falas_Geral.Falas_Segunda.Falas_Sala.escrita(true,help,1)
             cronos = false
             if (DECISIONS[4]!==undefined) {
@@ -1001,13 +1053,277 @@ personagem.onload = function(){
                     escritaMD(false)
                     dialogoHelper = 0
                     pilha[5] = false
+                    console.log('execute')
                 }
-                Falas_Geral.Falas_Segunda.Falas_Sala.escrita(true,help,3)
+                /*Falas_Geral.Falas_Segunda.Falas_Sala.escrita(true,help,3)
                 if (pressingM[5]) {
                     semana === 1
                     cronos = true
                     personagemX,personagemY = 295,289
                     pilha[4] = false
+                }*/
+               personagemX = 295
+               personagemY = 289
+               semana = 1
+               cronos = true
+               cronologia[4] = true
+            }
+        }
+        if (BOXes.sala&&semana===1&&cronologia[4]) {
+            cronos = false
+            if (DECISIONS[4]&&DECISIONS[5]) {
+                week().Falas_Sala.escrita(true,help,1)
+            }else{
+                if (DECISIONS[4]) {
+                    week().Falas_Sala.escrita(true,help,2)
+                }
+                if (DECISIONS[5]) {
+                    week().Falas_Sala.escrita(true,help,3)
+                }
+            }
+            if (DECISIONS[4]!==true&&DECISIONS[5]!==true) {
+                week().Falas_Sala.escrita(true,help,4)
+            }
+            if (pressingM[5]) {
+                help = 0
+                text = ''
+                chageMd(false)
+                escritaMD(false)
+                dialogoHelper = 0
+                cronos = true
+                cronologia[4] = false
+                pressingM[5] = false
+            }
+        }
+        if (BOXes.cozinha&&pilha[6]&&semana===1) {
+            cronos = false
+            week().Falas_Cozinha.escrita(true,help,3)
+            if (DECISIONS[6]!==undefined) {
+                pilha[6] = false
+                help = 0
+                text = ''
+                chageMd(false)
+                escritaMD(false)
+                dialogoHelper = 0
+                cronos = true
+            }
+        }
+        if (semana===1&&DECISIONS[8]===true&&pilha[7]) {
+            cronos = false
+            if (DECISIONS[7]) {
+                week().Falas_Fabrica_Escritorio.escrita(true,help,1)
+            }else{
+                week().Falas_Fabrica_Escritorio.escrita(true,help,2)
+            }
+            if (pressingM[5]) {
+                help = 0
+                text = ''
+                chageMd(false)
+                escritaMD(false)
+                dialogoHelper = 0
+                cronos = true
+                pressingM[5] = false
+                pilha[7] = false
+            }
+        }
+        if (semana===1&&DECISIONS[8]===true&&pilha[7]===false&&pilha[11]) {
+            if (pilha[8]) {
+                nemo_pos[0] = -40
+                nemo_pos[1] = personagemY
+                pilha[8] = false
+            }
+            if (DECISIONS[7]===false) {
+                cronos = false
+                if (pilha[10]) {
+                    if (nemo_pos[0]+148<personagemX) {
+                        nemo_pos[0]+=2
+                        nemo.NPC(7,3)
+                    }else{
+                        nemo.NPC(2,0)
+                        pilha[9] = false
+                    }
+                }
+                if (pilha[9]===false&&pilha[10]) {
+                    dialogos.dialog4.escrita(true,help,dialogoHelper)
+                    if (dialogoHelper<dialogos.dialog4.fala.length&&pressingM[5]&&escritaTermina&&dialogos.dialog4.fala[dialogoHelper]!==undefined) {
+                        dialogoHelper++
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                    }else{
+                        if (pressingM[5]&&dialogoHelper>=dialogos.dialog4.fala.length) {
+                            help = 0
+                            text = ''
+                            chageMd(false)
+                            escritaMD(false)
+                            dialogoHelper = 0
+                            pilha[10] = false
+                        }
+                    }
+                }
+            }else{
+                if (BOXes.cozinhaFabrica&&personagemX>=340) {
+                    cronos = false
+                    if (pilha[10]) {
+                        if (nemo_pos[0]+148<personagemX) {
+                            nemo_pos[0]+=2
+                            nemo.NPC(7,3)
+                        }else{
+                            nemo.NPC(2,0)
+                            pilha[9] = false
+                        }
+                    }
+                    if (pilha[9]===false&&pilha[10]) {
+                        dialogos.dialog3.escrita(true,help,dialogoHelper)
+                        if (dialogoHelper<dialogos.dialog3.fala.length&&pressingM[5]&&escritaTermina&&dialogos.dialog3.fala[dialogoHelper]!==undefined) {
+                            dialogoHelper++
+                            help = 0
+                            text = ''
+                            chageMd(false)
+                            escritaMD(false)
+                        }else{
+                            if (pressingM[5]&&dialogoHelper>=dialogos.dialog3.fala.length) {
+                                help = 0
+                                text = ''
+                                chageMd(false)
+                                escritaMD(false)
+                                dialogoHelper = 0
+                                pilha[10] = false
+                            }
+                        }
+                    }
+                }
+            }if (pilha[10]===false) {
+                if (nemo_pos[0]>-30) {
+                    nemo_pos[0]-=2
+                    nemo.NPC(26,21)
+                }else{
+                    cronos = true
+                }
+            }
+        }
+        if (pilha[10]===false&&semana===1&&DECISIONS[8]===true&&pilha[15]===false) {
+            pilha[11]= false
+            if(DECISIONS[9]===undefined){
+                cronos=false
+                week().Falas_Fabrica_Escritorio.escrita(true,help,3)
+            }else{
+                if (pilha[16]) {
+                    help = 0
+                    text = ''
+                    chageMd(false)
+                    escritaMD(false)
+                    dialogoHelper = 0
+                    pilha[16] = false
+                }
+                if (DECISIONS[9]) {
+                    pilha[12]=false
+                }else{
+                    cronos=true
+                }
+            }
+            if (DECISIONS[9]===false&&DECISIONS[10]===undefined&&BOXes.quarto) {
+                cronos=false
+                week().Falas_Fabrica_Escritorio.escrita(true,help,3)
+            }else{
+                if (DECISIONS[9]===false&&DECISIONS[10]!==undefined&&BOXes.quarto) {
+                    help = 0
+                    text = ''
+                    chageMd(false)
+                    escritaMD(false)
+                    dialogoHelper = 0
+                }
+                if (DECISIONS[10]===true) {
+                    pilha[12]=false
+                }else{
+                    help = 0
+                    text = ''
+                    chageMd(false)
+                    escritaMD(false)
+                    dialogoHelper = 0
+                    room[3] = true
+                    room[0] = false
+                    BOXes.sala = true
+                    BOXes.quarto = false
+                    countdown = false
+                    setTimeout(function(){countdown = true},1000)
+                    personagemX = 295
+                    personagemY = 289
+                    semana = 2
+                    cronos=true
+                }
+            }
+            if (pilha[12]===false) {
+                if (DECISIONS[9]===true) {
+                    room[4] = true
+                    room[3] = false
+                    personagemX = -30
+                    BOXes.sala = false
+                    BOXes.jardin = true
+                    countdown = false
+                    setTimeout(function(){countdown = true},1000)
+                    cronos=false
+                    if (pilha[13]===false&&pilha[14]) {
+                        dialogos.reflexao.escrita(true,help,dialogoHelper)
+                        if (dialogoHelper<dialogos.reflexao.fala.length&&pressingM[5]&&escritaTermina&&dialogos.reflexao.fala[dialogoHelper]!==undefined) {
+                            dialogoHelper++
+                            help = 0
+                            text = ''
+                            chageMd(false)
+                            escritaMD(false)
+                        }else{
+                            if (pressingM[5]&&dialogoHelper>=dialogos.reflexao.fala.length) {
+                                help = 0
+                                text = ''
+                                chageMd(false)
+                                escritaMD(false)
+                                dialogoHelper = 0
+                                pilha[14] = false
+                            }
+                        }
+                    }
+                }                
+            }
+        }
+
+        if (pilha[14]===false&&semana===1&&BOXes.sala) {
+            cronos = false
+            if (DECISIONS[11]===undefined) {
+                week().Falas_Sala.escrita(true,help,5)
+            }if (DECISIONS[11]=true) {
+                help = 0
+                text = ''
+                chageMd(false)
+                escritaMD(false)
+                dialogoHelper = 0
+                pilha[5] = false
+                personagemX = 295
+                personagemY = 289
+                semana = 2
+                cronos=true
+            }else{
+                pilha[17]=false
+            }
+        }
+        if (DECISIONS[12]===true&&semana===1) {
+            cronos=false
+            dialogos.insonia.escrita(true,help,dialogoHelper)
+            if (dialogoHelper<dialogos.insonia.fala.length&&pressingM[5]&&escritaTermina&&dialogos.insonia.fala[dialogoHelper]!==undefined) {
+                dialogoHelper++
+                help = 0
+                text = ''
+                chageMd(false)
+                escritaMD(false)
+            }else{
+                if (pressingM[5]&&dialogoHelper>=dialogos.insonia.fala.length) {
+                    help = 0
+                    text = ''
+                    chageMd(false)
+                    escritaMD(false)
+                    dialogoHelper = 0
+                    semana = 2
+                    cronos=true
                 }
             }
         }
@@ -1021,13 +1337,24 @@ personagem.onload = function(){
         player.Cronos = cronos
         player.Cronoslogos = cronoslogos
         player.pilhas = pilha
+        player.SEMANA = semana
         localStorage.setItem('player',JSON.stringify(player))
         if (c) {
             console.log(cronologia)
             console.log(heppen)
             console.log(DECISIONS)
+            console.log(pilha)
             c = false
         }
+        /*if (semanaes_trick[0]===false&&semana===0) {
+            stop = false
+            semanaes.segunda.createImg()
+            semanaes.segunda.NPC(0,34,true)
+            if (animation_end) {
+                semanaes_trick[0] = true
+                stop = true
+            }
+        }*/
     }
     let introHelper = 0
     let falseFrame = 0
