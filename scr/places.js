@@ -7,23 +7,23 @@ let x = 1360
 let helperN= 1
 let ani = 0
 let animation_end = false
+let anend = function(tyz){animation_end=tyz}
 if(localStorage.getItem('player')!== null){
     room = JSON.parse(localStorage.getItem('player')).ro
 }
 class Places {
-    constructor(src,ro,dx,dy,w,h,nFrames,sizeX,sizeY) {
+    constructor(src,ro,dx,dy,w,h,nFrames,sizeX,sizeY,telas) {
         this.src = src
         this.image = new Image()
         this.ro = ro
         this.dx = dx
         this.dy = dy 
-        if (w!==0&&h!==0) {
-            this.w = w
-            this.h = h
-        }
+        this.w = w
+        this.h = h
         this.nFrames = nFrames
         this.sizeX = sizeX
         this.sizeY = sizeY
+        this.telas = telas
     }
     createImg(){
         this.image.onload = () => {
@@ -68,8 +68,26 @@ class Places {
         }
         cxt.drawImage(this.image,this.sizeX*(helperN),0,this.sizeX,this.sizeY,this.dx,this.dy,this.w,this.h)
     }
+    tells(typer){
+            if (this.sizeX===undefined) {
+                cxt.drawImage(this.image,this.dx,this.dy,this.w,this.h)
+            } else {
+                cxt.drawImage(this.image,this.sizeX*(helperN),0,this.sizeX,this.sizeY,this.dx,this.dy,this.w*3,this.h*3)
+                if (ani%4===0) {
+                    if (helperN<=typer) {
+                        helperN++
+                        ani++
+                    } else {
+                        helperN = 0
+                        ani++
+                        animation_end = true
+                    }
+                }else{
+                    ani++
+                }
+            }
+    }
 }
-
 let quarto = new Places('images/quarto.png',0,0,0,x,y)
 let quarto_cama= new Places('images/cama_quarto.png',0,0,0,x,y)
 let cozinha = new Places('images/cozinha.png',1,0,0,x,y)
@@ -82,7 +100,14 @@ let cozinha_fabrica = new Places('images/cozinha_fabrica.png',7,0,0,x,y)
 let fabrica_recepcao = new Places('images/fabrica_recepcao.png',8,0,0,x,y)
 let corredor_fabrica = new Places('images/corredor_fabrica.png',9,0,0,x,y)
 let escritorio_Einar = new Places('images/escritorio.png',10,0,0,x,y)
+let start = new Places('images/start.png',0,500,450,400,225)
+let Acidia = new Places('images/ACIDIA.png',0,0,0,x,y,undefined,undefined,undefined,undefined)
+let segunda = new Places('images/segunda.png',0,0,0,x,y,34,x,y)
+let tersa = new Places('images/terça.png',0,0,0,x,y,34,x,y)
 
+segunda.createImg()
+Acidia.createImg()
+start.createImg()
 quarto.createImg()
 cozinha.createImg()
 banheiro.createImg()
@@ -96,4 +121,12 @@ corredor_fabrica.createImg()
 quarto_cama.createImg()
 escritorio_Einar.createImg()
 
-export {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica,quarto_cama,escritorio_Einar,Places,animation_end}
+export {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica,quarto_cama,escritorio_Einar,Places,animation_end,start,Acidia,anend,segunda,tersa}
+
+function sad() {
+    let ks = new Image()
+    ks.onload = () => {
+        cxt.drawImage(ks, 0, 0); console.log('test')
+    }
+    ks.src = 'images/segunda.png'
+}

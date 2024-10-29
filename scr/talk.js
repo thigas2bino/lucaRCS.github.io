@@ -1,6 +1,7 @@
 import { HitBoxes } from "./Colision.js"
 import { interaction, x,y } from "./main.js"
-import {text,escritaText,pressingM} from './main.js'
+import {text,escritaText,pressingM,star} from './main.js'
+import { start } from "./places.js"
 //decisions
 let DECISIONS = []
 if(localStorage.getItem('player')!== null){
@@ -9,7 +10,7 @@ if(localStorage.getItem('player')!== null){
 
 const canvas = document.getElementById('canva1')
 const cxt = canvas.getContext('2d')
-const maxWidth = 490
+const maxWidth = 750
 const lineHeight = 30
 let xPos = 350
 let yPos = 650
@@ -52,8 +53,8 @@ class Criador_de_falas{
         this.sino = SINO
     }
     escrita(but,helper,x){
-        if(but){
-            cxt.drawImage(caixa,300,600)
+        if(but&&star===false){
+            cxt.drawImage(caixa,300,600,800,250)
             cxt.fillStyle = 'white'
             cxt.font = '23px comic Sans'
             if(this.fala[x]===undefined){
@@ -71,7 +72,7 @@ class Criador_de_falas{
                 }
             }
            wrapText(cxt, text, xPos, yPos, maxWidth, lineHeight);
-            if (choice) {
+            if (choice&&star===false) {
                 cxt.fillText('sim                                                      não',370,720)
                 if(yes){
                     cxt.fillText('*',358,720)

@@ -1,12 +1,24 @@
 const canvas = document.getElementById('canva1')
 const cxt = canvas.getContext('2d')
-import {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica, quarto_cama, escritorio_Einar,Places, animation_end} from "./places.js"
+import {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica, quarto_cama, escritorio_Einar,Places, animation_end,start,Acidia, segunda, anend, tersa} from "./places.js"
 import { HitBoxes } from "./Colision.js"
 import { Criador_de_falas,DECISIONS,chageMd,chager,choice,colaboration, escritaMD, escritaTermina} from "./talk.js"
 
 let currentFala
 
 
+
+let star = true
+let played = [false,false,false,false,false,false,false]
+let temp = false
+if(localStorage.getItem('player')!== null){
+    if (JSON.parse(localStorage.getItem('player')).star!==undefined) {
+        star = JSON.parse(localStorage.getItem('player')).stare
+    }
+    if (JSON.parse(localStorage.getItem('player')).played!==undefined) {
+        played = JSON.parse(localStorage.getItem('player')).playede
+    }
+}
 let c = false
 
 let pilha = [true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true]
@@ -191,6 +203,15 @@ let place = false
 export {x,y}
 canvas.height = x-20
 canvas.width = y-20
+const clicking = document.addEventListener('click',function (event) {
+    if (event.clientX>=500&&event.clientX<=900&&played[0]===false) {
+        if (event.clientY>=400&&event.clientY<=525) {
+            played[0] = true
+            star = false
+            temp = true
+        }
+    }
+})
 const pressin = document.addEventListener('keydown',function(event){
     if(event.key === 'd'){
         pressingM[1] = true
@@ -265,6 +286,8 @@ let player = {
     Cronoslogos:cronoslogos,
     Cronos:cronos,
     SEMANA:semana,
+    stare:star,
+    playede:played,
 }
 function escritaText(ObjetoDeFala,xes,helpea){
     if(escritaD%delay===0){
@@ -277,8 +300,9 @@ function escritaText(ObjetoDeFala,xes,helpea){
     }
     escritaD++
 }
-export{text,escritaText,pressingM,interaction}
+export{text,escritaText,pressingM,interaction,star}
 personagem.onload = function(){
+
     function animation(){
         cxt.clearRect(0,0,y,x)
         nemo = new Places('images/nemo-andando.png',10,nemo_pos[0],nemo_pos[1],330,330,27,240,240)
@@ -287,7 +311,7 @@ personagem.onload = function(){
             console.log(personagemY)
         }
 
-        if (stop) {
+        if (star===false) {
             quarto.animeteImg()
             quarto_cama.animeteImg()
             banheiro.animeteImg()
@@ -301,7 +325,36 @@ personagem.onload = function(){
             corredor_fabrica.animeteImg()
             escritorio_Einar.animeteImg()
         }
-
+        if (star&&played[0]===false) {
+            if (semana===0) {
+                Acidia.animeteImg()
+                start.animeteImg()
+            }
+        }
+        if (semana===0&&played[1]===false&&temp) {
+            star = true
+            segunda.createImg()
+            if (played[0]===true) {
+                segunda.tells(33)
+                if (animation_end) {
+                    played[1] = true
+                    anend(false)
+                    star = false
+                }
+            }
+        }
+        if (semana===1&&played[2]===false) {
+            star = true
+            tersa.createImg()
+            if (played[1]) {
+                tersa.tells(33)
+                if (animation_end) {
+                    played[2] = true
+                    anend(false)
+                    star = false
+                }
+            }
+        }
         function colliderArson(roomT,which) {
             if (room[roomT]) {
                 switch (HitboxInfo.Sider(which)) {
@@ -715,7 +768,7 @@ personagem.onload = function(){
                 xbet++
             }
         }
-        if (stop) {
+        if (star===false) {
             cxt.drawImage(personagem,242*(frameX+frameM),0,242,242,personagemX,personagemY,330,330)
         }
         if(interaction_jumper||colaboration){
@@ -1067,6 +1120,7 @@ personagem.onload = function(){
                semana = 1
                cronos = true
                cronologia[4] = true
+               played[1]=true
             }
         }
         if (BOXes.sala&&semana===1&&cronologia[4]) {
@@ -1338,12 +1392,15 @@ personagem.onload = function(){
         player.Cronoslogos = cronoslogos
         player.pilhas = pilha
         player.SEMANA = semana
+        player.stare = star
+        player.playede = played
         localStorage.setItem('player',JSON.stringify(player))
         if (c) {
             console.log(cronologia)
             console.log(heppen)
             console.log(DECISIONS)
             console.log(pilha)
+            console.log(semana)
             c = false
         }
         /*if (semanaes_trick[0]===false&&semana===0) {
