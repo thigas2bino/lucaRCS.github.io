@@ -3,11 +3,19 @@ import { interaction, x,y } from "./main.js"
 import {text,escritaText,pressingM,star} from './main.js'
 import { start } from "./places.js"
 //decisions
-let DECISIONS = []
-if(localStorage.getItem('player')!== null){
-    DECISIONS = JSON.parse(localStorage.getItem('player')).decisions
+let THECISIONS = {
+    dec: [],
+    qua: [],
+    qui: [],
+    sex: []
 }
-
+let DECISIONS = THECISIONS.dec
+if(localStorage.getItem('player')!== null){
+    DECISIONS = JSON.parse(localStorage.getItem('player')).decisions.dec
+    THECISIONS = JSON.parse(localStorage.getItem('player')).decisions
+}
+let chagf = function(tyz,yez){DECISIONS[yez]=tyz}
+let TH = (k,a,b)=>{THECISIONS[k][a]=b}
 const canvas = document.getElementById('canva1')
 const cxt = canvas.getContext('2d')
 const maxWidth = 750
@@ -16,6 +24,7 @@ let xPos = 350
 let yPos = 650
 let choice = false
 let yes = false
+let check = false
 
 let escritaTermina = false
 
@@ -52,8 +61,9 @@ class Criador_de_falas{
         this.semana = semana
         this.sino = SINO
     }
-    escrita(but,helper,x){
+    escrita(but,helper,x,tell=false){
         if(but&&star===false){
+            check = true
             cxt.drawImage(caixa,300,600,800,250)
             cxt.fillStyle = 'white'
             cxt.font = '23px comic Sans'
@@ -85,31 +95,42 @@ class Criador_de_falas{
                 if(pressingM[0]){
                     yes = true
                 }
-                if (pressingM[5]) {
-                    if (DECISIONS[3]!==true&&DECISIONS[2]!==undefined) {
-                        DECISIONS[3] = yes
-                    } else {
-                        if (DECISIONS[8]!==undefined&&DECISIONS[8]===false) {
-                            DECISIONS[8] = yes
-                        }else{
-                            DECISIONS.push(yes)
+                if (pressingM[5]&&tell===false) {
+                    if (this.semana===1||this.semana===0) {
+                        if (DECISIONS[3]!==true&&DECISIONS[2]!==undefined) {
+                            DECISIONS[3] = yes
+                        } else {
+                            if (DECISIONS[8]!==undefined&&DECISIONS[8]===false) {
+                                DECISIONS[8] = yes
+                            }else{
+                                DECISIONS.push(yes)
+                            }
+                        }
+                        if (DECISIONS[1]===false) {
+                            DECISIONS[2]=false
+                        }
+                        if (DECISIONS[6]===false) {
+                            DECISIONS[7]=false
+                        }
+                        if (DECISIONS[10]===false) {
+                            DECISIONS[11]=true
+                        }if (DECISIONS[11]===true) {
+                            DECISIONS[12]=false
                         }
                     }
-                    if (DECISIONS[1]===false) {
-                        DECISIONS[2]=false
-                    }
-                    if (DECISIONS[6]===false) {
-                        DECISIONS[7]=false
-                    }
-                    if (DECISIONS[10]===false) {
-                        DECISIONS[11]=true
-                    }if (DECISIONS[11]===true) {
-                        DECISIONS[12]=false
-                    }
+                if (this.semana===2) {
+                    THECISIONS.qua.push(yes)
+                    console.log('test')
+                }
                     choice = false
                     colaboration = true
                     escritaTermina = false
-                    console.log(DECISIONS)
+                }else{
+                    if (tell===true&&pressingM[5]) {
+                        choice = false
+                        colaboration = true
+                        escritaTermina = false
+                    }
                 }
             }
             return true
@@ -119,4 +140,4 @@ class Criador_de_falas{
 }
 let chageMd = (bool) =>{choice = bool}
 let escritaMD = (bool) =>{escritaTermina = bool}
-export {Criador_de_falas,colaboration,chager,choice,chageMd,DECISIONS,escritaTermina,escritaMD}
+export {Criador_de_falas,TH,colaboration,chager,choice,chageMd,DECISIONS,escritaTermina,escritaMD,check,chagf,THECISIONS}

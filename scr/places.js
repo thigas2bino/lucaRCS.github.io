@@ -33,8 +33,11 @@ class Places {
         }
         this.image.src = this.src
     }
-    animeteImg(){
+    animeteImg(yes){
         if(room[this.ro]){
+            cxt.drawImage(this.image,this.dx,this.dy,this.w,this.h)
+        }
+        if (yes===true) {
             cxt.drawImage(this.image,this.dx,this.dy,this.w,this.h)
         }
     }
@@ -72,8 +75,8 @@ class Places {
             if (this.sizeX===undefined) {
                 cxt.drawImage(this.image,this.dx,this.dy,this.w,this.h)
             } else {
-                cxt.drawImage(this.image,this.sizeX*(helperN),0,this.sizeX,this.sizeY,this.dx,this.dy,this.w*3,this.h*3)
-                if (ani%4===0) {
+                cxt.drawImage(this.image,this.sizeX*(helperN),0,this.sizeX,this.sizeY,this.dx,this.dy,this.w,this.h)
+                if (ani%7===0) {
                     if (helperN<=typer) {
                         helperN++
                         ani++
@@ -102,9 +105,11 @@ let corredor_fabrica = new Places('images/corredor_fabrica.png',9,0,0,x,y)
 let escritorio_Einar = new Places('images/escritorio.png',10,0,0,x,y)
 let start = new Places('images/start.png',0,500,450,400,225)
 let Acidia = new Places('images/ACIDIA.png',0,0,0,x,y,undefined,undefined,undefined,undefined)
-let segunda = new Places('images/segunda.png',0,0,0,x,y,34,x,y)
-let tersa = new Places('images/terça.png',0,0,0,x,y,34,x,y)
+let segunda = new Places('images/segunda.png',0,0,0,544,306,34,544,306)
+let tersa = new Places('images/terça.png',0,0,0,544,306,25,544,306)
+let Einar = new Places('images/EINAR.jpeg',0,300,300,100,100)
 
+Einar.createImg()
 segunda.createImg()
 Acidia.createImg()
 start.createImg()
@@ -121,12 +126,5 @@ corredor_fabrica.createImg()
 quarto_cama.createImg()
 escritorio_Einar.createImg()
 
-export {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica,quarto_cama,escritorio_Einar,Places,animation_end,start,Acidia,anend,segunda,tersa}
+export {Einar,room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica,quarto_cama,escritorio_Einar,Places,animation_end,start,Acidia,anend,segunda,tersa}
 
-function sad() {
-    let ks = new Image()
-    ks.onload = () => {
-        cxt.drawImage(ks, 0, 0); console.log('test')
-    }
-    ks.src = 'images/segunda.png'
-}
