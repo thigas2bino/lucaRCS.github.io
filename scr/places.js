@@ -1,7 +1,7 @@
 const canvas = document.getElementById('canva1')
 const cxt = canvas.getContext('2d')
-//quarto,cozinha,banheiro,sala,jardin,ponto,fora fabrica,cozinha fabrica,fabrica recepção,corredo fabrica,escritorio einar
-let room = [true,false,false,false,false,false,false,false,false,false,false]
+//quarto,cozinha,banheiro,sala,jardin,ponto,fora fabrica,cozinha fabrica,fabrica recepção,corredo fabrica,escritorio einar,HospitalFrente-Recepcao-Corredor,Hospital quarto
+let room = [true,false,false,false,false,false,false,false,false,false,false,false,false,false,false]
 let y = 765
 let x = 1360
 let helperN= 1
@@ -103,12 +103,21 @@ let cozinha_fabrica = new Places('images/cozinha_fabrica.png',7,0,0,x,y)
 let fabrica_recepcao = new Places('images/fabrica_recepcao.png',8,0,0,x,y)
 let corredor_fabrica = new Places('images/corredor_fabrica.png',9,0,0,x,y)
 let escritorio_Einar = new Places('images/escritorio.png',10,0,0,x,y)
+let Hospital_Frente = new Places('images/HospitalFrente.png',11,0,0,x,y)
+let Hospital_Recepcao = new Places('images/HospitalRecepção.png',12,0,0,x,y)
+let Hospital_Corredor = new Places('images/HospitalCorredor.png',13,0,0,x,y)
+let Hospital_Quarto = new Places('images/HospitalQuarto.png',14,0,0,x,y)
 let start = new Places('images/start.png',0,500,450,400,225)
 let Acidia = new Places('images/ACIDIA.png',0,0,0,x,y,undefined,undefined,undefined,undefined)
 let segunda = new Places('images/segunda.png',0,0,0,544,306,34,544,306)
 let tersa = new Places('images/terça.png',0,0,0,544,306,25,544,306)
+let Quarta = new Places('images/quarta.png',0,0,0,544,306,22,544,306)
+let Quinta = new Places('images/Quinta.png',0,0,0,544,306,21,544,306)
 let Einar = new Places('images/EINAR.jpeg',0,300,300,100,100)
 
+
+Quarta.createImg()
+Quinta.createImg()
 Einar.createImg()
 segunda.createImg()
 Acidia.createImg()
@@ -125,6 +134,10 @@ fabrica_recepcao.createImg()
 corredor_fabrica.createImg()
 quarto_cama.createImg()
 escritorio_Einar.createImg()
+Hospital_Corredor.createImg()
+Hospital_Frente.createImg()
+Hospital_Quarto.createImg()
+Hospital_Recepcao.createImg()
 
-export {Einar,room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica,quarto_cama,escritorio_Einar,Places,animation_end,start,Acidia,anend,segunda,tersa}
+export {Einar,Quarta,Quinta,room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica,quarto_cama,escritorio_Einar,Places,animation_end,start,Acidia,anend,segunda,tersa,Hospital_Corredor,Hospital_Frente,Hospital_Quarto,Hospital_Recepcao}
 

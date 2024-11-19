@@ -61,7 +61,7 @@ class Criador_de_falas{
         this.semana = semana
         this.sino = SINO
     }
-    escrita(but,helper,x,tell=false){
+    escrita(but,helper,x,tell=false,canF=true){
         if(but&&star===false){
             check = true
             cxt.drawImage(caixa,300,600,800,250)
@@ -83,11 +83,11 @@ class Criador_de_falas{
             }
            wrapText(cxt, text, xPos, yPos, maxWidth, lineHeight);
             if (choice&&star===false) {
-                cxt.fillText('sim                                                      não',370,720)
+                cxt.fillText('sim                                                      não',370,730)
                 if(yes){
-                    cxt.fillText('*',358,720)
+                    cxt.fillText('*',358,730)
                 }else{
-                    cxt.fillText('*',700,720)
+                    cxt.fillText('*',700,730)
                 }
                 if (pressingM[1]) {
                     yes = false
@@ -118,10 +118,21 @@ class Criador_de_falas{
                             DECISIONS[12]=false
                         }
                     }
-                if (this.semana===2) {
-                    THECISIONS.qua.push(yes)
-                    console.log('test')
-                }
+                    if (this.semana===2&&tell===false) {
+                        if (canF) {
+                            THECISIONS.qua.push(yes)
+                        }else{
+                            if (yes===true) {
+                                THECISIONS.qua.push(yes)
+                            }
+                        }
+                    }
+                    if (this.semana===3&&tell===false) {
+                        THECISIONS.qui.push(yes)
+                    }
+                    if (this.semana===4&&tell===false) {
+                        THECISIONS.sex.push(yes)
+                    }
                     choice = false
                     colaboration = true
                     escritaTermina = false

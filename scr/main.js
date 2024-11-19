@@ -1,13 +1,13 @@
 const canvas = document.getElementById('canva1')
 const cxt = canvas.getContext('2d')
-import {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica, quarto_cama, escritorio_Einar,Places, animation_end,start,Acidia, segunda, anend, tersa, Einar} from "./places.js"
+import {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica, quarto_cama, escritorio_Einar,Places, animation_end,start,Acidia, segunda, anend, tersa, Einar, Quarta, Quinta, Hospital_Corredor, Hospital_Frente, Hospital_Quarto, Hospital_Recepcao} from "./places.js"
 import { HitBoxes } from "./Colision.js"
 import { Criador_de_falas,DECISIONS,TH,THECISIONS,chageMd,chager,chagf,check,choice,colaboration, escritaMD, escritaTermina} from "./talk.js"
 //debug
 const a = (c) => {console.log(c)}
 
 let currentFala
-
+let TrabHosp = true
 let onibus = false
 
 let star = true
@@ -24,6 +24,7 @@ if(localStorage.getItem('player')!== null){
 played[0]=false
 star = true 
 let c = false
+let k = true
 
 let pilha = [true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true]
 if(localStorage.getItem('player')!== null){
@@ -82,9 +83,22 @@ let dialogos = {
     dialog4: new Criador_de_falas(['Nemo: E aí, Einar, não te vi hoje na cozinha hoje, o que aconteceu?','Einar: só esqueci a marmita, mas acho que consigo aguentar, não tô com tanta fome.','Nemo: Cara, é sério isso? Depois de tantos anos de amizade e você vai mentir na cara dura?Não se preocupa que eu acabei me empolgando e trouxe mais comida hoje, toma aqui sua parte','Einar: Acho que não é empolgação, você quase sempre faz isso na verdade, mas bom, eu agradeço muito','Nemo: Não faço isso quase sempre… Só acontece de ser sempre que você esquece sua marmita.','Einar: então você faz mais por que sabe que eu esqueço?','Nemo: Já disse, tudo coincidência. E outra, eu também gosto de ajudar como posso, então se eu tô ajudando quando preparo seu almoço, com certeza vou continuar com isso. Aí você vai poder se concentrar em outras coisas, como dormir mais. Afinal essas suas olheiras já estão me dando pesadelos de tão grandes que elas estão!','Einar: Sei, coincidência. Mas enfim, muito obrigado, de novo. E sobre as olheiras, não é pra tanto vai.','Nemo: Claro que é, amanhã a gente vai sair depois do trabalho e você vai ver como as criancinhas saem correndo quando te veem','Einar: E desde quando que a gente vai sair que eu não to sabendo?','Nemo: Ora, desde agora, acabamos de combinar','Einar: ah… Odeio quando você faz isso.','Nemo: Se odiasse mesmo você não apareceria. Enfim, te vejo amanhã no almoço e depois do trabalho então, só lembra que já não estamos mais em 2024, então sem cigarros no nosso passeio de amanhã!','Einar: eu sei, mas nada me impede de fumar antes de ir, ninguém vai falar nada mesmo','Nemo: Claro que vão, provavelmente vão nos barrar, eu sabia que você estava chegando bem antes de você entrar só sentindo o cheiro do seu cigarro.','Einar: não é pra tanto né, sei que fica um pouco do cheiro, mas não no nível que você tá falando','Nemo: Enfim, falou, Einar, te vejo amanhã','Einar: Até, tchau.'],1,[false]),
     reflexao: new Criador_de_falas(['Bom, o passeio é só amanhã, então acho que não tem problema fumar agora','*dá um trago','Passeio… não poder fumar é o único problema de ter que sair, mas acho que dar uma pausa por um momento não é tão ruim, afinal, é pelo Nemo.','*se mantém fumando em silêncio'],1,[false]),
     insonia: new Criador_de_falas(['Mas que droga, não consigo pegar no sono.','*tenta dormir de novo','Eu tô tão cansado, só queria dormir um pouco…É, acho que as noites de jogatina tiveram seu preço.','*Tenta dormir até o horário que normalmente levanta.'],1,[false]),
-    dialog5: new Criador_de_falas(['Não quero que o Nemo saiba que estou mal e fique preocupado. Mas se eu ficar aqui, ele vai vir me encontrar de qualquer forma','Nemo: Boa tarde, Einar, como você está? Fez muitas coisas produtivas hoje?','Einar: Ah, Nemo. Boa tarde, eu tô o mesmo de sempre, até que tá sendo um dia normal, consegui fazer algumas coisas.','Nemo: Ohh que bom que seu dia tá sendo tão produtivo quanto o meu. Inclusive, mudando completamente de assunto, você viu que essa semana a máxima não vai ficar abaixo de 40 graus?','Einar: Acho que não vi, mas bom, pelo menos a gente tem ar-condicionado aqui na fábrica.','Nemo: Meu Deus, Einar, você precisa se noticiar mais. Não é todo mundo que tem um ar-condicionado em casa, além de que não é meramente uma questão de sentir calor ou não. Tudo tem causa e consequência.','Einar: Ah, Nemo, vai se ferrar vai.','Nemo: Seu chico sin educación, às vezes esqueço que você é bem cabeça oca','Einar: Sem educação? É o que?','Nemo:  Esquece isso. Está tudo certo para hoje?','Einar: Ah, já ia me esquecendo, hoje vou estar ocupado depois do trabalho e não vou poder ir, foi mal.','Nemo: Aconteceu alguma coisa?','Einar: Tava pensando em ir ao médico','Nemo: Ahh, então é justificável você não ir, mas que bom finalmente você está se cuidando.','Einar: Sim, com certeza','Nemo: Boa consulta meu amigo, adeus','Einar: Obrigado, e até amanhã',],2,[false]),
-    dialog51: new Criador_de_falas(['Não quero que o Nemo saiba que estou mal e fique preocupado. Mas se eu ficar aqui, ele vai vir me encontrar de qualquer forma','Nemo: Boa tarde, Einar, como você está? Fez muitas coisas produtivas hoje?','Einar: Ah, Nemo. Boa tarde, eu tô o mesmo de sempre, até que tá sendo um dia normal, consegui fazer algumas coisas.','Nemo: Ohh que bom que seu dia tá sendo tão produtivo quanto o meu.Inclusive, mudando completamente de assunto, você viu que essa semana a máxima não vai ficar abaixo de 40 graus?','Einar: Acho que não vi, mas bom, pelo menos a gente tem ar-condicionado aqui na fábrica.','Nemo: Meu Deus, Einar, você precisa se noticiar mais. Não é todo mundo que tem um ar-condicionado em casa, além de que não é meramente uma questão de sentir calor ou não. Tudo tem causa e consequência.','Einar: Ah, Nemo, vai se ferrar vai.','Nemo: Seu chico sin educación, às vezes esqueço que você é bem cabeça oca','Einar: Sem educação? É o que?','Nemo:  Esquece isso. Está tudo certo para hoje?','Einar: Ah, já ia me esquecendo, hoje vou estar ocupado depois do trabalho e não vou poder ir, foi mal.','Nemo: Aconteceu alguma coisa?','Einar: Tava pensando em  ir pra casa e descansar ou dormir um pouco, não tô muito bem.','Nemo: Ahh, então é justificável você não ir, mas que bom finalmente você está se cuidando.','Einar: Sim, com certeza',' bom trabalho meu amigo, adeus','Einar: Obrigado, e até amanhã'],2,[false]),
-    fumandaQA: new Criador_de_falas(['Ufa, finalmente, mal podia esperar para poder fumar, pelo menos assim consigo descansar um pouco.','*dá um trago','hm? tem alguma coisa estranha, parece que meu cigarro não tá tão bom quanto antes, será que estragou?','*Experimenta o cigarro para testar o gosto','Não, não é isso, é algo a mais, ele parece mais amargo, mas não como se estivesse estragado, o gosto é um pouco mais fraco do que o normal, um pouco mais… sem sabor… um pouco mais…','…Vazio…','…','Vazio… Acho que essa é a palavra certa, meio sem gosto, meio indiferente, um pouco parecido com todo o resto da minha vida.','É, isso é uma merda, que graça minha vida vai ter se as coisas continuarem a perder o gosto é cor? Afinal, quando todos meus prazeres morrerem, eu não vou ter morrido também?','Não sei, se eu não sentir nada, eu vou ser um morto vivendo, e seu eu sentir dor com as coisas, então a morte,a não existência, será melhor que minha vida.','…','Talvez isso realmente faça algum sentido.','*Joga o cigarro no chão e apaga com o sapato.'],2,[false])
+    dialog5: new Criador_de_falas(['Nemo: Boa tarde, Einar, como você está? Fez muitas coisas produtivas hoje?','Einar: Ah, Nemo. Boa tarde, eu tô o mesmo de sempre, até que tá sendo um dia normal, consegui fazer algumas coisas.','Nemo: Ohh que bom que seu dia tá sendo tão produtivo quanto o meu. Inclusive, mudando completamente de assunto, você viu que essa semana a máxima não vai ficar abaixo de 40 graus?','Einar: Acho que não vi, mas bom, pelo menos a gente tem ar-condicionado aqui na fábrica.','Nemo: Meu Deus, Einar, você precisa se noticiar mais. Não é todo mundo que tem um ar-condicionado em casa, além de que não é meramente uma questão de sentir calor ou não. Tudo tem causa e consequência.','Einar: Ah, Nemo, vai se ferrar vai.','Nemo: Seu chico sin educación, às vezes esqueço que você é bem cabeça oca','Einar: Sem educação? É o que?','Nemo:  Esquece isso. Está tudo certo para hoje?','Einar: Ah, já ia me esquecendo, hoje vou estar ocupado depois do trabalho e não vou poder ir, foi mal.','Nemo: Aconteceu alguma coisa?','Einar: Tava pensando em ir ao médico','Nemo: Ahh, então é justificável você não ir, mas que bom finalmente você está se cuidando.','Einar: Sim, com certeza','Nemo: Boa consulta meu amigo, adeus','Einar: Obrigado, e até amanhã',],2,[false]),
+    dialog51: new Criador_de_falas(['Nemo: Boa tarde, Einar, como você está? Fez muitas coisas produtivas hoje?','Einar: Ah, Nemo. Boa tarde, eu tô o mesmo de sempre, até que tá sendo um dia normal, consegui fazer algumas coisas.','Nemo: Ohh que bom que seu dia tá sendo tão produtivo quanto o meu.Inclusive, mudando completamente de assunto, você viu que essa semana a máxima não vai ficar abaixo de 40 graus?','Einar: Acho que não vi, mas bom, pelo menos a gente tem ar-condicionado aqui na fábrica.','Nemo: Meu Deus, Einar, você precisa se noticiar mais. Não é todo mundo que tem um ar-condicionado em casa, além de que não é meramente uma questão de sentir calor ou não. Tudo tem causa e consequência.','Einar: Ah, Nemo, vai se ferrar vai.','Nemo: Seu chico sin educación, às vezes esqueço que você é bem cabeça oca','Einar: Sem educação? É o que?','Nemo:  Esquece isso. Está tudo certo para hoje?','Einar: Ah, já ia me esquecendo, hoje vou estar ocupado depois do trabalho e não vou poder ir, foi mal.','Nemo: Aconteceu alguma coisa?','Einar: Tava pensando em  ir pra casa e descansar ou dormir um pouco, não tô muito bem.','Nemo: Ahh, então é justificável você não ir, mas que bom finalmente você está se cuidando.','Einar: Sim, com certeza',' bom trabalho meu amigo, adeus','Einar: Obrigado, e até amanhã'],2,[false]),
+    fumandaQA: new Criador_de_falas(['Ufa, finalmente, mal podia esperar para poder fumar, pelo menos assim consigo descansar um pouco.','*dá um trago','hm? tem alguma coisa estranha, parece que meu cigarro não tá tão bom quanto antes, será que estragou?','*Experimenta o cigarro para testar o gosto','Não, não é isso, é algo a mais, ele parece mais amargo, mas não como se estivesse estragado, o gosto é um pouco mais fraco do que o normal, um pouco mais… sem sabor… um pouco mais…','…Vazio…','…','Vazio… Acho que essa é a palavra certa, meio sem gosto, meio indiferente, um pouco parecido com todo o resto da minha vida.','É, isso é uma merda, que graça minha vida vai ter se as coisas continuarem a perder o gosto é cor? Afinal, quando todos meus prazeres morrerem, eu não vou ter morrido também?','Não sei, se eu não sentir nada, eu vou ser um morto vivendo, e seu eu sentir dor com as coisas, então a morte,a não existência, será melhor que minha vida.','…','Talvez isso realmente faça algum sentido.','*Joga o cigarro no chão e apaga com o sapato.'],2,[false]),
+    dialog6: new Criador_de_falas(['Nemo: Ei, cara! Tudo bom?','Einar: Opa, eae, tô bem sim, e você?','Nemo: Tô bem, mas então, como foi sua consulta ontem?','Einar: “Ele vai surtar se souber que eu não fui, é melhor eu nem contar.”Ah, foi até que bem.','Nemo: Entendi, e o médico te passou algo em específico? Tipo um medicamento ou algo para fazer, como exercícios físicos?','Einar: “rápido! Tenho que pensar em alguma coisa.”','Einar: Ele disse só o básico: não ficar usando o celular ou computador antes de dormir, me alimentar bem e essas coisas.','Nemo: Ahh, entendi, essas coisas são realmente importantes. Mas então, você fez alguma coisa depois do médico?','Einar: Só voltei pra casa na verdade.','Nemo: Beleza','Nemo: ...','Nemo: Então, ontem depois do trabalho, eu acabei testando uma nova receita de hambúrguer vegetariano, ficou incrível, na próxima eu trago para você. Aliás, você está viciado em alguma comida atualmente? ','Einar: Viciado? não sei se essa é a melhor palavra','Nemo: (rindo), é no sentido de algo que você comeu recentemente e quer comer todo o momento, por exemplo, meu atual amor é por hambúrguer vegetariano','Einar: Acho que minha comida favorita continua sendo strogonoff','Nemo: Uma ótima escolha, meu amigo','Einar: Eita, o tempo voou hoje, que droga.','Nemo: É mesmo, queria ter mais tempo para hablar com você, até mais hermano','Einar: Até, outra hora a gente conversa mais'],3,[]),
+    dialog61: new Criador_de_falas(['Nemo: Ei Einar, como você está?','Einar: Tô que nem um passarinho Nemo, prestes a pular de um prédio.','Nemo: Caralho mano, tá acontecendo alguma coisa com você? Teu tom foi bem suspeito.','Einar: Nah, imagina, não tem nada acontecendo! pode ficar tranquilo','Nemo: Eita hermano, se acalma, só estou tentando conversar com você.','Einar: Mas eu tô completamente calmo.','Nemo: Se isso é o seu calmo, nem quero saber como é você de mau humor.','Einar: Mas eu tô completamente de boa','Nemo: Quer saber Einar, depois a gente conversa'],3,[]),
+    onibuess: new Criador_de_falas(['Finalmente acabou!','Não via a hora para meu expediente acabar, pelo menos agora eu vou…chegar em casa, fumar, jogar ou ficar acordado a noite inteira.','Para então, quando eu finalmente dormir, não conseguir nem sequer descansar, porque opa! Já é a hora de mais um maravilhoso dia de trabalho!!!','Maravilhoso o c@ralho, só eu sei o quanto odeio essa rotina e essa minha vida incrivelmente patética!','Não consigo ser nem sequer um ser humano funcional, dependo de vícios para manter uma rotina que todo mundo segue tranquilamente, sem precisar de algo fútil como jogos ou cigarro!','Mas também chega a ser irônico, né?','Enquanto uso essas coisas para me sentir vivo, elas me matam pouco a pouco, minha tosse só piora, junto da minha insônia. Acho que foi esse o jeito que encontrei para me matar sem que minha mãe ou o Nemo ficassem se culpando…','O único problema nisso, é que não tá sendo tão efetivo quanto eu imaginava, achei que seria um processo mais rápido.','Se bem que… eu ainda posso tentar outra coisa…','Não, melhor não, acho que só devo apelar pra isso em último caso.'],3,[]),
+    alivio: new Criador_de_falas(['suspira aliviado','Finalmente, já não tava aguentando mais ficar sem meu cigarro, ele é a fórmula mágica da felicidade.','se mantém fumando em silêncio','Acho que já é o suficiente, consegui aproveitar o que queria.'],3,[]),
+    ligação_Hospicio: new Criador_de_falas(['Einar: Alô?','???: Olá, boa tarde, aqui é do hospital x, é com o senhor Einar que eu falo?','Einar: Sim, ele mesmo, do que se trata?','???: bom, me chamo Elisa, sou enfermeira da ala médica que a sua mãe está internada, e ela fez vários pedidos para falar com o senhor, e também nos passou o seu número.','Elisa: E é por isso que estamos te ligando, pois queremos confirmar se o senhor pode visitá-la, já que ela está nervosa faz alguns dias.','Einar: Ah, sim, consigo sim, avisa para ela que às 19h eu vou estar aí.','Elisa: Ok senhor Einar, muito obrigado por nos confirmar, uma boa noite.','Einar: Eu que agradeço por informar, uma ótima noite para você também.','Einar: “Certo, o que será que a mãe quer comigo agora?”','Einar: “De qualquer forma, acho melhor eu ir.”'],3,[]),
+    conversa_norma: new Criador_de_falas(['Einar: Oi, mãe.','Alice: Filho, querido, finalmente você chegou. Por que demorou tanto? Foram aquelas enfermeiras malvadas que te proibiram de vir aqui mais cedo?','Einar: Não mãe, não começa, eu só tava trabalhando, elas não tem nenhuma culpa sobre isso.','Ah, sim, trabalhando. Parece que essa é a única coisa que você tem feito ultimamente, mal tem tempo pra me visitar… Assim você deixa a mamãe triste.Eu larguei tudo por você, Einar querido. Eu tive que abandonar a faculdade quando engravidei de você, e seu pai, aquele desgraçado… ','Einar: Chega! Eu já entendi isso há muito tempo, afinal você não consegue falar algo novo ou minimamente decente, é sempre sobre o quão maravilhosa e foda você foi para me criar e como eu sou um bosta por não “retribuir” esse favor, mas advinha? Você não fez nada mais do que sua obrigação, eu não pedi para nascer, me criar era sua responsabilidade, não um favor.','Alice: Filho… o que aconteceu com você? Meu querido, você mudou, antes você era mais bem comportado, e eu jamais quis que você pensasse que eu te achava um fardo. Einar, você sempre foi minha criança de ouro, tudo o que eu fiz foi com a intenção de te criar de forma que você não seguisse os passos do seu pai. Me desculpa se eu passei essa impressão, de verdade.','Einar: Ah sim, com toda certeza, a criança de ouro que você nunca quis ter, não é, mamãe?','Alice: O que… Eu… Digo, seu pai e eu não estávamos planejando te ter em uma idade tão jovem, então você tem que entender que às vezes eu ficava pensando em como minha vida seria se eu pudesse ter terminado minha faculdade. Mas isso só quando nos meus momentos mais baixos! Quando eu recuperava a razão, percebia que você na verdade era um presente que a vida me deu','Einar: Engraçado, você percebia que eu era um presente da vida, mas nunca chegou a pedir desculpas pelo que fez, nem sequer fez algo com o intuito de compensar isso! Vamos lá mãe, me diz logo, em algum momento da sua vida você chegou a realmente me amar?','Alice: Eu…'],3,[]),
+    conversa_irra: new Criador_de_falas(['Einar: Oi, mãe.','Alice: Filho, querido, finalmente você chegou. Por que demorou tanto? Foram aquelas enfermeiras malvadas que te proibiram de vir aqui mais cedo?','Einar: Não mãe, não começa, eu só tava trabalhando, elas não tem nenhuma culpa sobre isso.','Alice: Ah, sim, trabalhando. Parece que essa é a única coisa que você tem feito ultimamente, mal tem tempo pra me visitar…Assim você deixa a mamãe triste.Eu larguei tudo por você, Einar querido. Eu tive que abandonar a faculdade quando engravidei de você, e seu pai, aquele desgraçado… Nos abandonando daquele jeito.E agora parece que você tá seguindo os passos dele. Tal pai, tal filho!','Einar: Ah, é mesmo? Entendi então.Mas sobre o que você quer falar? Me disseram que você tava um tanto nervosa.','Alice: Agora preciso de motivo para querer falar com meu filho, o único que me resta? Tá, tudo bem, já entendi, você não gosta mais de mim, né? Pode ir então, não me importo, essas paredes me farão mais companhia.','Einar: Mãe, não foi isso que eu quis dizer, mas se é assim que a senhora quer entender, tudo bem!','Alice: Ora, seu atrevido, quando é que você aprendeu a falar assim? Aposto que foi com aquele refugiado, que se finge de bonzinho mas roubou sua promoção.','Einar: O nome dele é Nemo, para início de conversa, e acho bom você se referir a ele com mais respeito, e ele sequer é imigrante. Além disso, em poucos anos ele me ajudou e me apoiou mais do que você durante minha vida inteira.','Alice: É mesmo? E quem que tinha que trabalhar em dois empregos e ainda te ajudar com as tarefas de casa?E quem te amparou quando você chegou chorando na minha porta mês passado?E quem estava do seu lado, te apoiando, quando você tentou se matar em uma idade tão jovem?','Einar: …','Einar: É, ele não estava lá.“Ninguém estava…”'],3,[]),
+    refletir1:new Criador_de_falas(['Acho que, pensando bem, eu não devia ter falado aquilo para ela.','Em partes ela tava realmente certa, e esse é o maior problema.','O Nemo realmente não estava lá nos momentos que ela citou, mas ela também não estava presente na maior parte do tempo.','Não só ela na verdade, meu pai, meus ex-amigos, todo mundo.','Será que ninguém tem algum motivo para ficar ou, todos tem sempre um motivo para ir embora?','Talvez ter que conviver comigo seja um bom motivo para cair fora, afinal, não sou alguém que os outros gostariam de manter por perto.','É, pior que isso faz um pouco de sentido…','Ah, meu ponto chegou.'],3,[]),
+    refletir2:new Criador_de_falas(['…que sensação, estranha?','Me sinto incrivelmente leve agora, é como se eu tivesse tirado um peso gigante das costas, o qual eu já estava carregando há muito tempo.','Acho que falar aquilo tudo com ela foi algo necessário, não aguento mais ter que ouvir as reclamações e humilhações dela.','Bom, agora pode ser que alguma coisa mude, nunca bati de frente com ela desse jeito antes, então é possível que ela se toque o quão desprezível é isso.','e mesmo que ela não mude nada, não importa, pelo menos agora eu sei que tenho algum resquício de voz para me impor contra o que ela fala, o que pode ser bom, eu acho.','Ah, meu ponto chegou.'],3,[]),
+    ligação_Hospicio2: new Criador_de_falas(['Elisa: Alô? Senhor Einar?','Einar: Alô, boa tarde, com quem eu falo?','Elisa: Sou a enfermeira do hospital, Elisa, aquela que ligou para o senhor ontem.','Einar: Ah sim, me lembro de ontem.Inclusive, aconteceu alguma coisa? Não é todo dia que o hospital liga para mim.','Elisa: Bom senhor Einar, é sobre sua mãe, ela teve uma piora repentina, e acabou tendo algumas paradas cardíacas, mas pode ficar tranquilo senhor, ela já está sendo encaminhada para a cirurgia, no entanto, ainda existe a possibilidade de sua mãe precisar de um acompanhante, o senhor poderia vir aqui?','Einar: …','Elisa: Senhor Einar? Ainda está aí?','Einar: Ah… Sim, sim, eu estou, só… espera um pouquinho, vou me arrumar e em breve eu estarei no hospital.','Elisa: Ok senhor, muito obrigado pela compreensão, sua mãe ficará bem, pode contar com a gente.','Einar: Certo… Muito obrigado.','…','*A enfermeira desliga a ligação.'],4,[]),
+    Cirurgico: new Criador_de_falas(['Einar: Olá, boa tarde, eu sou o Einar, me ligaram agora pouco avisando sobre a cirurgia da minha mãe, Alice, e me pediram para vir aqui assinar alguns papéis.','Elisa: Olá senhor Einar, boa tarde, eu sou a Elisa, eu que conversei com você no telefone. Bem, temos que conversar.','Einar: A minha mãe está bem? Aconteceu alguma complicação?','Elisa: A senhora Alice teve uma piora desde que te liguei, então o cirurgião responsável pelo caso decidiu pela falta de gravidade da situação fazer a cirurgia sem acompanhante, você pode sentar se quiser.','Einar: Está bem, obrigado'],4,[]),
+    conversa_desconhecida: new Criador_de_falas(['???: Ei moço, tá tudo bem? Você parece um pouco preocupado com algo.','Einar: Eu não sei, acabei de ficar sabendo que minha mãe vai passar por um cirurgia de risco, e estou com medo do que pode acontecer.','???: Sua mãe parece ser uma pessoa bem importante pra você.','Einar: É, até certo ponto ela é sim importante, mesmo que tenha algumas coisas um tanto questionáveis sobre ela.','???: Quer conversar sobre isso? Digo, não sei se te incomoda falar com uma total desconhecida sobre assuntos tão pessoais assim, mas caso se sinta à vontade, ficaria feliz de ouvir. Pelo menos pra mim, ajuda bastante falar com alguém, me ajuda a pôr os pensamentos em ordem.','Einar: Sinceramente não tenho hábito de falar, talvez seja difícil, mas gostaria de tentar.','???: Vai no seu ritmo, eu também estou esperando alguém e ainda vai demorar, então posso esperar o tempo que for necessário.','Einar: Bom, sendo sincero, minha mãe nunca foi um bom exemplo de figura materna, ela vivia fumando e quase nunca estava sóbria.','Einar:Acho que acabei adquirindo alguns hábitos ruins dela, e eu meio que a culpo e a odeio por isso, mas mesmo assim eu tenho medo de perder ela. Não sei o que seria de mim sem ela, e dela sem mim.','???: E você teve e está tendo que lidar com toda essa confusão sozinho?','Einar: Sim, meu pai deixou a gente quando eu era muito novo, e ter que aguentar minha mãe depois da partida dele não foi algo fácil, por assim dizer. Ela me machucou muito, e no entanto, não consigo deixar de amá-la completamente.','???: É possível amar uma rosa apesar de seus espinhos? Eu acho que sim. Todavia, é preciso tomar cuidado para não se espetar, e se você sangrar, precisa cuidar da ferida também, não basta deixar cicatrizar sozinha, se não pode acabar em infecções inimagináveis.','???:E, pelo visto, parece que hoje você consegue ver que esses espinhos deixaram cicatrizes.','Einar: É, sinto cada marca que isso me deixou ao longo dos anos, e, para ser sincero, eu realmente não queria amar alguém que me faz tão mal e sequer se importou com o que eu sentia.','Einar:E apesar disso, eu sempre acabava voltando como um cachorrinho que segue seu dono, independente de quantas vezes ele é machucado por isso.','Einar:Se quer saber a verdade, eu tô cansado disso tudo, às vezes até sinto que…','Einar:Se ela finalmente…','Einar:…descansasse','Einar:eu talvez teria um pouco de paz.','[...]','*O silêncio invade a conversa por alguns instantes…','???: Não controlamos nossos sentimentos e é natural sentir a ambiguidade deles, independentemente por quem seja.Todos nós estamos sempre procurando por paz, esse sentimento te faz humano não é mesmo?','Einar: Acho que sim.'],4,[]),
+
 }
 
 let Falas_Geral = {
@@ -115,7 +129,7 @@ let Falas_Geral = {
         Falas_Fabrica_Cozinha : new Criador_de_falas([],1,[]),
     },
     Falas_Quarta : {
-        Falas_Banheiro : new Criador_de_falas(['1','2','lavar o rosto?','Cacete, eu tô completamente acabado, minhas olheiras estão realmente horríveis.Provavelmente deve ser por causa do meu sono, não durmo direito faz algum tempo, e nos últimos dias eu simplesmente não dormi.Talvez seja melhor ir no Hospital?','Ir ao médico, antes isso do que continuar não dormindo, mesmo que eu odeie ir lá.','Esperar um pouco, vai que passa né? E se não passar, talvez eu possa resolver sozinho, com algum chá ou algo assim.'],2,[false,false,true,true,false,false]),
+        Falas_Banheiro : new Criador_de_falas(['1','2','lavar o rosto?','Cacete, eu tô completamente acabado, minhas olheiras estão realmente horríveis.Provavelmente deve ser por causa do meu sono, não durmo direito faz algum tempo.Talvez seja melhor ir no Hospital?','Ir ao médico, antes isso do que continuar não dormindo, mesmo que eu odeie ir lá.','Esperar um pouco, vai que passa né? E se não passar, talvez eu possa resolver sozinho, com algum chá ou algo assim.'],2,[false,false,true,true,false,false]),
         Falas_Quarto : new Criador_de_falas(['1','2','3','fumar?','jogar?','Bom, jogar só por hoje não faz mal, preciso relaxar um pouco no fim das contas.','Talvez fumar já seja o suficiente por essa noite, me sinto relaxado o suficiente.','Virar só mais uma noitezinha não parece uma má ideia.','Acho  melhor tentar dormir ao invés de jogar, ficar  só jogando durante a noite deve ser uma das coisas que está ferrando meu sono.'],2,[false,false,false,true,true]),
         Falas_Cozinha : new Criador_de_falas(['fazer marmita?','2','3','marmita feita','Ah, lembrei, tenho que fazer minha marmita, senão o Nemo vai precisar dividir a dele, e odeio quando ele precisa se preocupar com um peso a mais.'],2,[true,false,false,false,false,false]),
         Falas_Sala : new Criador_de_falas(['1','fumar?'],2,[false,true]),
@@ -123,28 +137,29 @@ let Falas_Geral = {
         Falas_Ponto : new Criador_de_falas([],2,[]),
         Falas_Fabrica_Frente : new Criador_de_falas([],2,[]),
         Falas_Fabrica_Recepcao : new Criador_de_falas(['Einar está cansado e quer ir para casa jogar.Desistir da consulta?','Estou muito cansado agora eu vou amanhã'],2,[true]),
-        Falas_Fabrica_Corredor : new Criador_de_falas([],2,[]),
-        Falas_Fabrica_Escritorio : new Criador_de_falas(['trabalhar?','ir para o refeitorio se encontrar com nemo?','Ah, tô a fim de ficar um pouco sozinho hoje, então vou almoçar aqui mesmo, se não vou ter que conversar com o Nemo.'],2,[true,true]),
+        Falas_Fabrica_Corredor : new Criador_de_falas(['Não tô muito a fim de almoçar com alguém hoje, mas se eu não for o Nemo vai vir aqui me procurar.Já sei! É só eu almoçar no almoxarifado, lá ele não vai me encontrar.Até que eu consigo pensar um pouco as vezes!'],2,[]),
+        Falas_Fabrica_Escritorio : new Criador_de_falas(['trabalhar?','Ir para o refeitorio se encontrar com nemo?'],2,[true,true]),
         Falas_Fabrica_Cozinha : new Criador_de_falas([],2,[]),
     },
     Falas_Quinta : {
-        Falas_Banheiro : new Criador_de_falas([],3,[]),
-        Falas_Quarto : new Criador_de_falas([],3,[]),
-        Falas_Cozinha : new Criador_de_falas([],3,[]),
-        Falas_Sala : new Criador_de_falas([],3,[]),
-        Falas_Jardin : new Criador_de_falas([],3,[]),
+        Falas_Banheiro : new Criador_de_falas(['1','2','lavar o rosto?'],3,[false,false,true]),
+        Falas_Quarto : new Criador_de_falas(['1','2','3'],3,[false,false,false]),
+        Falas_Cozinha : new Criador_de_falas(['fazer marmita?','2','3','marmita feita','Não posso esquecer minha marmita, se não o Nemo vai ter que lidar com um peso morto na hora do almoço.'],3,[true]),
+        Falas_Sala : new Criador_de_falas(['1','fumar?','Tem certeza? Melhor pensar de novo...Fumar?','Foi um dia cansativo, estressante e já faz tempo que você não fuma...Fumar?','Vamos lá, última chance...Fumar?','fala especifia'],3,[false,true,true,true,true]),
+        Falas_Jardin : new Criador_de_falas(['...'],3,[]),
         Falas_Ponto : new Criador_de_falas([],3,[]),
         Falas_Fabrica_Frente : new Criador_de_falas([],3,[]),
         Falas_Fabrica_Recepcao : new Criador_de_falas([],3,[]),
         Falas_Fabrica_Corredor : new Criador_de_falas([],3,[]),
-        Falas_Fabrica_Escritorio : new Criador_de_falas([],3,[]),
+        Falas_Fabrica_Escritorio : new Criador_de_falas(['trabalhar?','Finalmente o horário de almoço, não aguentava mais ficar aqui.'],3,[true]),
         Falas_Fabrica_Cozinha : new Criador_de_falas([],3,[]),
+        Falas_Hospital_Recpcao: new Criador_de_falas([],3,[])
     },
     Falas_Sexta : {
-        Falas_Banheiro : new Criador_de_falas([],4,[]),
-        Falas_Quarto : new Criador_de_falas([],4,[]),
-        Falas_Cozinha : new Criador_de_falas([],4,[]),
-        Falas_Sala : new Criador_de_falas([],4,[]),
+        Falas_Banheiro : new Criador_de_falas(['1','2'],4,[false,false]),
+        Falas_Quarto : new Criador_de_falas(['1','2','3'],4,[]),
+        Falas_Cozinha : new Criador_de_falas(['1','2','3'],4,[]),
+        Falas_Sala : new Criador_de_falas(['1','MEIO DIA?? Merda, eu tô muito fudido.','Ah, foda-se, nem adianta mais eu ir, até eu pegar o ônibus já vai levar mais um tempo, e quando eu chegar lá o chefe vai encher o meu saco e vou ter que ficar até umas tantas da noite fazendo hora extra.','Tentar voltar a dormir?','Eu… só… quero… dormir, desgraça.Ah, foda-se, tanto faz, vou ficar aqui deitado para relaxar o minimo que seja.'],4,[false,false,false,true]),
         Falas_Jardin : new Criador_de_falas([],4,[]),
         Falas_Ponto : new Criador_de_falas([],4,[]),
         Falas_Fabrica_Frente : new Criador_de_falas([],4,[]),
@@ -152,6 +167,7 @@ let Falas_Geral = {
         Falas_Fabrica_Corredor : new Criador_de_falas([],4,[]),
         Falas_Fabrica_Escritorio : new Criador_de_falas([],4,[]),
         Falas_Fabrica_Cozinha : new Criador_de_falas([],4,[]),
+        Falas_Hospital_Recpcao: new Criador_de_falas(['Einar! A cirurgia teve complicações (ou seria longa desde o início) e ele poderia ir para casa descansar. Assim que terminassem, lhe ligariam.'],4,[])
     },
     Falas_Sabado : {
         Falas_Banheiro : new Criador_de_falas([],5,[]),
@@ -196,6 +212,10 @@ let BOXes = {
     'fabricaRecept':false,
     'corredorFabrica':false,
     'escritorio':false,
+    'HospitalFrente':false,
+    'HospitalRecpcao':false,
+    'HospitalCorredor':false,
+    "HospitalQuarto":false,
 }
 if(localStorage.getItem('player')!== null){
     BOXes = JSON.parse(localStorage.getItem('player')).Caixas
@@ -326,6 +346,10 @@ personagem.onload = function(){
             fabrica_recepcao.animeteImg()
             corredor_fabrica.animeteImg()
             escritorio_Einar.animeteImg()
+            Hospital_Corredor.animeteImg()
+            Hospital_Frente.animeteImg()
+            Hospital_Quarto.animeteImg()
+            Hospital_Recepcao.animeteImg()
         }
         if (star&&played[0]===false) {
             if (true) {
@@ -352,9 +376,33 @@ personagem.onload = function(){
             star = true
             tersa.createImg()
             if (played[1]) {
-                tersa.tells(33)
+                tersa.tells(24)
                 if (animation_end) {
                     played[2] = true
+                    anend(false)
+                    star = false
+                }
+            }
+        }
+        if (semana===2&&played[3]===false) {
+            star = true
+            Quarta.createImg()
+            if (played[2]) {
+                Quarta.tells(21)
+                if (animation_end) {
+                    played[3] = true
+                    anend(false)
+                    star = false
+                }
+            }
+        }
+        if (semana===3&&played[4]===false) {
+            star = true
+            Quinta.createImg()
+            if (played[3]) {
+                Quinta.tells(20)
+                if (animation_end) {
+                    played[4] = true
                     anend(false)
                     star = false
                 }
@@ -412,8 +460,14 @@ personagem.onload = function(){
         let cozinha_fabrica_parede = new HitBoxes(100,500,1220,20)
         let parede_escritorio = new HitBoxes(100,500,1220,40)
         let escritorio_cadeira = new HitBoxes(650,500,140,80)
-        let banheiro_quina = new HitBoxes()
         let porta_escrito = new HitBoxes(50,530,150,200)
+        let porta_Hospital = new HitBoxes(540,500,400,50)
+        let Hospital_CorredorH = new HitBoxes(-100,418,1400,50)
+        let Hospital_CorredorB = new HitBoxes(450,423,565,100)
+        let Hospital_QuartoP1 = new HitBoxes(110,423,80,400)
+        let Hospital_QuartoP2 = new HitBoxes(110,423,660,223)
+        let Hospital_QuartoB = new HitBoxes(800,423,358,120)
+        let Hospital_QuartoH = new HitBoxes(0,423,1358,80)
 
         //hit interactions
         let Ponts_interest = {
@@ -430,7 +484,7 @@ personagem.onload = function(){
             trabalhar: new HitBoxes(620,460,200,180,10,0),
         }
         //cxt.fillStyle = 'red'
-        //cxt.fillRect(50,530,150,200)
+        //cxt.fillRect(0,423,1358,80)
         //hitbox info
         let HitboxInfo = new HitBoxes(personagemX+120,personagemY+260,85,50)
         if(room[0]||room[1]||room[2]||room[3]){
@@ -505,6 +559,22 @@ personagem.onload = function(){
             colliderArson(10,parede_escritorio)
             colliderArson(10,escritorio_cadeira)
         }
+        if (room[11]) {
+            colliderArson(11,fabrica_parede)
+        }
+        if (room[12]) {
+            colliderArson(12,fabrica_parede)
+        }
+        if (room[13]) {
+            colliderArson(13,Hospital_CorredorH)
+            colliderArson(13,Hospital_CorredorB)
+        }
+        if (room[14]) {
+            colliderArson(14,Hospital_QuartoB)
+            colliderArson(14,Hospital_QuartoP1)
+            colliderArson(14,Hospital_QuartoP2)
+            colliderArson(14,Hospital_QuartoH)
+        }
         if (interaction!==true&&cronos&&cronoslogos[0]&&cronoslogos[1]) {
             for (let index = 0; index < personagemSpeed; index++) {
                 if (dialogs[0]!==true) {
@@ -570,6 +640,9 @@ personagem.onload = function(){
                 pilha[20] = false
                 pilha[19] = false
             }
+            if (semana===3&&pilha[35]) {
+                pilha[35] = false
+            }
             countdown = false
             setTimeout(function(){countdown = true},1000)
         }
@@ -591,7 +664,7 @@ personagem.onload = function(){
             BOXes.quarto = true
             countdown = false
             setTimeout(function(){countdown = true},1000)
-        }if(personagemX>= y-200 && room[1]&&trasiType===0&&countdown&&pilha[19]){
+        }if(personagemX>= y-200 && room[1]&&trasiType===0&&countdown&&pilha[19]&&(pilha[35]||pilha[36]===false)){
             room[1] = false
             room[3] = true
             personagemX = -54
@@ -661,11 +734,21 @@ personagem.onload = function(){
             setTimeout(function(){countdown = true},1000)
             BOXes.ponto = false
         }
-        if(ponto_viagem.Collider(HitboxInfo)&&enterPlace&&room[5]&&trasiType===0&&countdown){
+        if(ponto_viagem.Collider(HitboxInfo)&&enterPlace&&room[5]&&trasiType===0&&countdown&&TrabHosp){
             room[6] = true
             room[5] = false
             personagemX = 925
             BOXes.foraFabrica = true
+            BOXes.ponto = false
+            enterPlace = false
+            countdown = false
+            setTimeout(function(){countdown = true},1000)
+        }
+        if(ponto_viagem.Collider(HitboxInfo)&&enterPlace&&room[5]&&trasiType===0&&countdown&&TrabHosp===false){
+            room[11] = true
+            room[5] = false
+            personagemX = 925
+            BOXes.HospitalFrente = true
             BOXes.ponto = false
             enterPlace = false
             countdown = false
@@ -764,6 +847,77 @@ personagem.onload = function(){
             countdown = false
             setTimeout(function(){countdown = true},1000)
         }
+        //Hospital Frente
+        if (ponto_volta.Collider(HitboxInfo)&&enterPlace&&room[11]&&countdown) {
+            room[5] = true
+            room[11] = false
+            personagemX = 559
+            BOXes.ponto = true
+            BOXes.HospitalFrente = false
+            countdown = false
+            setTimeout(function(){countdown = true},1000)
+        }  
+        if (porta_Hospital.Collider(HitboxInfo)&&enterPlace&&room[11]&&countdown) {
+            room[12] = true
+            room[11] = false
+            personagemX = -54
+            personagemY = 344
+            BOXes.HospitalRecpcao = true
+            BOXes.HospitalFrente = false
+            countdown = false
+            setTimeout(function(){countdown = true},1000)
+        }
+        //Hospital recepção
+        if (personagemX<= -55 && room[12]&&countdown) {
+            room[11] = true
+            room[12] = false
+            personagemX = 587
+            personagemY = 224
+            BOXes.HospitalFrente = true
+            BOXes.HospitalRecpcao = false
+            countdown = false
+            setTimeout(function(){countdown = true},1000)
+        }
+        if (personagemX>= y-200 && room[12]&&countdown) {
+            room[13] = true
+            room[12] = false
+            personagemX = -30
+            BOXes.HospitalCorredor = true
+            BOXes.HospitalRecpcao = false
+            countdown = false
+            setTimeout(function(){countdown = true},1000)
+        }
+        //Hosptal Corredor
+        if (personagemX<= -55 && room[13]&&countdown) {
+            room[12] = true
+            room[13] = false
+            personagemX = y-220
+            personagemY = 335
+            BOXes.HospitalRecpcao = true
+            BOXes.HospitalCorredor = false
+            countdown = false
+            setTimeout(function(){countdown = true},1000)
+        }
+        if (personagemX>= y-200 && room[13]&&countdown) {
+            room[14] = true
+            room[13] = false
+            personagemX = y-220
+            personagemY = 335
+            BOXes.HospitalQuarto = true
+            BOXes.HospitalCorredor = false
+            countdown = false
+            setTimeout(function(){countdown = true},1000)
+        }
+        //Hospial Quarto
+        if (personagemX>= y-200 && room[14]&&countdown) {
+            room[13] = true
+            room[14] = false
+            personagemX = y-201
+            BOXes.HospitalCorredor = true
+            BOXes.HospitalQuarto = false
+            countdown = false
+            setTimeout(function(){countdown = true},1000)
+        }
         if(interaction!==true&&((porta_escrito.Collider(HitboxInfo)&&room[10])||(room[6]&&ponto_volta.Collider(HitboxInfo))||(porta_escritorio.Collider(HitboxInfo)&&room[9])||(fabrica_recp.Collider(HitboxInfo)&&room[8])||(porta_fabrica.Collider(HitboxInfo)&&room[6])||(ponto_viagem.Collider(HitboxInfo)&&room[5]))){
             cxt.fillStyle = 'white'
             cxt.font = '23px comic Sans'
@@ -856,7 +1010,21 @@ personagem.onload = function(){
                         }
                     }
                     if (semana===2) {
-                        if (currentFala===0&&((pilha[23]&&THECISIONS.qua[0])||(THECISIONS.qua[1]&&pilha[23]===false))) {
+                        if (currentFala===0&&((pilha[23]&&THECISIONS.qua[0])||(THECISIONS.qua[2]&&pilha[23]===false))) {
+                            week().Falas_Cozinha.escrita(interaction,help,3)
+                            break
+                        }
+                        if (currentFala===0&&((pilha[23]&&THECISIONS.qua[0]===undefined)||(THECISIONS.qua[2]===undefined&&pilha[23]===false))) {
+                            week().Falas_Cozinha.escrita(interaction,help,currentFala,false,false)
+                            break
+                        }
+                    }
+                    if (semana===3) {
+                        if (currentFala===0&&THECISIONS.qui[0]===undefined) {
+                            week().Falas_Cozinha.escrita(interaction,help,currentFala,false,false)
+                            break
+                        }
+                        if (currentFala===0&&THECISIONS.qui[0]!==undefined) {
                             week().Falas_Cozinha.escrita(interaction,help,3)
                             break
                         }
@@ -921,9 +1089,25 @@ personagem.onload = function(){
                         week().Falas_Fabrica_Escritorio.escrita(interaction,help,currentFala,true)
                         break
                     }
-                    if (semana===2&&currentFala===0&&((THECISIONS.qua[2]&&pilha[23])||(THECISIONS.qua[1]&&pilha[23]===false))) {
-                        week().Falas_Fabrica_Escritorio.escrita(interaction,help,currentFala,true)
-                        break
+                    if (semana===2) {
+                        if (currentFala===0&&((THECISIONS.qua[1]&&pilha[23])||(THECISIONS.qua[3]&&pilha[23]===false))) {
+                            week().Falas_Fabrica_Escritorio.escrita(interaction,help,currentFala,true)
+                            break
+                        }
+                        if (currentFala===0&&((THECISIONS.qua[1]===undefined&&pilha[23])||(THECISIONS.qua[3]===undefined&&pilha[23]===false))) {
+                            week().Falas_Fabrica_Escritorio.escrita(interaction,help,currentFala,false,false)
+                            break
+                        }
+                    }
+                    if (semana===3) {
+                        if (currentFala===0&&THECISIONS.qui[1]!==undefined) {
+                            week().Falas_Fabrica_Escritorio.escrita(interaction,help,currentFala,true)
+                            break
+                        }
+                        if (currentFala===0&&THECISIONS.qui[1]===undefined) {
+                            week().Falas_Fabrica_Escritorio.escrita(interaction,help,currentFala,false,false)
+                            break
+                        }
                     }
                     week().Falas_Fabrica_Escritorio.escrita(interaction,help,currentFala)
                     break;
@@ -1451,44 +1635,94 @@ codigo belo
             }
             if (pilha[23]===false&&THECISIONS.qua[0]&&pilha[22]) {
                 cronos = false
-                week().Falas_Banheiro.escrita(true,help,4)
-                if (pressingM[5]) {
+                week().Falas_Banheiro.escrita(true,help,3)
+                if(k){
+                    pressingM[5] = false
+                    k = false
+                }
+                if (pressingM[5]&&THECISIONS.qua[2]!==undefined) {
                     cronos = true
                     pilha[22] = false
+                    k = true
                 }
             }
-            if (pilha[23]===false&&THECISIONS.qua[0]&&pilha[22]===false&&pilha[24]) {
+            if (pilha[23]===false&&THECISIONS.qua[1]&&pilha[22]===false&&pilha[24]) {
                 cronos = false
+                if(k){
+                    pressingM[5] = false
+                    k = false
+                    help = 0
+                    text=''
+                }
                 week().Falas_Banheiro.escrita(true,help,4)
                 if (pressingM[5]) {
                     cronos = true
                     pilha[24] = false
+                    k = true
                 }
             }
-            if (pilha[23]===false&&THECISIONS.qua[0]===false&&pilha[22]===false&&pilha[24]) {
+            if (pilha[23]===false&&THECISIONS.qua[1]===false&&pilha[22]===false&&pilha[24]) {
                 cronos = false
-                week().Falas_Banheiro.escrita(true,help,4)
+                if(k){
+                    pressingM[5] = false
+                    k = false
+                    help = 0
+                    text=''
+                }
+                week().Falas_Banheiro.escrita(true,help,5)
                 if (pressingM[5]) {
                     cronos = true
                     pilha[24] = false
+                    k = true
                 }
             }
-            if (((THECISIONS.qua[2]&&pilha[23])||(THECISIONS.qua[1]&&pilha[23]===false))&&pilha[25]) {
+            if (((THECISIONS.qua[1]&&pilha[23])||(THECISIONS.qua[3]&&pilha[23]===false))&&pilha[25]&&BOXes.corredorFabrica) {
                 cronos = false
+                if(k){
+                    pressingM[5] = false
+                    k = false
+                    help = 0
+                    text=''
+                }
                 week().Falas_Fabrica_Escritorio.escrita(true,help,1)
                 if (pressingM[5]) {
                     cronos = true
                     pilha[25] = false
+                    k = true
                 }
             }
-            if (BOXes.cozinhaFabrica&&((THECISIONS.qua[3]&&pilha[23])||(THECISIONS.qua[2]&&pilha[23]===false))&&pilha[26]) {
+            if (((THECISIONS.qua[2]===false&&pilha[23])||(THECISIONS.qua[4]===false&&pilha[23]===false))&&pilha[26]&&BOXes.corredorFabrica) {
                 cronos = false
-                if (nemo_pos[0]+148<personagemX) {
-                    nemo_pos[0]+=2
-                    nemo.NPC(7,3)
-                }else{
-                    nemo.NPC(2,0)
-                    pilha[27] = false
+                if(k){
+                    pressingM[5] = false
+                    k = false
+                    help = 0
+                    text=''
+                }
+                week().Falas_Fabrica_Corredor.escrita(true,help,0)
+                if (pressingM[5]) {
+                    cronos = true
+                    pilha[26] = false
+                    k = true
+                    a('wtf')
+                }
+            }
+            if (BOXes.cozinhaFabrica&&((THECISIONS.qua[2]&&pilha[23])||(THECISIONS.qua[4]&&pilha[23]===false))&&pilha[26]) {
+                if (personagemX>=340) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        nemo_pos[1]=personagemY
+                        nemo_pos[0]=-30
+                    }
+                    if (nemo_pos[0]+148<personagemX) {
+                        nemo_pos[0]+=2
+                        nemo.NPC(7,3)
+                    }else{
+                        nemo.NPC(2,0)
+                        pilha[27] = false
+                    }
                 }
                 if (pilha[27]===false&&pilha[23]) {
                         dialogos.dialog5.escrita(true,help,dialogoHelper)
@@ -1500,13 +1734,14 @@ codigo belo
                         escritaMD(false)
                     }else{
                         if (pressingM[5]&&dialogoHelper>=dialogos.dialog5.fala.length) {
-                            help = 0
-                            text = ''
-                            chageMd(false)
-                            escritaMD(false)
-                            dialogoHelper = 0
-                            cronos=true
-                            pilha[27] = false
+                            pilha[26] = false
+                            k = true
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                        dialogoHelper = 0
+                        cronos=true
                         }
                     }
                 }
@@ -1520,26 +1755,33 @@ codigo belo
                         escritaMD(false)
                     }else{
                         if (pressingM[5]&&dialogoHelper>=dialogos.dialog51.fala.length) {
-                            help = 0
-                            text = ''
-                            chageMd(false)
-                            escritaMD(false)
-                            dialogoHelper = 0
-                            cronos=true
-                            pilha[27] = false
+                            pilha[26] = false
+                            k = true
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                        dialogoHelper = 0
+                        cronos=true
                         }
                     }
                 }
-                if (pilha[27]&&semana===2) {
+                if (pilha[26]===false) {
                     if (nemo_pos[0]>-30) {
                         nemo_pos[0]-=2
                         nemo.NPC(26,21)
                     }else{
-                        pilha[26] = false
+                        k = true
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                        dialogoHelper = 0
+                        cronos=true
                     }
                 }
             }
-            if (((THECISIONS.qua[3]===false&&pilha[23])||(THECISIONS.qua[2]===false&&pilha[23]===false))&&pilha[28]) {
+            if (((THECISIONS.qua[2]===false&&pilha[23])||(THECISIONS.qua[4]===false&&pilha[23]===false))&&pilha[28]) {
                 week().Falas_Fabrica_Escritorio.escrita(true,help,2)
                 cronos = false
                 if (pressingM[5]) {
@@ -1547,7 +1789,7 @@ codigo belo
                     pilha[28] = false
                 }
             }
-            if (BOXes.foraFabrica&&(pilha[28]===false||pilha[26]===false)&&pilha[23]&&pilha[29]) {
+            if (BOXes.foraFabrica&&(pilha[28]===false||pilha[26]===false)&&pilha[23]===false&&pilha[29]) {
                 week().Falas_Fabrica_Frente.escrita(true,help,0,true)
                 cronos = false
                 if (pressingM[5]) {
@@ -1563,7 +1805,7 @@ codigo belo
                     pilha[30] = false
                 }
             }
-            if (BOXes.quarto&&((THECISIONS.qua[4]===false&&pilha[23])||(THECISIONS.qua[3]===false&&pilha[23]===false))&&pilha[31]) {
+            if (BOXes.quarto&&((THECISIONS.qua[3]===false&&pilha[23])||(THECISIONS.qua[5]===false&&pilha[23]===false))&&pilha[31]) {
                 week().Falas_Quarto.escrita(true,help,3)
                 cronos = false
                 if (pressingM[5]) {
@@ -1571,7 +1813,7 @@ codigo belo
                     pilha[31] = false
                 }
             }
-            if (pilha[32]&&(((THECISIONS.qua[5]&&pilha[23])||(THECISIONS.qua[4]&&pilha[23]===false))||((THECISIONS.qua[4]&&pilha[23])||(THECISIONS.qua[3]&&pilha[23]===false)))) {
+            if (pilha[32]&&(((THECISIONS.qua[4]&&pilha[23])||(THECISIONS.qua[6]&&pilha[23]===false))||((THECISIONS.qua[3]&&pilha[23])||(THECISIONS.qua[5]&&pilha[23]===false)))) {
                 room[4] = true
                 room[3] = false
                 room[0] = false
@@ -1600,51 +1842,86 @@ codigo belo
                         pilha[32] = false
                     }
                 }
-                if (((THECISIONS.qua[4]&&pilha[23])||(THECISIONS.qua[3]&&pilha[23]===false))) {
+                if (((THECISIONS.qua[3]&&pilha[23])||(THECISIONS.qua[4]&&pilha[23]===false))) {
                     if (pilha[23]) {
-                        TH('qua',5,true)
-                    }else{
                         TH('qua',4,true)
+                    }else{
+                        TH('qua',6,true)
                     }
                 }
             }
-            if (BOXes.quarto&&((THECISIONS.qua[5]&&pilha[23])||(THECISIONS.qua[4]&&pilha[23]===false))&&pilha[33]) {
+            if (BOXes.quarto&&((THECISIONS.qua[4]!==undefined&&pilha[23])||(THECISIONS.qua[7]!==undefined&&pilha[23]===false))&&pilha[33]) {
                 cronos = false
+                if(k){
+                    pressingM[5] = false
+                    k = false
+                    help = 0
+                    text=''
+                }
                 week().Falas_Quarto.escrita(true,help,4)
                 if (pressingM[5]) {
                     cronos=true
                     pilha[33] = false
+                    k=true
                 }
             }
             if (BOXes.quarto) {
-                if (((THECISIONS.qua[6]&&pilha[23])||(THECISIONS.qua[5]&&pilha[23]===false))&&pilha[34]) {
-                    if (((THECISIONS.qua[5]&&pilha[23])||(THECISIONS.qua[4]&&pilha[23]===false))) {
-                            cronos = false
+                if (((THECISIONS.qua[4]&&pilha[23])||(THECISIONS.qua[6]&&pilha[23]===false))&&pilha[34]) {
+                    if (((THECISIONS.qua[5]&&pilha[23])||(THECISIONS.qua[7]&&pilha[23]===false))) {
+                        cronos = false
+                        if(k){
+                            pressingM[5] = false
+                            k = false
+                            help = 0
+                            text=''
+                        }
                         week().Falas_Quarto.escrita(true,help,5)
                         if (pressingM[5]) {
                             cronos=true
                             pilha[34] = false
+                            k=true
                         }
                     }else{
                         cronos = false
+                        if(k){
+                            pressingM[5] = false
+                            k = false
+                            help = 0
+                            text=''
+                        }
                         week().Falas_Quarto.escrita(true,help,6)
                         if (pressingM[5]) {
                             cronos=true
                             pilha[34] = false
+                            k=true
                         }
                     }
-                }if(((THECISIONS.qua[6]===false&&pilha[23])||(THECISIONS.qua[5]===false&&pilha[23]===false))&&pilha[34]){
-                    if (((THECISIONS.qua[5]&&pilha[23])||(THECISIONS.qua[4]&&pilha[23]===false))) {
+                }if(((THECISIONS.qua[4]===false&&pilha[23])||(THECISIONS.qua[6]===false&&pilha[23]===false))&&pilha[34]){
+                    if (((THECISIONS.qua[4]&&pilha[23])||(THECISIONS.qua[6]&&pilha[23]===false))) {
                         cronos = false
+                        if(k){
+                            pressingM[5] = false
+                            k = false
+                            help = 0
+                            text=''
+                        }
                         week().Falas_Quarto.escrita(true,help,7)
                         if (pressingM[5]) {
                             cronos=true
                             pilha[34] = false
+                            k=true
                         }
                     }else{
                         cronos = false
+                        if(k){
+                            pressingM[5] = false
+                            k = false
+                            help = 0
+                            text=''
+                        }
                         week().Falas_Quarto.escrita(true,help,8)
                         if (pressingM[5]) {
+                            k=true
                             cronos=true
                             pilha[34] = false
                         }
@@ -1666,6 +1943,381 @@ codigo belo
                 cronos=true
             }
         }
+        //Quinta
+        if (semana===3) {
+            if (pilha[35]===false&&pilha[37]) {
+                cronos = false
+                if(k){
+                    pressingM[5] = false
+                    k = false
+                    help = 0
+                    text=''
+                }
+                week().Falas_Cozinha.escrita(true,help,4)
+                if (pressingM[5]) {
+                    k=true
+                    cronos=true
+                    pilha[37] = false
+                }
+            }
+            if (THECISIONS.qui[0]===true&&pilha[36]) {
+                pilha[36] = false
+            }
+            if (THECISIONS.qui[1]!==undefined&&pilha[38]) {
+                cronos = false
+                if(k){
+                    pressingM[5] = false
+                    k = false
+                    help = 0
+                    text=''
+                }
+                week().Falas_Fabrica_Escritorio.escrita(true,help,1)
+                if (pressingM[5]) {
+                    k=true
+                    cronos=true
+                    pilha[38] = false
+                }
+            }
+            if (((THECISIONS.qua[4]===true&&pilha[23])||(THECISIONS.qua[7]===true&&pilha[23]===false))) {
+                pilha[39] = false
+            }
+        if (BOXes.cozinhaFabrica&&THECISIONS.qui[1]!==undefined&&personagemX>=340&&pilha[42]) {
+            cronos=false
+            if (nemo_pos[0]+148<personagemX) {
+                nemo_pos[0]+=2
+                nemo.NPC(7,3)
+            }else{
+                nemo.NPC(2,0)
+                pilha[40] = false
+            }
+            if (pilha[40]===false) {
+                if (pilha[39]) {
+                    dialogos.dialog6.escrita(true,help,dialogoHelper)
+                    if (dialogoHelper<dialogos.dialog6.fala.length&&pressingM[5]&&escritaTermina&&dialogos.dialog6.fala[dialogoHelper]!==undefined) {
+                        dialogoHelper++
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                    }else{
+                        if (pressingM[5]&&dialogoHelper>=dialogos.dialog6.fala.length) {
+                        pilha[41] = false
+                        k = true
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                        dialogoHelper = 0
+                        cronos=true
+                        }
+                    }
+                }else{
+                    dialogos.dialog61.escrita(true,help,dialogoHelper)
+                    if (dialogoHelper<dialogos.dialog61.fala.length&&pressingM[5]&&escritaTermina&&dialogos.dialog61.fala[dialogoHelper]!==undefined) {
+                        dialogoHelper++
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                    }else{
+                        if (pressingM[5]&&dialogoHelper>=dialogos.dialog61.fala.length) {
+                            pilha[41] = false
+                            k = true
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                        dialogoHelper = 0
+                        cronos=true
+                        }
+                    }
+                }
+            }
+        }
+        if (pilha[41]===false&&pilha[42]) {
+            if (nemo_pos[0]>-30) {
+                nemo_pos[0]-=2
+                nemo.NPC(26,21)
+            }else{
+                k = true
+                help = 0
+                text = ''
+                chageMd(false)
+                escritaMD(false)
+                dialogoHelper = 0
+                cronos=true
+                pilha[42] = false
+            }
+        }
+        if (BOXes.ponto&&pilha[42]===false&&pilha[43]) {
+            dialogos.onibuess.escrita(true,help,dialogoHelper)
+            if (dialogoHelper<dialogos.onibuess.fala.length&&pressingM[5]&&escritaTermina&&dialogos.onibuess.fala[dialogoHelper]!==undefined) {
+                dialogoHelper++
+                help = 0
+                text = ''
+                chageMd(false)
+                escritaMD(false)
+            }else{
+                if (pressingM[5]&&dialogoHelper>=dialogos.onibuess.fala.length) {
+                    pilha[43] = false
+                    k = true
+                    help = 0
+                    text = ''
+                    chageMd(false)
+                    escritaMD(false)
+                    dialogoHelper = 0
+                    cronos=true
+                }
+            }
+        }
+        if (BOXes.sala&&pilha[43]===false&&THECISIONS.qui[2]===undefined) {
+            cronos = false
+            if(k){
+                pressingM[5] = false
+                k = false
+                help = 0
+                text=''
+            }
+            week().Falas_Sala.escrita(true,help,1)
+            if (pressingM[5]) {
+                k=true
+                cronos=true
+                pilha[44] = false
+            }
+        }
+        if (pilha[44]===false&&THECISIONS.qui[2]===true&&pilha[47]) {
+            cronos = false
+            if(k){
+                pressingM[5] = false
+                k = false
+                help = 0
+                text=''
+            }
+            week().Falas_Sala.escrita(true,help,5)
+            if (pressingM[5]) {
+                k=true
+                cronos=true
+                pilha[47] = false
+            }
+        }
+        if (pilha[44]===false&&THECISIONS.qui[3]===undefined&&THECISIONS.qui[2]===false) {
+            cronos = false
+            if(k){
+                pressingM[5] = false
+                k = false
+                help = 0
+                text=''
+            }
+            week().Falas_Sala.escrita(true,help,2)
+            if (pressingM[5]) {
+                k=true
+                cronos=true
+                pilha[45] = false
+            }
+        }
+        if (pilha[45]===false&&THECISIONS.qui[4]===undefined&&THECISIONS.qui[3]===false) {
+            cronos = false
+            if(k){
+                pressingM[5] = false
+                k = false
+                help = 0
+                text=''
+            }
+            week().Falas_Sala.escrita(true,help,3)
+            if (pressingM[5]) {
+                k=true
+                cronos=true
+                pilha[46] = false
+            }
+        }
+        if (pilha[46]===false&&pilha[48]&&THECISIONS.qui[4]===false) {
+            cronos = false
+            if(k){
+                pressingM[5] = false
+                k = false
+                help = 0
+                text=''
+            }
+            week().Falas_Sala.escrita(true,help,4,true)
+            if (pressingM[5]) {
+                k=true
+                cronos=true
+                pilha[48] = false
+            }
+        }
+        if ((THECISIONS.qui[2]||THECISIONS.qui[3]||THECISIONS.qui[4])&&pilha[48]) {
+            room[4] = true
+            room[3] = false
+            room[0] = false
+            personagemX = -30
+            BOXes.sala = false
+            BOXes.quarto = false
+            BOXes.jardin = true
+            countdown = false
+            setTimeout(function(){countdown = true},1000)
+            cronos=false
+            if (THECISIONS.qui[2]) {
+                cronos = false
+                if(k){
+                    pressingM[5] = false
+                    k = false
+                    help = 0
+                    text=''
+                }
+                week().Falas_Jardin.escrita(true,help,0)
+                if (pressingM[5]) {
+                    k=true
+                    cronos=true
+                    pilha[48] = false
+                    pilha[50] = false
+                }
+            } else {
+                dialogos.alivio.escrita(true,help,dialogoHelper)
+                if (dialogoHelper<dialogos.alivio.fala.length&&pressingM[5]&&escritaTermina&&dialogos.alivio.fala[dialogoHelper]!==undefined) {
+                    dialogoHelper++
+                    help = 0
+                    text = ''
+                    chageMd(false)
+                    escritaMD(false)
+                }else{
+                    if (pressingM[5]&&dialogoHelper>=dialogos.alivio.fala.length) {
+                        pilha[48] = false
+                        pilha[50] = false
+                        k = true
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                        dialogoHelper = 0
+                        cronos=true
+                    }
+                }
+            }
+        }
+        if (pilha[48]===false&&pilha[49]&&BOXes.sala) {
+            cronos=false
+            dialogos.ligação_Hospicio.escrita(true,help,dialogoHelper)
+            if (dialogoHelper<dialogos.ligação_Hospicio.fala.length&&pressingM[5]&&escritaTermina&&dialogos.ligação_Hospicio.fala[dialogoHelper]!==undefined) {
+                dialogoHelper++
+                help = 0
+                text = ''
+                chageMd(false)
+                escritaMD(false)
+            }else{
+                if (pressingM[5]&&dialogoHelper>=dialogos.ligação_Hospicio.fala.length) {
+                    pilha[49] = false
+                    TrabHosp = false
+                    k = true
+                    help = 0
+                    text = ''
+                    chageMd(false)
+                    escritaMD(false)
+                    dialogoHelper = 0
+                    cronos=true
+                }
+            }
+        }
+        if (pilha[51]&&BOXes.HospitalQuarto) {
+            if (pilha[50]) {
+                cronos=false
+                dialogos.conversa_irra.escrita(true,help,dialogoHelper)
+                if (dialogoHelper<dialogos.conversa_irra.fala.length&&pressingM[5]&&escritaTermina&&dialogos.conversa_irra.fala[dialogoHelper]!==undefined) {
+                    dialogoHelper++
+                    help = 0
+                    text = ''
+                    chageMd(false)
+                escritaMD(false)
+                }else{
+                    if (pressingM[5]&&dialogoHelper>=dialogos.conversa_irra.fala.length) {
+                        pilha[51] = false
+                        k = true
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                        dialogoHelper = 0
+                        cronos=true
+                    }
+                }
+            }else{
+                cronos=false
+                dialogos.conversa_norma.escrita(true,help,dialogoHelper)
+                if (dialogoHelper<dialogos.conversa_norma.fala.length&&pressingM[5]&&escritaTermina&&dialogos.conversa_norma.fala[dialogoHelper]!==undefined) {
+                    dialogoHelper++
+                    help = 0
+                    text = ''
+                    chageMd(false)
+                    escritaMD(false)
+                }else{
+                    if (pressingM[5]&&dialogoHelper>=dialogos.conversa_norma.fala.length) {
+                        pilha[51] = false
+                        k = true
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                        dialogoHelper = 0
+                        cronos=true
+                    }
+                }
+            }
+        }
+        if (pilha[51]===false&&BOXes.ponto&&pilha[52]) {
+            if (pilha[50]) {
+                cronos=false
+                dialogos.refletir2.escrita(true,help,dialogoHelper)
+                if (dialogoHelper<dialogos.refletir2.fala.length&&pressingM[5]&&escritaTermina&&dialogos.refletir2.fala[dialogoHelper]!==undefined) {
+                    dialogoHelper++
+                    help = 0
+                    text = ''
+                    chageMd(false)
+                    escritaMD(false)
+                }else{
+                if (pressingM[5]&&dialogoHelper>=dialogos.refletir2.fala.length) {
+                        pilha[52] = false
+                        k = true
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                        dialogoHelper = 0
+                        cronos=true
+                    }
+                }
+            } else {
+                cronos=false
+                dialogos.refletir1.escrita(true,help,dialogoHelper)
+                if (dialogoHelper<dialogos.refletir1.fala.length&&pressingM[5]&&escritaTermina&&dialogos.refletir1.fala[dialogoHelper]!==undefined) {
+                    dialogoHelper++
+                    help = 0
+                    text = ''
+                    chageMd(false)
+                    escritaMD(false)
+                }else{
+                if (pressingM[5]&&dialogoHelper>=dialogos.refletir1.fala.length) {
+                        pilha[52] = false
+                        k = true
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                        dialogoHelper = 0
+                        cronos=true
+                        semana=4
+                    }
+                }
+            }
+        }
+        //sexta
+        if(semana===4){
+            if (pilha[50]) {
+                //sexta 1.2
+
+            }else{
+                //sexta 1.1
+            }
+        }
+    }
         enterPlace = false
         player.Caixas = BOXes
         player.ro = room
@@ -1683,8 +2335,9 @@ codigo belo
         if (c) {
             console.log(cronologia)
             console.log(heppen)
-            console.log(DECISIONS)
+            console.log(THECISIONS)
             console.log(pilha)
+            a(pilha.length)
             console.log(semana)
             c = false
         }
@@ -1725,3 +2378,4 @@ codigo belo
 }
 personagem.src = "images/personagem-andando.png"
 //dados:{"ro":[true,false,false,false,false,false,false,false,false,false,false],"peX":480,"peY":320,"decisions":{"dec":[false,false,false,true,false,true,true,true,true,false,true,true],"qua":[],"qui":[],"sex":[]},"Cronologia":[false,true,1,true,false],"Cronoslogos":[true,true],"Cronos":true,"SEMANA":2,"stare":false,"playede":[true,true,true,false,false,false,false],"Caixas":{"quarto":true,"banheiro":false,"cozinha":false,"sala":false,"jardin":false,"ponto":false,"foraFabrica":false,"cozinhaFabrica":false,"fabricaRecept":false,"corredorFabrica":false,"escritorio":false},"pilhas":[false,false,false,false,true,false,false,false,false,false,false,false,false,true,false,false,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true]}
+//quinta:{"ro":[true,false,false,false,false,false,false,false,false,false,false],"peX":528,"peY":320,"decisions":{"dec":[false,false,false,true,false,true,true,true,true,false,true,true],"qua":[true,true,false,false,false,true],"qui":[],"sex":[]},"Cronologia":[false,true,1,true,false],"Cronoslogos":[true,true],"Cronos":true,"SEMANA":3,"stare":false,"playede":[true,true,true,true,true,false,false],"Caixas":{"quarto":true,"banheiro":false,"cozinha":false,"sala":false,"jardin":false,"ponto":false,"foraFabrica":false,"cozinhaFabrica":false,"fabricaRecept":false,"corredorFabrica":false,"escritorio":false},"pilhas":[false,false,false,false,true,false,false,false,false,false,false,false,false,true,false,false,false,true,true,true,false,false,true,true,true,false,false,true,false,true,false,false,true,false,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true]}
