@@ -10,7 +10,7 @@ let THECISIONS = {
     sex: []
 }
 let DECISIONS = THECISIONS.dec
-if(localStorage.getItem('player')!== null){
+if(localStorage.getItem('player')!== null&&JSON.parse(localStorage.getItem('player')).decisions!==undefined){
     DECISIONS = JSON.parse(localStorage.getItem('player')).decisions.dec
     THECISIONS = JSON.parse(localStorage.getItem('player')).decisions
 }

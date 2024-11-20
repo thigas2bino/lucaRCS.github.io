@@ -1,6 +1,6 @@
 const canvas = document.getElementById('canva1')
 const cxt = canvas.getContext('2d')
-import {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica, quarto_cama, escritorio_Einar,Places, animation_end,start,Acidia, segunda, anend, tersa, Einar, Quarta, Quinta, Hospital_Corredor, Hospital_Frente, Hospital_Quarto, Hospital_Recepcao} from "./places.js"
+import {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica, quarto_cama, escritorio_Einar,Places, animation_end,start,Acidia, segunda, anend, tersa, Quarta, Quinta, Hospital_Corredor, Hospital_Frente, Hospital_Quarto, Hospital_Recepcao, salaC, Sexta} from "./places.js"
 import { HitBoxes } from "./Colision.js"
 import { Criador_de_falas,DECISIONS,TH,THECISIONS,chageMd,chager,chagf,check,choice,colaboration, escritaMD, escritaTermina} from "./talk.js"
 //debug
@@ -8,10 +8,13 @@ const a = (c) => {console.log(c)}
 
 let currentFala
 let TrabHosp = true
+if(localStorage.getItem('player')!== null&&JSON.parse(localStorage.getItem('player')).tab!==undefined){
+    TrabHosp = JSON.parse(localStorage.getItem('player')).tab
+}
 let onibus = false
 
 let star = true
-let played = [false,false,false,false,false,false,false]
+let played = [false,false,false,false,false,false,false,false,false]
 let temp = false
 if(localStorage.getItem('player')!== null){
     if (JSON.parse(localStorage.getItem('player')).star!==undefined) {
@@ -98,7 +101,11 @@ let dialogos = {
     ligação_Hospicio2: new Criador_de_falas(['Elisa: Alô? Senhor Einar?','Einar: Alô, boa tarde, com quem eu falo?','Elisa: Sou a enfermeira do hospital, Elisa, aquela que ligou para o senhor ontem.','Einar: Ah sim, me lembro de ontem.Inclusive, aconteceu alguma coisa? Não é todo dia que o hospital liga para mim.','Elisa: Bom senhor Einar, é sobre sua mãe, ela teve uma piora repentina, e acabou tendo algumas paradas cardíacas, mas pode ficar tranquilo senhor, ela já está sendo encaminhada para a cirurgia, no entanto, ainda existe a possibilidade de sua mãe precisar de um acompanhante, o senhor poderia vir aqui?','Einar: …','Elisa: Senhor Einar? Ainda está aí?','Einar: Ah… Sim, sim, eu estou, só… espera um pouquinho, vou me arrumar e em breve eu estarei no hospital.','Elisa: Ok senhor, muito obrigado pela compreensão, sua mãe ficará bem, pode contar com a gente.','Einar: Certo… Muito obrigado.','…','*A enfermeira desliga a ligação.'],4,[]),
     Cirurgico: new Criador_de_falas(['Einar: Olá, boa tarde, eu sou o Einar, me ligaram agora pouco avisando sobre a cirurgia da minha mãe, Alice, e me pediram para vir aqui assinar alguns papéis.','Elisa: Olá senhor Einar, boa tarde, eu sou a Elisa, eu que conversei com você no telefone. Bem, temos que conversar.','Einar: A minha mãe está bem? Aconteceu alguma complicação?','Elisa: A senhora Alice teve uma piora desde que te liguei, então o cirurgião responsável pelo caso decidiu pela falta de gravidade da situação fazer a cirurgia sem acompanhante, você pode sentar se quiser.','Einar: Está bem, obrigado'],4,[]),
     conversa_desconhecida: new Criador_de_falas(['???: Ei moço, tá tudo bem? Você parece um pouco preocupado com algo.','Einar: Eu não sei, acabei de ficar sabendo que minha mãe vai passar por um cirurgia de risco, e estou com medo do que pode acontecer.','???: Sua mãe parece ser uma pessoa bem importante pra você.','Einar: É, até certo ponto ela é sim importante, mesmo que tenha algumas coisas um tanto questionáveis sobre ela.','???: Quer conversar sobre isso? Digo, não sei se te incomoda falar com uma total desconhecida sobre assuntos tão pessoais assim, mas caso se sinta à vontade, ficaria feliz de ouvir. Pelo menos pra mim, ajuda bastante falar com alguém, me ajuda a pôr os pensamentos em ordem.','Einar: Sinceramente não tenho hábito de falar, talvez seja difícil, mas gostaria de tentar.','???: Vai no seu ritmo, eu também estou esperando alguém e ainda vai demorar, então posso esperar o tempo que for necessário.','Einar: Bom, sendo sincero, minha mãe nunca foi um bom exemplo de figura materna, ela vivia fumando e quase nunca estava sóbria.','Einar:Acho que acabei adquirindo alguns hábitos ruins dela, e eu meio que a culpo e a odeio por isso, mas mesmo assim eu tenho medo de perder ela. Não sei o que seria de mim sem ela, e dela sem mim.','???: E você teve e está tendo que lidar com toda essa confusão sozinho?','Einar: Sim, meu pai deixou a gente quando eu era muito novo, e ter que aguentar minha mãe depois da partida dele não foi algo fácil, por assim dizer. Ela me machucou muito, e no entanto, não consigo deixar de amá-la completamente.','???: É possível amar uma rosa apesar de seus espinhos? Eu acho que sim. Todavia, é preciso tomar cuidado para não se espetar, e se você sangrar, precisa cuidar da ferida também, não basta deixar cicatrizar sozinha, se não pode acabar em infecções inimagináveis.','???:E, pelo visto, parece que hoje você consegue ver que esses espinhos deixaram cicatrizes.','Einar: É, sinto cada marca que isso me deixou ao longo dos anos, e, para ser sincero, eu realmente não queria amar alguém que me faz tão mal e sequer se importou com o que eu sentia.','Einar:E apesar disso, eu sempre acabava voltando como um cachorrinho que segue seu dono, independente de quantas vezes ele é machucado por isso.','Einar:Se quer saber a verdade, eu tô cansado disso tudo, às vezes até sinto que…','Einar:Se ela finalmente…','Einar:…descansasse','Einar:eu talvez teria um pouco de paz.','[...]','*O silêncio invade a conversa por alguns instantes…','???: Não controlamos nossos sentimentos e é natural sentir a ambiguidade deles, independentemente por quem seja.Todos nós estamos sempre procurando por paz, esse sentimento te faz humano não é mesmo?','Einar: Acho que sim.'],4,[]),
-
+    complicacoes: new Criador_de_falas(['Recepção: Einar Ramos??','Einar: É, acho que tenho que ir.De qualquer forma, foi muito bom conversar com você moça, muito obrigado por ter me ouvido, mesmo que seja algo muito bom de se ouvir assim do nada.','???: Tudo bem, não precisa se preocupar, não foi nenhum problema ouvir você, caso volte, fique a vontade para se abrir e confiar em mim.','Einar: É… obrigado, até uma próxima, caso a gente se encontre de novo.','???: Até.'],4,[]),
+    uhh: new Criador_de_falas(['Elisa: Olá senhor Einar, sinto te informar mas…','Elisa: A cirurgia da sua mãe sofreu algumas complicações a mais, e mesmo o médico tendo estabilizado ela um pouco, o procedimento ainda vai demorar mais algumas horas.','Elisa: Por isso, acredito que seja melhor o senhor ir para casa agora e descansar um pouco enquanto não temos novidades.','Einar: Certo, mas e se algo acontecer com minha mãe ou tiver algumas atualizações de como tudo está indo?','Elisa: Olha, sendo bem sincera, a situação atual não é muito grave, mas sim delicada.','Elisa: Assim, o risco da operação não é alto, mas levara algum tempo, e caso aconteça alguma coisa eu posso ligar para o senhor para te informar sobre o que está acontecendo.','Elisa: Por agora, eu recomendo fortemente que relaxe e descanse, coisas que não serão possíveis enquanto estiver no hospital.','Einar: Ok, eu entendo, acho que talvez seja melhor mesmo. Muito obrigado pela preocupação.','Einar: Vou indo embora então, e por favor, não espere para ligar, me avise na mesma hora que receber notícias, é a melhor ajuda que eu poderia contar agora.','Elisa: Pode deixar senhor Einar, eu prometo que vou ligar, até outra hora, bom descanso.','Einar: Obrigado, e um ótimo trabalho para você.'],4,[]),
+    reflect1:new Criador_de_falas(['Einar: “Ufa, só quero ir pra casa agora, não tô aguentando de sono.”','Einar: “É incrivel como ficar com a minha mãe é exaustivo, não importa se a conversa é longa ou curta, tudo é sempre muito desgastante, sempre aquele mesmo jeito cinico e acido, falando sobre como ela é uma mãe incrivel e como eu sou um filho ingrato por não devolver o favor de me criar.”','Einar: “Ainda bem que eu bati de frente, mostrei que ela é não tão perfeita como se vangloria, em parte eu só sou esse fracasso que sou hoje porque ela foi um fracasso comigo.”','Einar: “Inclusive, acho que tenho que continuar o que venho tentando nos ultimos dias, de me controlar e essas coisas, assim o fracasso dela vai morrer aos poucos conforme o esforço que eu…','Einar: *Buaaa…','Einar: Ah… eu tô… tão cansado…','Einar: Passei tanto tempo ligado… e alerta… que não percebi que tô quase… dormindo…','Einar: Tenho que ficar atento ao meu…','*Einar apaga de sono, dormindo por algumas horas'],4,[]),
+    ligação_Hospicio3:new Criador_de_falas(['Elisa: Alô? Senhor Einar?','Einar: Alô, boa tarde, com quem eu falo?','Elisa: Sou a enfermeira do hospital, Elisa, aquela que ligou para o senhor ontem.','Einar: Ah sim, me lembro de ontem.Inclusive, aconteceu alguma coisa? Não é todo dia que o hospital liga para mim.','Elisa: Bom senhor Einar, é sobre sua mãe, ela teve uma piora repentina, e acabou tendo algumas paradas cardíacas, mas pode ficar tranquilo senhor, ela já está sendo encaminhada para a cirurgia, no entanto, ainda existe a possibilidade de sua mãe precisar de um acompanhante, o senhor poderia vir aqui?','Einar: …','Elisa: Senhor Einar? Ainda está aí?','Einar: Ah… Sim, sim, eu estou, só… espera um pouquinho, vou me arrumar e em breve eu estarei no hospital.','Elisa: Ok senhor, muito obrigado pela compreensão, sua mãe ficará bem, pode contar com a gente.','Einar: Certo… Muito obrigado.','...','*A enfermeira desliga a ligação.','Einar: Puta mierda…','Einar: Eu… Eu não consigo ver ela de novo, não depois do que eu falei ontem.','Einar: É melhor eu não ir, não vai mudar nada, pode piorar o estado dela na verdade, talvez ela não queira me ver assim que se recuperar.','Einar: Que saco, pra que eu fui falar aquilo pra ela ontem? Inferno.'],4,[]),
+    reflect2: new Criador_de_falas(['Einar: …','Einar: Será que era melhor eu ter ido? Sei que brigamos, mas… Querendo ou não, ela é tudo que eu tenho de família, e em uma situação como essa ela precisaria de mim.','Einar: Ou talvez não precise tanto assim, tenho que parar de achar que eu sou tão importante, o máximo que ela deve estar sentindo é raiva, ainda mais que eu falei coisas que não deviam ser ditas.','Einar: Eu sou realmente um péssimo filho, olha o que minha mãe tem que passar por minha causa.','Einar: Se eu não tivesse nascido ela estaria mil vezes melhor…','Einar: mil vezes melhor…','Einar: Acho que tive uma ideia, para resolver tudo isso…','*demonstra uma certa alegria pelo que acabara de pensar em fazer.'],4,[])
 }
 
 let Falas_Geral = {
@@ -159,7 +166,7 @@ let Falas_Geral = {
         Falas_Banheiro : new Criador_de_falas(['1','2'],4,[false,false]),
         Falas_Quarto : new Criador_de_falas(['1','2','3'],4,[]),
         Falas_Cozinha : new Criador_de_falas(['1','2','3'],4,[]),
-        Falas_Sala : new Criador_de_falas(['1','MEIO DIA?? Merda, eu tô muito fudido.','Ah, foda-se, nem adianta mais eu ir, até eu pegar o ônibus já vai levar mais um tempo, e quando eu chegar lá o chefe vai encher o meu saco e vou ter que ficar até umas tantas da noite fazendo hora extra.','Tentar voltar a dormir?','Eu… só… quero… dormir, desgraça.Ah, foda-se, tanto faz, vou ficar aqui deitado para relaxar o minimo que seja.'],4,[false,false,false,true]),
+        Falas_Sala : new Criador_de_falas(['1','MEIO DIA?? Merda, eu tô muito fudido.','Ah, foda-se, nem adianta mais eu ir, até eu pegar o ônibus já vai levar mais um tempo, e quando eu chegar lá o chefe vai encher o meu saco e vou ter que ficar até umas tantas da noite fazendo hora extra.','Tentar voltar a dormir?','Eu… só… quero… dormir, desgraça.Ah, foda-se, tanto faz, vou ficar aqui deitado para relaxar o minimo que seja.','Bom não a nada que eu possa fazer.'],4,[false,false,false,true]),
         Falas_Jardin : new Criador_de_falas([],4,[]),
         Falas_Ponto : new Criador_de_falas([],4,[]),
         Falas_Fabrica_Frente : new Criador_de_falas([],4,[]),
@@ -167,7 +174,7 @@ let Falas_Geral = {
         Falas_Fabrica_Corredor : new Criador_de_falas([],4,[]),
         Falas_Fabrica_Escritorio : new Criador_de_falas([],4,[]),
         Falas_Fabrica_Cozinha : new Criador_de_falas([],4,[]),
-        Falas_Hospital_Recpcao: new Criador_de_falas(['Einar! A cirurgia teve complicações (ou seria longa desde o início) e ele poderia ir para casa descansar. Assim que terminassem, lhe ligariam.'],4,[])
+        Falas_Hospital_Recpcao: new Criador_de_falas(['Ficar no Hospital?'],4,[true])
     },
     Falas_Sabado : {
         Falas_Banheiro : new Criador_de_falas([],5,[]),
@@ -349,6 +356,7 @@ personagem.onload = function(){
             Hospital_Corredor.animeteImg()
             Hospital_Frente.animeteImg()
             Hospital_Quarto.animeteImg()
+            Hospital_Recepcao.createImg()
             Hospital_Recepcao.animeteImg()
         }
         if (star&&played[0]===false) {
@@ -408,7 +416,30 @@ personagem.onload = function(){
                 }
             }
         }
-        Einar.animeteImg(true)
+        if (semana===4&&played[5]===false) {
+            star = true
+            Sexta.createImg()
+            if (played[4]) {
+                Sexta.tells(20)
+                if (animation_end) {
+                    played[5] = true
+                    anend(false)
+                    star = false
+                }
+            }
+        }
+        if (semana===5&&played[6]===false) {
+            star = true
+            Sexta.createImg()
+            if (played[5]) {
+                Sexta.tells(22)
+                if (animation_end) {
+                    played[6] = true
+                    anend(false)
+                    star = false
+                }
+            }
+        }
         function colliderArson(roomT,which) {
             if (room[roomT]) {
                 switch (HitboxInfo.Sider(which)) {
@@ -468,6 +499,9 @@ personagem.onload = function(){
         let Hospital_QuartoP2 = new HitBoxes(110,423,660,223)
         let Hospital_QuartoB = new HitBoxes(800,423,358,120)
         let Hospital_QuartoH = new HitBoxes(0,423,1358,80)
+        let Hospital_Recep = new HitBoxes(880,480,300,80)
+        let Hospital_Banco = new HitBoxes(200,480,450,60)
+        let sofa = new HitBoxes(257,660,430,180)
 
         //hit interactions
         let Ponts_interest = {
@@ -484,7 +518,7 @@ personagem.onload = function(){
             trabalhar: new HitBoxes(620,460,200,180,10,0),
         }
         //cxt.fillStyle = 'red'
-        //cxt.fillRect(0,423,1358,80)
+        //cxt.fillRect(257,660,430,80)
         //hitbox info
         let HitboxInfo = new HitBoxes(personagemX+120,personagemY+260,85,50)
         if(room[0]||room[1]||room[2]||room[3]){
@@ -529,6 +563,7 @@ personagem.onload = function(){
             colliderArson(3,sala_quina1)
 
             colliderArson(3,sala_quina2)
+            colliderArson(3,sofa)
         }
         if(room[4]){
             
@@ -715,7 +750,7 @@ personagem.onload = function(){
                 pilha[15]=false
             }
         }
-        if(personagemX>= y-200 && room[4]&&trasiType===0&&countdown){
+        if(personagemX>= y-200 && room[4]&&trasiType===0&&countdown&&((semana!==4)||pilha[58]===false)&&!(pilha[50]&&semana===4)){
             room[5] = true
             room[4] = false
             personagemX = -30
@@ -868,7 +903,7 @@ personagem.onload = function(){
             setTimeout(function(){countdown = true},1000)
         }
         //Hospital recepção
-        if (personagemX<= -55 && room[12]&&countdown) {
+        if (personagemX<= -55 && room[12]&&countdown&&!(pilha[62]===false&&THECISIONS.sex[1]===true&&semana===4)) {
             room[11] = true
             room[12] = false
             personagemX = 587
@@ -898,7 +933,7 @@ personagem.onload = function(){
             countdown = false
             setTimeout(function(){countdown = true},1000)
         }
-        if (personagemX>= y-200 && room[13]&&countdown) {
+        if (personagemX>= y-200 && room[13]&&countdown&&pilha[58]) {
             room[14] = true
             room[13] = false
             personagemX = y-220
@@ -918,7 +953,7 @@ personagem.onload = function(){
             countdown = false
             setTimeout(function(){countdown = true},1000)
         }
-        if(interaction!==true&&((porta_escrito.Collider(HitboxInfo)&&room[10])||(room[6]&&ponto_volta.Collider(HitboxInfo))||(porta_escritorio.Collider(HitboxInfo)&&room[9])||(fabrica_recp.Collider(HitboxInfo)&&room[8])||(porta_fabrica.Collider(HitboxInfo)&&room[6])||(ponto_viagem.Collider(HitboxInfo)&&room[5]))){
+        if(interaction!==true&&((porta_Hospital.Collider(HitboxInfo)&&room[11])||(ponto_volta.Collider(HitboxInfo)&&room[11])||(porta_escrito.Collider(HitboxInfo)&&room[10])||(room[6]&&ponto_volta.Collider(HitboxInfo))||(porta_escritorio.Collider(HitboxInfo)&&room[9])||(fabrica_recp.Collider(HitboxInfo)&&room[8])||(porta_fabrica.Collider(HitboxInfo)&&room[6])||(ponto_viagem.Collider(HitboxInfo)&&room[5]))||(Hospital_Banco.Collider(HitboxInfo)&&room[12]&&pilha[59]===false)||(Hospital_Recep.Collider(HitboxInfo)&&room[12]&&pilha[59])){
             cxt.fillStyle = 'white'
             cxt.font = '23px comic Sans'
             cxt.fillText('aperte (e) para interagir',700,730)
@@ -948,6 +983,9 @@ personagem.onload = function(){
         }
         if (stop) {
             nemo.createImg()
+        }
+        if (star===false) {
+            salaC.animeteImg()
         }
         for (const a in Ponts_interest) {
             const element = Ponts_interest[a]
@@ -1150,12 +1188,6 @@ personagem.onload = function(){
                 }
             }
         }
-/*
-codigo belo
-((THECISIONS.qua[1]&&pilha[23])||(THECISIONS.qua[2]&&pilha[23]===false)) primera birfucação
-
-
-*/
         if (cronologia[1]&&cronoslogos[0]!==true&&semana===0) {
             week().Falas_Cozinha.escrita(true,help,4)
             if (DECISIONS[1]!==undefined) {
@@ -1350,7 +1382,7 @@ codigo belo
                     pilha[4] = false
                 }*/
                personagemX = 295
-               personagemY = 289
+               personagemY = 289+70
                semana = 1
                cronos = true
                cronologia[4] = true
@@ -1562,6 +1594,7 @@ codigo belo
                 }                
             }
         }
+        //
         if (pilha[14]&&semana===1&&BOXes.quarto&&DECISIONS[10]===false) {
             personagemX = 528
             personagemY = 320
@@ -1981,85 +2014,67 @@ codigo belo
             if (((THECISIONS.qua[4]===true&&pilha[23])||(THECISIONS.qua[7]===true&&pilha[23]===false))) {
                 pilha[39] = false
             }
-        if (BOXes.cozinhaFabrica&&THECISIONS.qui[1]!==undefined&&personagemX>=340&&pilha[42]) {
-            cronos=false
-            if (nemo_pos[0]+148<personagemX) {
-                nemo_pos[0]+=2
-                nemo.NPC(7,3)
-            }else{
-                nemo.NPC(2,0)
-                pilha[40] = false
-            }
-            if (pilha[40]===false) {
-                if (pilha[39]) {
-                    dialogos.dialog6.escrita(true,help,dialogoHelper)
-                    if (dialogoHelper<dialogos.dialog6.fala.length&&pressingM[5]&&escritaTermina&&dialogos.dialog6.fala[dialogoHelper]!==undefined) {
-                        dialogoHelper++
-                        help = 0
-                        text = ''
-                        chageMd(false)
-                        escritaMD(false)
+        
+            if (BOXes.cozinhaFabrica&&THECISIONS.qui[1]!==undefined&&personagemX>=340&&pilha[42]) {
+                cronos=false
+                if (pilha[41]) {
+                    if (nemo_pos[0]+148<personagemX) {
+                        nemo_pos[0]+=2
+                        nemo.NPC(7,3)
                     }else{
-                        if (pressingM[5]&&dialogoHelper>=dialogos.dialog6.fala.length) {
-                        pilha[41] = false
-                        k = true
-                        help = 0
-                        text = ''
-                        chageMd(false)
-                        escritaMD(false)
-                        dialogoHelper = 0
-                        cronos=true
-                        }
+                        nemo.NPC(2,0)
+                        pilha[40] = false
                     }
-                }else{
-                    dialogos.dialog61.escrita(true,help,dialogoHelper)
-                    if (dialogoHelper<dialogos.dialog61.fala.length&&pressingM[5]&&escritaTermina&&dialogos.dialog61.fala[dialogoHelper]!==undefined) {
-                        dialogoHelper++
-                        help = 0
-                        text = ''
-                        chageMd(false)
-                        escritaMD(false)
-                    }else{
-                        if (pressingM[5]&&dialogoHelper>=dialogos.dialog61.fala.length) {
+                }
+                if (pilha[40]===false&&pilha[41]) {
+                    if (pilha[39]) {
+                        dialogos.dialog6.escrita(true,help,dialogoHelper)
+                        if (dialogoHelper<dialogos.dialog6.fala.length&&pressingM[5]&&escritaTermina&&dialogos.dialog6.fala[dialogoHelper]!==undefined) {
+                            dialogoHelper++
+                            help = 0
+                            text = ''
+                            chageMd(false)
+                            escritaMD(false)
+                        }else{
+                            if (pressingM[5]&&dialogoHelper>=dialogos.dialog6.fala.length) {
                             pilha[41] = false
                             k = true
-                        help = 0
-                        text = ''
-                        chageMd(false)
-                        escritaMD(false)
-                        dialogoHelper = 0
-                        cronos=true
+                            help = 0
+                            text = ''
+                            chageMd(false)
+                            escritaMD(false)
+                            dialogoHelper = 0
+                            cronos=true
+                            }
+                        }
+                    }else{
+                        dialogos.dialog61.escrita(true,help,dialogoHelper)
+                        if (dialogoHelper<dialogos.dialog61.fala.length&&pressingM[5]&&escritaTermina&&dialogos.dialog61.fala[dialogoHelper]!==undefined) {
+                            dialogoHelper++
+                            help = 0
+                            text = ''
+                            chageMd(false)
+                            escritaMD(false)
+                        }else{
+                            if (pressingM[5]&&dialogoHelper>=dialogos.dialog61.fala.length) {
+                                pilha[41] = false
+                                k = true
+                                help = 0
+                                text = ''
+                                chageMd(false)
+                                escritaMD(false)
+                                dialogoHelper = 0
+                                cronos=true
+                            }
                         }
                     }
                 }
             }
-        }
-        if (pilha[41]===false&&pilha[42]) {
-            if (nemo_pos[0]>-30) {
-                nemo_pos[0]-=2
-                nemo.NPC(26,21)
-            }else{
-                k = true
-                help = 0
-                text = ''
-                chageMd(false)
-                escritaMD(false)
-                dialogoHelper = 0
-                cronos=true
-                pilha[42] = false
-            }
-        }
-        if (BOXes.ponto&&pilha[42]===false&&pilha[43]) {
-            dialogos.onibuess.escrita(true,help,dialogoHelper)
-            if (dialogoHelper<dialogos.onibuess.fala.length&&pressingM[5]&&escritaTermina&&dialogos.onibuess.fala[dialogoHelper]!==undefined) {
-                dialogoHelper++
-                help = 0
-                text = ''
-                chageMd(false)
-                escritaMD(false)
-            }else{
-                if (pressingM[5]&&dialogoHelper>=dialogos.onibuess.fala.length) {
-                    pilha[43] = false
+            if (pilha[41]===false&&pilha[42]) {
+                if (nemo_pos[0]>-30) {
+                    nemo_pos[0]-=2
+                    nemo.NPC(26,21)
+                }else{
                     k = true
                     help = 0
                     text = ''
@@ -2067,96 +2082,32 @@ codigo belo
                     escritaMD(false)
                     dialogoHelper = 0
                     cronos=true
+                    pilha[42] = false
+                }
+            }   
+            if (BOXes.ponto&&pilha[42]===false&&pilha[43]) {
+                cronos=false
+                dialogos.onibuess.escrita(true,help,dialogoHelper)
+                if (dialogoHelper<dialogos.onibuess.fala.length&&pressingM[5]&&escritaTermina&&dialogos.onibuess.fala[dialogoHelper]!==undefined) {
+                    dialogoHelper++
+                    help = 0
+                    text = ''
+                    chageMd(false)
+                    escritaMD(false)
+                }else{
+                    if (pressingM[5]&&dialogoHelper>=dialogos.onibuess.fala.length) {
+                        pilha[43] = false
+                        k = true
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                        dialogoHelper = 0
+                        cronos=true
+                    }
                 }
             }
-        }
-        if (BOXes.sala&&pilha[43]===false&&THECISIONS.qui[2]===undefined) {
-            cronos = false
-            if(k){
-                pressingM[5] = false
-                k = false
-                help = 0
-                text=''
-            }
-            week().Falas_Sala.escrita(true,help,1)
-            if (pressingM[5]) {
-                k=true
-                cronos=true
-                pilha[44] = false
-            }
-        }
-        if (pilha[44]===false&&THECISIONS.qui[2]===true&&pilha[47]) {
-            cronos = false
-            if(k){
-                pressingM[5] = false
-                k = false
-                help = 0
-                text=''
-            }
-            week().Falas_Sala.escrita(true,help,5)
-            if (pressingM[5]) {
-                k=true
-                cronos=true
-                pilha[47] = false
-            }
-        }
-        if (pilha[44]===false&&THECISIONS.qui[3]===undefined&&THECISIONS.qui[2]===false) {
-            cronos = false
-            if(k){
-                pressingM[5] = false
-                k = false
-                help = 0
-                text=''
-            }
-            week().Falas_Sala.escrita(true,help,2)
-            if (pressingM[5]) {
-                k=true
-                cronos=true
-                pilha[45] = false
-            }
-        }
-        if (pilha[45]===false&&THECISIONS.qui[4]===undefined&&THECISIONS.qui[3]===false) {
-            cronos = false
-            if(k){
-                pressingM[5] = false
-                k = false
-                help = 0
-                text=''
-            }
-            week().Falas_Sala.escrita(true,help,3)
-            if (pressingM[5]) {
-                k=true
-                cronos=true
-                pilha[46] = false
-            }
-        }
-        if (pilha[46]===false&&pilha[48]&&THECISIONS.qui[4]===false) {
-            cronos = false
-            if(k){
-                pressingM[5] = false
-                k = false
-                help = 0
-                text=''
-            }
-            week().Falas_Sala.escrita(true,help,4,true)
-            if (pressingM[5]) {
-                k=true
-                cronos=true
-                pilha[48] = false
-            }
-        }
-        if ((THECISIONS.qui[2]||THECISIONS.qui[3]||THECISIONS.qui[4])&&pilha[48]) {
-            room[4] = true
-            room[3] = false
-            room[0] = false
-            personagemX = -30
-            BOXes.sala = false
-            BOXes.quarto = false
-            BOXes.jardin = true
-            countdown = false
-            setTimeout(function(){countdown = true},1000)
-            cronos=false
-            if (THECISIONS.qui[2]) {
+            if (BOXes.sala&&pilha[43]===false&&THECISIONS.qui[2]===undefined) {
                 cronos = false
                 if(k){
                     pressingM[5] = false
@@ -2164,25 +2115,135 @@ codigo belo
                     help = 0
                     text=''
                 }
-                week().Falas_Jardin.escrita(true,help,0)
+                week().Falas_Sala.escrita(true,help,1)
+                if (pressingM[5]) {
+                    k=true
+                    cronos=true
+                    pilha[44] = false
+                }  
+            }
+            if (pilha[44]===false&&THECISIONS.qui[2]===true&&pilha[47]) {
+                cronos = false
+                if(k){
+                    pressingM[5] = false
+                    k = false
+                    help = 0
+                    text=''
+                }
+                week().Falas_Sala.escrita(true,help,5)
+                if (pressingM[5]) {
+                    k=true
+                    cronos=true
+                    pilha[47] = false
+                }
+            }
+            if (pilha[44]===false&&THECISIONS.qui[3]===undefined&&THECISIONS.qui[2]===false) {
+                cronos = false
+                if(k){
+                    pressingM[5] = false
+                    k = false
+                    help = 0
+                    text=''
+                }
+                week().Falas_Sala.escrita(true,help,2)
+                if (pressingM[5]) {
+                    k=true
+                    cronos=true
+                    pilha[45] = false
+                }
+            }
+            if (pilha[45]===false&&THECISIONS.qui[4]===undefined&&THECISIONS.qui[3]===false) {
+                cronos = false
+                if(k){
+                    pressingM[5] = false
+                    k = false
+                    help = 0
+                    text=''
+                }
+                week().Falas_Sala.escrita(true,help,3)
+                if (pressingM[5]) {
+                    k=true
+                    cronos=true
+                    pilha[46] = false
+                }
+            }
+            if (pilha[46]===false&&pilha[48]&&THECISIONS.qui[4]===false) {
+                cronos = false
+                if(k){
+                    pressingM[5] = false
+                    k = false
+                    help = 0
+                    text=''
+                }
+                week().Falas_Sala.escrita(true,help,4,true)
                 if (pressingM[5]) {
                     k=true
                     cronos=true
                     pilha[48] = false
-                    pilha[50] = false
                 }
-            } else {
-                dialogos.alivio.escrita(true,help,dialogoHelper)
-                if (dialogoHelper<dialogos.alivio.fala.length&&pressingM[5]&&escritaTermina&&dialogos.alivio.fala[dialogoHelper]!==undefined) {
-                    dialogoHelper++
-                    help = 0
-                    text = ''
-                    chageMd(false)
-                    escritaMD(false)
-                }else{
-                    if (pressingM[5]&&dialogoHelper>=dialogos.alivio.fala.length) {
+            }
+            if ((THECISIONS.qui[2]||THECISIONS.qui[3]||THECISIONS.qui[4])&&pilha[48]) {
+                room[4] = true
+                room[3] = false
+                room[0] = false
+                personagemX = -30
+                BOXes.sala = false
+                BOXes.quarto = false
+                BOXes.jardin = true
+                countdown = false
+                setTimeout(function(){countdown = true},1000)
+                cronos=false
+                if (THECISIONS.qui[2]) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        help = 0
+                        text=''
+                    }
+                    week().Falas_Jardin.escrita(true,help,0)
+                    if (pressingM[5]) {
+                        k=true
+                        cronos=true
                         pilha[48] = false
                         pilha[50] = false
+                    }
+                } else {
+                    dialogos.alivio.escrita(true,help,dialogoHelper)
+                    if (dialogoHelper<dialogos.alivio.fala.length&&pressingM[5]&&escritaTermina&&dialogos.alivio.fala[dialogoHelper]!==undefined) {
+                        dialogoHelper++
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                    }else{
+                        if (pressingM[5]&&dialogoHelper>=dialogos.alivio.fala.length) {
+                            pilha[48] = false
+                            pilha[50] = false
+                            k = true
+                            help = 0
+                            text = ''
+                            chageMd(false)
+                            escritaMD(false)
+                            dialogoHelper = 0
+                            cronos=true
+                        }
+                    }
+                }
+            }
+            if (pilha[48]===false&&pilha[49]&&BOXes.sala) {
+                cronos=false
+                dialogos.ligação_Hospicio.escrita(true,help,dialogoHelper)
+                if (dialogoHelper<dialogos.ligação_Hospicio.fala.length&&pressingM[5]&&escritaTermina&&dialogos.ligação_Hospicio.fala[dialogoHelper]!==undefined) {
+                    dialogoHelper++
+                    help = 0
+                    text = ''
+                    chageMd(false)
+                    escritaMD(false)
+                }else{
+                    if (pressingM[5]&&dialogoHelper>=dialogos.ligação_Hospicio.fala.length) {
+                        pilha[49] = false
+                        TrabHosp = false
                         k = true
                         help = 0
                         text = ''
@@ -2193,117 +2254,111 @@ codigo belo
                     }
                 }
             }
-        }
-        if (pilha[48]===false&&pilha[49]&&BOXes.sala) {
-            cronos=false
-            dialogos.ligação_Hospicio.escrita(true,help,dialogoHelper)
-            if (dialogoHelper<dialogos.ligação_Hospicio.fala.length&&pressingM[5]&&escritaTermina&&dialogos.ligação_Hospicio.fala[dialogoHelper]!==undefined) {
-                dialogoHelper++
-                help = 0
-                text = ''
-                chageMd(false)
-                escritaMD(false)
-            }else{
-                if (pressingM[5]&&dialogoHelper>=dialogos.ligação_Hospicio.fala.length) {
-                    pilha[49] = false
-                    TrabHosp = false
-                    k = true
-                    help = 0
-                    text = ''
-                    chageMd(false)
-                    escritaMD(false)
-                    dialogoHelper = 0
-                    cronos=true
-                }
-            }
-        }
-        if (pilha[51]&&BOXes.HospitalQuarto) {
-            if (pilha[50]) {
-                cronos=false
-                dialogos.conversa_irra.escrita(true,help,dialogoHelper)
-                if (dialogoHelper<dialogos.conversa_irra.fala.length&&pressingM[5]&&escritaTermina&&dialogos.conversa_irra.fala[dialogoHelper]!==undefined) {
-                    dialogoHelper++
-                    help = 0
-                    text = ''
-                    chageMd(false)
-                escritaMD(false)
-                }else{
-                    if (pressingM[5]&&dialogoHelper>=dialogos.conversa_irra.fala.length) {
-                        pilha[51] = false
-                        k = true
+            if (pilha[51]&&BOXes.HospitalQuarto) {
+                if (pilha[50]) {
+                    cronos=false
+                    dialogos.conversa_irra.escrita(true,help,dialogoHelper)
+                    if (dialogoHelper<dialogos.conversa_irra.fala.length&&pressingM[5]&&escritaTermina&&dialogos.conversa_irra.fala[dialogoHelper]!==undefined) {
+                        dialogoHelper++
                         help = 0
                         text = ''
                         chageMd(false)
                         escritaMD(false)
-                        dialogoHelper = 0
-                        cronos=true
+                    }else{
+                        if (pressingM[5]&&dialogoHelper>=dialogos.conversa_irra.fala.length) {
+                            pilha[51] = false
+                            k = true
+                            help = 0
+                            text = ''
+                            chageMd(false)
+                            escritaMD(false)
+                            dialogoHelper = 0
+                            cronos=true
+                        }
                     }
-                }
-            }else{
-                cronos=false
-                dialogos.conversa_norma.escrita(true,help,dialogoHelper)
-                if (dialogoHelper<dialogos.conversa_norma.fala.length&&pressingM[5]&&escritaTermina&&dialogos.conversa_norma.fala[dialogoHelper]!==undefined) {
-                    dialogoHelper++
-                    help = 0
-                    text = ''
-                    chageMd(false)
-                    escritaMD(false)
                 }else{
-                    if (pressingM[5]&&dialogoHelper>=dialogos.conversa_norma.fala.length) {
-                        pilha[51] = false
-                        k = true
+                    cronos=false
+                    dialogos.conversa_norma.escrita(true,help,dialogoHelper)
+                    if (dialogoHelper<dialogos.conversa_norma.fala.length&&pressingM[5]&&escritaTermina&&dialogos.conversa_norma.fala[dialogoHelper]!==undefined) {
+                        dialogoHelper++
                         help = 0
                         text = ''
                         chageMd(false)
                         escritaMD(false)
-                        dialogoHelper = 0
-                        cronos=true
+                    }else{
+                        if (pressingM[5]&&dialogoHelper>=dialogos.conversa_norma.fala.length) {
+                            pilha[51] = false
+                            k = true
+                            help = 0
+                            text = ''
+                            chageMd(false)
+                            escritaMD(false)
+                            dialogoHelper = 0
+                            cronos=true
+                        }
                     }
                 }
             }
-        }
-        if (pilha[51]===false&&BOXes.ponto&&pilha[52]) {
-            if (pilha[50]) {
-                cronos=false
-                dialogos.refletir2.escrita(true,help,dialogoHelper)
-                if (dialogoHelper<dialogos.refletir2.fala.length&&pressingM[5]&&escritaTermina&&dialogos.refletir2.fala[dialogoHelper]!==undefined) {
-                    dialogoHelper++
-                    help = 0
-                    text = ''
-                    chageMd(false)
-                    escritaMD(false)
-                }else{
-                if (pressingM[5]&&dialogoHelper>=dialogos.refletir2.fala.length) {
-                        pilha[52] = false
-                        k = true
+            if (pilha[51]===false&&BOXes.ponto&&pilha[52]) {
+                if (pilha[50]) {
+                    cronos=false
+                    dialogos.refletir2.escrita(true,help,dialogoHelper)
+                    if (dialogoHelper<dialogos.refletir2.fala.length&&pressingM[5]&&escritaTermina&&dialogos.refletir2.fala[dialogoHelper]!==undefined) {
+                        dialogoHelper++
                         help = 0
                         text = ''
                         chageMd(false)
                         escritaMD(false)
-                        dialogoHelper = 0
-                        cronos=true
+                    }else{
+                        if (pressingM[5]&&dialogoHelper>=dialogos.refletir2.fala.length) {
+                                pilha[52] = false
+                                k = true
+                                help = 0
+                                text = ''
+                                chageMd(false)
+                                escritaMD(false)
+                                dialogoHelper = 0
+                                cronos=true
+                                semana=4
+                                room[3] = true
+                                room[5] = false
+                                personagemX = 295
+                                personagemY = 289+70
+                                BOXes.sala = true
+                                countdown = false
+                                setTimeout(function(){countdown = true},1000)
+                                BOXes.ponto = false
+                        }
                     }
-                }
-            } else {
-                cronos=false
-                dialogos.refletir1.escrita(true,help,dialogoHelper)
-                if (dialogoHelper<dialogos.refletir1.fala.length&&pressingM[5]&&escritaTermina&&dialogos.refletir1.fala[dialogoHelper]!==undefined) {
-                    dialogoHelper++
-                    help = 0
-                    text = ''
-                    chageMd(false)
-                    escritaMD(false)
-                }else{
-                if (pressingM[5]&&dialogoHelper>=dialogos.refletir1.fala.length) {
-                        pilha[52] = false
-                        k = true
+                } else {
+                    cronos=false
+                    dialogos.refletir1.escrita(true,help,dialogoHelper)
+                    if (dialogoHelper<dialogos.refletir1.fala.length&&pressingM[5]&&escritaTermina&&dialogos.refletir1.fala[dialogoHelper]!==undefined) {
+                        dialogoHelper++
                         help = 0
                         text = ''
                         chageMd(false)
                         escritaMD(false)
-                        dialogoHelper = 0
-                        cronos=true
-                        semana=4
+                    }else{
+                    if (pressingM[5]&&dialogoHelper>=dialogos.refletir1.fala.length) {
+                            pilha[52] = false
+                            k = true
+                            help = 0
+                            text = ''
+                            chageMd(false)
+                            escritaMD(false)
+                            dialogoHelper = 0
+                            cronos=true
+                            semana=4
+                            room[3] = true
+                            room[5] = false
+                            personagemX = 295
+                            personagemY = 289+70
+                            BOXes.sala = true
+                            countdown = false
+                            setTimeout(function(){countdown = true},1000)
+                            BOXes.ponto = false
+                        }
                     }
                 }
             }
@@ -2312,12 +2367,394 @@ codigo belo
         if(semana===4){
             if (pilha[50]) {
                 //sexta 1.2
-
+                if (pilha[53]) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        help = 0
+                        text=''
+                    }
+                    week().Falas_Sala.escrita(true,help,1)
+                    if (pressingM[5]) {
+                        k=true
+                        cronos=true
+                        pilha[53] = false
+                    }
+                }
+                if (pilha[54]&&pilha[53]===false) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        help = 0
+                        text=''
+                    }
+                    week().Falas_Sala.escrita(true,help,2)
+                    if (pressingM[5]) {
+                        k=true
+                        cronos=true
+                        pilha[54] = false
+                    }
+                }
+                if (pilha[55]&&pilha[54]===false) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        help = 0
+                        text=''
+                    }
+                    week().Falas_Sala.escrita(true,help,3)
+                    if (pressingM[5]) {
+                        k=true
+                        cronos=true
+                        pilha[55] = false
+                    }
+                }
+                if (THECISIONS.sex[0]===true&&pilha[56]) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        help = 0
+                        text=''
+                    }
+                    week().Falas_Sala.escrita(true,help,4)
+                    if (pressingM[5]) {
+                        k=true
+                        pilha[56] = false
+                        setTimeout(function(){pilha[57]=false},20000)
+                    }
+                }
+                if (THECISIONS.sex[0]===false&&pilha[56]) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        help = 0
+                        text=''
+                    }
+                    week().Falas_Sala.escrita(true,help,5)
+                    if (pressingM[5]) {
+                        k=true
+                        pilha[56] = false
+                        setTimeout(function(){pilha[57]=false},20000)
+                    }
+                }
+                if (pilha[57]===false&&pilha[58]) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        help = 0
+                        text=''
+                    }
+                    dialogos.ligação_Hospicio3.escrita(true,help,dialogoHelper)
+                    if (dialogoHelper<dialogos.ligação_Hospicio3.fala.length&&pressingM[5]&&escritaTermina&&dialogos.ligação_Hospicio3.fala[dialogoHelper]!==undefined) {
+                        dialogoHelper++
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                    }else{
+                        if (pressingM[5]&&dialogoHelper>=dialogos.ligação_Hospicio3.fala.length) {
+                            pilha[58] = false
+                            k = true
+                            help = 0
+                            text = ''
+                            chageMd(false)
+                            escritaMD(false)
+                            dialogoHelper = 0
+                            cronos=true
+                            setTimeout(function(){pilha[59]=false},20000)
+                        }
+                    }
+                }
+                if (pilha[60]&&pilha[59]===false) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        help = 0
+                        text=''
+                    }
+                    dialogos.reflect2.escrita(true,help,dialogoHelper)
+                    if (dialogoHelper<dialogos.reflect2.fala.length&&pressingM[5]&&escritaTermina&&dialogos.reflect2.fala[dialogoHelper]!==undefined) {
+                        dialogoHelper++
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                    }else{
+                        if (pressingM[5]&&dialogoHelper>=dialogos.reflect2.fala.length) {
+                            pilha[60] = false
+                            k = true
+                            help = 0
+                            text = ''
+                            chageMd(false)
+                            escritaMD(false)
+                            dialogoHelper = 0
+                            cronos=true
+                            personagemX = 528
+                            personagemY = 320
+                            room[0] = true
+                            room[1] = false
+                            room[2] = false
+                            room[3] = false
+                            room[4] = false
+                            BOXes.banheiro = false
+                            BOXes.sala = false
+                            BOXes.cozinha = false
+                            BOXes.jardin = false
+                            BOXes.quarto = true
+                            semana=5
+                        }
+                    }
+                }
             }else{
                 //sexta 1.1
+                if (pilha[53]) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        help = 0
+                        text=''
+                    }
+                    week().Falas_Sala.escrita(true,help,1)
+                    if (pressingM[5]) {
+                        k=true
+                        cronos=true
+                        pilha[53] = false
+                    }
+                }
+                if (pilha[54]&&pilha[53]===false) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        help = 0
+                        text=''
+                    }
+                    week().Falas_Sala.escrita(true,help,2)
+                    if (pressingM[5]) {
+                        k=true
+                        cronos=true
+                        pilha[54] = false
+                    }
+                }
+                if (pilha[55]&&pilha[54]===false) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        help = 0
+                        text=''
+                    }
+                    week().Falas_Sala.escrita(true,help,3)
+                    if (pressingM[5]) {
+                        k=true
+                        cronos=true
+                        pilha[55] = false
+                    }
+                }
+                if (THECISIONS.sex[0]===true&&pilha[56]) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        help = 0
+                        text=''
+                    }
+                    week().Falas_Sala.escrita(true,help,4)
+                    if (pressingM[5]) {
+                        k=true
+                        pilha[56] = false
+                        setTimeout(function(){pilha[57]=false},20000)
+                    }
+                }
+                if (pilha[57]===false&&pilha[58]) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        help = 0
+                        text=''
+                    }
+                    dialogos.ligação_Hospicio2.escrita(true,help,dialogoHelper)
+                    if (dialogoHelper<dialogos.ligação_Hospicio2.fala.length&&pressingM[5]&&escritaTermina&&dialogos.ligação_Hospicio2.fala[dialogoHelper]!==undefined) {
+                        dialogoHelper++
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                    }else{
+                        if (pressingM[5]&&dialogoHelper>=dialogos.ligação_Hospicio2.fala.length) {
+                            pilha[58] = false
+                            k = true
+                            help = 0
+                            text = ''
+                            chageMd(false)
+                            escritaMD(false)
+                            dialogoHelper = 0
+                            cronos=true
+                            TrabHosp = false
+                        }
+                    }
+                }
+                if (BOXes.HospitalRecpcao&&Hospital_Recep.Collider(HitboxInfo)&&((k===false&&pilha[58]===false)||enterPlace)&&pilha[59]) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        help = 0
+                        text=''
+                        enterPlace = false
+                    }
+                    dialogos.Cirurgico.escrita(true,help,dialogoHelper)
+                    if (dialogoHelper<dialogos.Cirurgico.fala.length&&pressingM[5]&&escritaTermina&&dialogos.Cirurgico.fala[dialogoHelper]!==undefined) {
+                        dialogoHelper++
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                    }else{
+                        if (pressingM[5]&&dialogoHelper>=dialogos.Cirurgico.fala.length) {
+                            pilha[59] = false
+                            k = true
+                            help = 0
+                            text = ''
+                            chageMd(false)
+                            escritaMD(false)
+                            dialogoHelper = 0
+                            cronos=true
+                        }
+                    }
+                }
+                if (BOXes.HospitalRecpcao&&Hospital_Banco.Collider(HitboxInfo)&&((k===false&&pilha[59]===false)||enterPlace)&&pilha[59]===false&&pilha[60]) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        help = 0
+                        text=''
+                        enterPlace = false
+                    }
+                    dialogos.conversa_desconhecida.escrita(true,help,dialogoHelper)
+                    if (dialogoHelper<dialogos.conversa_desconhecida.fala.length&&pressingM[5]&&escritaTermina&&dialogos.conversa_desconhecida.fala[dialogoHelper]!==undefined) {
+                        dialogoHelper++
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                    }else{
+                        if (pressingM[5]&&dialogoHelper>=dialogos.conversa_desconhecida.fala.length) {
+                            pilha[60] = false
+                            k = true
+                            help = 0
+                            text = ''
+                            chageMd(false)
+                            escritaMD(false)
+                            dialogoHelper = 0
+                            cronos=true
+                        }
+                    }
+                }
+                if (pilha[60]===false&&pilha[61]) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        help = 0
+                        text=''
+                        enterPlace = false
+                    }
+                    dialogos.uhh.escrita(true,help,dialogoHelper)
+                    if (dialogoHelper<dialogos.uhh.fala.length&&pressingM[5]&&escritaTermina&&dialogos.uhh.fala[dialogoHelper]!==undefined) {
+                        dialogoHelper++
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                    }else{
+                        if (pressingM[5]&&dialogoHelper>=dialogos.uhh.fala.length) {
+                            pilha[61] = false
+                            k = true
+                            help = 0
+                            text = ''
+                            chageMd(false)
+                            escritaMD(false)
+                            dialogoHelper = 0
+                            cronos=true
+                        }
+                    }
+                }
+                if (pilha[62]&&pilha[61]===false) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        help = 0
+                        text=''
+                        enterPlace = false
+                    }
+                    week().Falas_Hospital_Recpcao.escrita(true,help,0)
+                    if (pressingM[5]) {
+                        k=true
+                        cronos=true
+                        pilha[62] = false
+                    }
+                }
+                if (BOXes.HospitalRecpcao&&Hospital_Banco.Collider(HitboxInfo)&&((k===false&&pilha[62]===false)||enterPlace)&&pilha[62]===false&&pilha[63]&&THECISIONS.sex[1]) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        help = 0
+                        text=''
+                        enterPlace = false
+                    }
+                    week().Falas_Hospital_Recpcao.escrita(true,help,1,true)
+                    TH('sex',1,false)
+                    if (pressingM[5]) {
+                        k=true
+                        cronos=true
+                        pilha[62] = false
+                    }
+                }
+                if (THECISIONS.sex[1]===false&&pilha[62]===false&&pilha[63]&&BOXes.ponto) {
+                    cronos = false
+                    if(k){
+                        pressingM[5] = false
+                        k = false
+                        help = 0
+                        text=''
+                        enterPlace = false
+                    }
+                    dialogos.reflect1.escrita(true,help,dialogoHelper)
+                    if (dialogoHelper<dialogos.reflect1.fala.length&&pressingM[5]&&escritaTermina&&dialogos.reflect1.fala[dialogoHelper]!==undefined) {
+                        dialogoHelper++
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                    }else{
+                        if (pressingM[5]&&dialogoHelper>=dialogos.reflect1.fala.length) {
+                            pilha[63] = false
+                            k = true
+                            help = 0
+                            text = ''
+                            chageMd(false)
+                            escritaMD(false)
+                            dialogoHelper = 0
+                            cronos=true
+                            semana=5
+                        }
+                    }
+                }
             }
         }
-    }
         enterPlace = false
         player.Caixas = BOXes
         player.ro = room
@@ -2331,6 +2768,7 @@ codigo belo
         player.SEMANA = semana
         player.stare = star
         player.playede = played
+        player.tab = TrabHosp
         localStorage.setItem('player',JSON.stringify(player))
         if (c) {
             console.log(cronologia)
@@ -2339,20 +2777,12 @@ codigo belo
             console.log(pilha)
             a(pilha.length)
             console.log(semana)
+            a(room)
             c = false
         }
         if(interaction===true&&text===''){
             interaction= false
         }
-        /*if (semanaes_trick[0]===false&&semana===0) {
-            stop = false
-            semanaes.segunda.createImg()
-            semanaes.segunda.NPC(0,34,true)
-            if (animation_end) {
-                semanaes_trick[0] = true
-                stop = true
-            }
-        }*/
     }
     let introHelper = 0
     let falseFrame = 0
@@ -2379,3 +2809,6 @@ codigo belo
 personagem.src = "images/personagem-andando.png"
 //quarta:{"ro":[true,false,false,false,false,false,false,false,false,false,false],"peX":480,"peY":320,"decisions":{"dec":[false,false,false,true,false,true,true,true,true,false,true,true],"qua":[],"qui":[],"sex":[]},"Cronologia":[false,true,1,true,false],"Cronoslogos":[true,true],"Cronos":true,"SEMANA":2,"stare":false,"playede":[true,true,true,false,false,false,false],"Caixas":{"quarto":true,"banheiro":false,"cozinha":false,"sala":false,"jardin":false,"ponto":false,"foraFabrica":false,"cozinhaFabrica":false,"fabricaRecept":false,"corredorFabrica":false,"escritorio":false},"pilhas":[false,false,false,false,true,false,false,false,false,false,false,false,false,true,false,false,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true]}
 //quinta:{"ro":[true,false,false,false,false,false,false,false,false,false,false],"peX":528,"peY":320,"decisions":{"dec":[false,false,false,true,false,true,true,true,true,false,true,true],"qua":[true,true,false,false,false,true],"qui":[],"sex":[]},"Cronologia":[false,true,1,true,false],"Cronoslogos":[true,true],"Cronos":true,"SEMANA":3,"stare":false,"playede":[true,true,true,true,true,false,false],"Caixas":{"quarto":true,"banheiro":false,"cozinha":false,"sala":false,"jardin":false,"ponto":false,"foraFabrica":false,"cozinhaFabrica":false,"fabricaRecept":false,"corredorFabrica":false,"escritorio":false},"pilhas":[false,false,false,false,true,false,false,false,false,false,false,false,false,true,false,false,false,true,true,true,false,false,true,true,true,false,false,true,false,true,false,false,true,false,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true]}
+//sexta1.1:{"ro":[false,false,false,true,false,false,false,false,false,false,false,false,false,false,false],"peX":295,"peY":289,"decisions":{"dec":[false,false,false,true,false,true,true,true,true,false,true,true],"qua":[true,true,false,false,false,true],"qui":[true,true,false,true],"sex":[]},"Cronologia":[false,true,1,true,false],"Cronoslogos":[true,true],"Cronos":false,"SEMANA":4,"stare":false,"playede":[true,true,true,true,true,false,false],"Caixas":{"quarto":false,"banheiro":false,"cozinha":false,"sala":true,"jardin":false,"ponto":false,"foraFabrica":false,"cozinhaFabrica":false,"fabricaRecept":false,"corredorFabrica":false,"escritorio":false,"HospitalFrente":false,"HospitalRecpcao":false,"HospitalCorredor":false,"HospitalQuarto":false},"pilhas":[false,false,false,false,true,false,false,false,false,false,false,false,false,true,false,false,false,true,true,true,false,false,true,true,true,false,false,true,false,true,false,false,true,false,false,false,false,false,false,true,false,false,false,false,false,false,true,true,false,false,false,false,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true]}
+//sexta1.2:{"ro":[false,false,false,true,false,false,false,false,false,false,false,false,false,false,false],"peX":295,"peY":359,"decisions":{"dec":[false,false,false,true,false,true,true,true,true,false,true,true],"qua":[true,true,false,false,false,true],"qui":[true,true,false,false,false],"sex":[]},"Cronologia":[false,true,1,true,false],"Cronoslogos":[true,true],"Cronos":true,"SEMANA":4,"stare":false,"playede":[true,true,true,true,true,false,false],"Caixas":{"quarto":false,"banheiro":false,"cozinha":false,"sala":true,"jardin":false,"ponto":false,"foraFabrica":false,"cozinhaFabrica":false,"fabricaRecept":false,"corredorFabrica":false,"escritorio":false,"HospitalFrente":false,"HospitalRecpcao":false,"HospitalCorredor":false,"HospitalQuarto":false},"pilhas":[false,false,false,false,true,false,false,false,false,false,false,false,false,true,false,false,false,true,true,true,false,false,true,true,true,false,false,true,false,true,false,false,true,false,false,false,false,false,false,true,false,false,false,false,false,false,false,true,false,false,true,false,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true],"tab":false}
+//sabado2:{"ro":[false,false,false,false,false,true,false,false,false,false,false,false,false,false,false],"peX":559,"peY":224,"decisions":{"dec":[false,false,false,true,false,true,true,true,true,false,true,true],"qua":[true,true,false,false,false,true],"qui":[true,true,false,true],"sex":[true,false]},"Cronologia":[false,true,1,true,false],"Cronoslogos":[true,true],"Cronos":true,"SEMANA":4,"stare":false,"playede":[true,true,true,true,true,false,false],"Caixas":{"quarto":false,"banheiro":false,"cozinha":false,"sala":false,"jardin":false,"ponto":true,"foraFabrica":false,"cozinhaFabrica":false,"fabricaRecept":false,"corredorFabrica":false,"escritorio":false,"HospitalFrente":false,"HospitalRecpcao":false,"HospitalCorredor":false,"HospitalQuarto":false},"pilhas":[false,false,false,false,true,false,false,false,false,false,false,false,false,true,false,false,false,true,true,true,false,false,true,true,true,false,false,true,false,true,false,false,true,false,false,false,false,false,false,true,false,false,false,false,false,false,true,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true],"tab":false}
