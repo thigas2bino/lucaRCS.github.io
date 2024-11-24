@@ -1,6 +1,6 @@
 const canvas = document.getElementById('canva1')
 const cxt = canvas.getContext('2d')
-import {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica, quarto_cama, escritorio_Einar,Places, animation_end,start,Acidia, segunda, anend, tersa, Quarta, Quinta, Hospital_Corredor, Hospital_Frente, Hospital_Quarto, Hospital_Recepcao, salaC, Sexta} from "./places.js"
+import {room,quarto,cozinha,banheiro,sala,jardin,ponto_de_onibus,fora_fabrica,cozinha_fabrica,fabrica_recepcao,corredor_fabrica, quarto_cama, escritorio_Einar,Places, animation_end,start,Acidia, segunda, anend, tersa, Quarta, Quinta, Hospital_Corredor, Hospital_Frente, Hospital_Quarto, Hospital_Recepcao, salaC, Sexta, config} from "./places.js"
 import { HitBoxes } from "./Colision.js"
 import { Criador_de_falas,DECISIONS,TH,THECISIONS,chageMd,chager,chagf,check,choice,colaboration, escritaMD, escritaTermina} from "./talk.js"
 //debug
@@ -11,7 +11,12 @@ let TrabHosp = true
 if(localStorage.getItem('player')!== null&&JSON.parse(localStorage.getItem('player')).tab!==undefined){
     TrabHosp = JSON.parse(localStorage.getItem('player')).tab
 }
-let onibus = false
+let onibus = [false,false,false,false,false]
+let perso = true
+let onibusX = -900
+let OnibusY = 97
+
+let configs = false
 
 let star = true
 let played = [false,false,false,false,false,false,false,false,false]
@@ -241,6 +246,11 @@ const clicking = document.addEventListener('click',function (event) {
             temp = true
         }
     }
+    if (event.clientX>=0&&event.clientX<=40) {
+        if (event.clientY>=0&&event.clientY<=40) {
+            configs = !(configs)
+        }
+    }
 })
 const pressin = document.addEventListener('keydown',function(event){
     if(event.key === 'd'){
@@ -336,6 +346,7 @@ personagem.onload = function(){
     function animation(){
         cxt.clearRect(0,0,y,x)
         nemo = new Places('images/nemo-andando.png',10,nemo_pos[0],nemo_pos[1],330,330,27,240,240)
+        let Onibus = new Places('images/Onibus.png',0,onibusX,OnibusY,900,700)
         if(place){
             console.log(personagemX)
             console.log(personagemY)
@@ -358,6 +369,7 @@ personagem.onload = function(){
             Hospital_Quarto.animeteImg()
             Hospital_Recepcao.createImg()
             Hospital_Recepcao.animeteImg()
+            config.animeteImg(true)
         }
         if (star&&played[0]===false) {
             if (true) {
@@ -502,6 +514,7 @@ personagem.onload = function(){
         let Hospital_Recep = new HitBoxes(880,480,300,80)
         let Hospital_Banco = new HitBoxes(200,480,450,60)
         let sofa = new HitBoxes(257,660,430,180)
+        let otherparede = new HitBoxes(1200,140,360,780)
 
         //hit interactions
         let Ponts_interest = {
@@ -518,7 +531,7 @@ personagem.onload = function(){
             trabalhar: new HitBoxes(620,460,200,180,10,0),
         }
         //cxt.fillStyle = 'red'
-        //cxt.fillRect(257,660,430,80)
+        //cxt.fillRect(1200,140,360,780)
         //hitbox info
         let HitboxInfo = new HitBoxes(personagemX+120,personagemY+260,85,50)
         if(room[0]||room[1]||room[2]||room[3]){
@@ -554,7 +567,11 @@ personagem.onload = function(){
         if(room[2]){
             let banheiro_planta = new HitBoxes(1122,403,110,134)
 
+            let prt = new HitBoxes(0,140,360,780)
+
             colliderArson(2,banheiro_planta)
+
+            colliderArson(2,prt)
 
             colliderArson(2,sala_quina2)
         }
@@ -770,34 +787,17 @@ personagem.onload = function(){
             BOXes.ponto = false
         }
         if(ponto_viagem.Collider(HitboxInfo)&&enterPlace&&room[5]&&trasiType===0&&countdown&&TrabHosp){
-            room[6] = true
-            room[5] = false
-            personagemX = 925
-            BOXes.foraFabrica = true
-            BOXes.ponto = false
-            enterPlace = false
-            countdown = false
-            setTimeout(function(){countdown = true},1000)
+            onibus[0] = true
+            cronos = false
         }
         if(ponto_viagem.Collider(HitboxInfo)&&enterPlace&&room[5]&&trasiType===0&&countdown&&TrabHosp===false){
-            room[11] = true
-            room[5] = false
-            personagemX = 925
-            BOXes.HospitalFrente = true
-            BOXes.ponto = false
-            enterPlace = false
-            countdown = false
-            setTimeout(function(){countdown = true},1000)
+            onibus[0] = true
+            cronos = false
         }
         //fora fabrica
         if(enterPlace&&ponto_volta.Collider(HitboxInfo) && room[6]&&trasiType===0&&countdown){
-            room[5] = true
-            room[6] = false
-            personagemX = 559
-            BOXes.ponto = true
-            BOXes.foraFabrica = false
-            countdown = false
-            setTimeout(function(){countdown = true},1000)
+            onibus[0] = true
+            cronos = false
         }
         if(enterPlace&&porta_fabrica.Collider(HitboxInfo)&&room[6]&&countdown){
             room[8] = true
@@ -884,13 +884,8 @@ personagem.onload = function(){
         }
         //Hospital Frente
         if (ponto_volta.Collider(HitboxInfo)&&enterPlace&&room[11]&&countdown) {
-            room[5] = true
-            room[11] = false
-            personagemX = 559
-            BOXes.ponto = true
-            BOXes.HospitalFrente = false
-            countdown = false
-            setTimeout(function(){countdown = true},1000)
+            onibus[0] = true
+            cronos = false
         }  
         if (porta_Hospital.Collider(HitboxInfo)&&enterPlace&&room[11]&&countdown) {
             room[12] = true
@@ -974,8 +969,93 @@ personagem.onload = function(){
                 xbet++
             }
         }
-        if (star===false) {
+        if (star===false&&perso) {
             cxt.drawImage(personagem,242*(frameX+frameM),0,242,242,personagemX,personagemY,330,330)
+        }
+        if (onibus[0]) {
+            countdown = false
+            if (onibusX<=(personagemX-609)) {
+                onibusX+=3
+            }else{
+                if (onibus[2]===false) {
+                    setTimeout(() => {
+                        onibus[1] = true
+                    }, 2000);
+                    onibus[2] = true
+                }
+            }
+            if (onibus[1]) {
+                if (onibus[4]===false) {
+                    perso=false
+                }else{
+                    perso=true
+                }
+                if (onibusX>=1360) {
+                    if (onibus[3]===false&&onibus[4]===false) {
+                        onibus[3] = true
+                        if (room[5]) {
+                            if (TrabHosp) {
+                                room[6] = true
+                                room[5] = false
+                                personagemX = 925
+                                BOXes.foraFabrica = true
+                                BOXes.ponto = false
+                                enterPlace = false
+                                countdown = false
+                                setTimeout(function(){countdown = true},1000)
+                            }else{
+                                room[11] = true
+                                room[5] = false
+                                personagemX = 925
+                                BOXes.HospitalFrente = true
+                                BOXes.ponto = false
+                                enterPlace = false
+                                countdown = false
+                                setTimeout(function(){countdown = true},1000)
+                            }
+                        }else{
+                            if (room[6]) {
+                                room[5] = true
+                                room[6] = false
+                                personagemX = 559
+                                BOXes.ponto = true
+                                BOXes.foraFabrica = false
+                                countdown = false
+                                setTimeout(function(){countdown = true},1000)
+                            }else{
+                                room[5] = true
+                                room[11] = false
+                                personagemX = 559
+                                BOXes.ponto = true
+                                BOXes.HospitalFrente = false
+                                countdown = false
+                                setTimeout(function(){countdown = true},1000)
+                            }
+                        }
+                    }
+                    if (onibus[4]===true) {
+                        onibus[0] = false
+                        onibus[1] = false
+                        onibus[2] = false
+                        onibus[3] = false
+                        onibus[4] = false
+                        onibusX = -900
+                        countdown=true
+                    }
+                }else{
+                    onibusX+=3
+                }
+            }
+            if (onibus[3]===true&&onibus[4]===false) {
+                onibusX=-900
+                onibus[4] = true
+                onibus[1] = false
+                onibus[2] = false
+                cronos = true
+                countdown = true
+            }
+            Onibus.createImg()
+            Onibus.animeteImg(true)
         }
         if(interaction_jumper||colaboration){
             interaction = false
