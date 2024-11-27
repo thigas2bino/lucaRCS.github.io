@@ -326,7 +326,7 @@ let estabilizador2 = 18
 const personagem = new Image()
 let personagemX = 528
 let personagemY = 320
-let personagemSpeed = 24
+let personagemSpeed = 5
 if(localStorage.getItem('player')!== null){
     personagemX = JSON.parse(localStorage.getItem('player')).peX
     personagemY = JSON.parse(localStorage.getItem('player')).peY
@@ -365,13 +365,13 @@ class Quadrinhos {
         this.image.onload = ()=>{
             if (active) {
                 a('loaded')
-                canvas.drawImage(this.image,1360,765)
+                cxt.drawImage(this.image,1360,765)
             }
         }
     }
     DrawIt(active){
         if (active) {
-            canvas.drawImage(this.image,1360,765)
+            cxt.drawImage(this.image,1360,765)
         }
     }
 }
@@ -3046,7 +3046,7 @@ personagem.onload = function(){
                 if (pilha[74]) {
                     star = true
                     Final_Aceita.load(star)
-                    Final_Aceita.drawImage(star)
+                    Final_Aceita.DrawIt(star)
                 }
             }else{
                 //sabado 3
@@ -3061,7 +3061,7 @@ personagem.onload = function(){
                     cronos=false
                     star = true
                     quadro_nemo1.load(star)
-                    quadro_nemo1.drawImage(star)
+                    quadro_nemo1.DrawIt(star)
                     if (pressingM[5]) {
                         k=true
                         pilha[70] = false
@@ -3078,7 +3078,7 @@ personagem.onload = function(){
                     cronos=false
                     star = true
                     quadro_nemo2.load(star)
-                    quadro_nemo2.drawImage(star)
+                    quadro_nemo2.DrawIt(star)
                     if (pressingM[5]) {
                         k=true
                         pilha[71] = false
@@ -3095,7 +3095,7 @@ personagem.onload = function(){
                     cronos=false
                     star = true
                     quadro_nemo3.load(star)
-                    quadro_nemo3.drawImage(star)
+                    quadro_nemo3.DrawIt(star)
                 }
                 if (pilha[71]===false&&pilha[73]) {
                     cronos = false
