@@ -7,7 +7,8 @@ let THECISIONS = {
     dec: [],
     qua: [],
     qui: [],
-    sex: []
+    sex: [],
+    sab: [],
 }
 let DECISIONS = THECISIONS.dec
 if(localStorage.getItem('player')!== null&&JSON.parse(localStorage.getItem('player')).decisions!==undefined){
@@ -61,7 +62,7 @@ class Criador_de_falas{
         this.semana = semana
         this.sino = SINO
     }
-    escrita(but,helper,x,tell=false,canF=true){
+    escrita(but,helper,x,tell=false,canF=true,alfa='sim                                                      ',beta='não'){
         if(but&&star===false){
             check = true
             cxt.drawImage(caixa,300,600,800,250)
@@ -83,7 +84,7 @@ class Criador_de_falas{
             }
            wrapText(cxt, text, xPos, yPos, maxWidth, lineHeight);
             if (choice&&star===false) {
-                cxt.fillText('sim                                                      não',370,730)
+                cxt.fillText(alfa+beta,370,730)
                 if(yes){
                     cxt.fillText('*',358,730)
                 }else{
