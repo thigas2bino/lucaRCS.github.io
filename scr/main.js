@@ -84,11 +84,11 @@ if(localStorage.getItem('player')!== null){
     semana = JSON.parse(localStorage.getItem('player')).SEMANA
 }
 let dialogos = {
-    dialog1: new Criador_de_falas(['Nemo: Oi, Einar, como vc, tá?','Einar: o de sempre, e você?','Nemo: Estou bem, super bem, tive um excelente final de semana. Viajei bastante. E você, foi visitar a mamãe harpy hare como sempre?','Einar: Quê?','Nemo: Só quero puxar assunto mesmo, mas então, eu no sábado fui numa feira de antiguidades em outra cidade, foi incrível, até comprei algumas decorações para casa, também passei em uma livraria, até mesmo encontrei um novo livro para você.','Einar: sério mesmo? Qual livro você comprou?','Nemo: O mito de Sísifo, é de filosofia, fala um pouco sobre a falta de sentido na vida e na rotina, e como ou por que devemos continuar a viver apesar dessa falta','Einar: Não curto muito filosofia, mas parece interessante.','Nemo: Eu já cheguei a ler e é super a sua cara curte esse tipo de coisa, bem eu espero, se isso acontecer vou finalmente descobrir qual gênero de livro você gosta.','Einar: ah, mas eu nem sou chato pra esse tipo de coisa, você que não recomenda algo realmente bom, tipo aquele Diário de um banana','Nemo: Bém, acho que vou procurar algo nesse estilo, mas ainda vou tentar ampliar seu repertório, talvez você gostasse de ´´As vantagens de ser invisível´´','Einar: Já assisti o filme, só não sei se é a mesma coisa','Nemo: Eu acho o filme adaptado bem mais ou menos, mas já dá uma boa ideia do que se trata do livro','Einar: entendo, talvez eu leia, mas só talvez.','Nemo: Eu prometo a você, Einar , que um dia iria fazer você gostar de ler, juro pelo Zirgwè que tentarei isso.','Einar: boa sorte Nemo Santos'],0,[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]),
-    dialog2: new Criador_de_falas(['Nemo: Ei cara, está tudo bem? Você não foi na cozinha hoje','Einar: Ah, sim, é que eu esqueci a marmita, por isso não passei lá','Nemo: Nossa é horrível quando isso acontece, mas não se preocupe, eu por acaso trouxe uma marmita a mais','Einar: por acaso? Sei','Nemo: Eu gosto de cozinhar e por acaso trouxe algumas comidinhas para dividir com o pessoal, toma aqui(Você recebe uma marmita)','Einar: uou, muito obrigado, já estava ficando com fome para ser sincero você sempre me salva nessas horas','Nemo: Não tem problema Einar, amigos são para isso, sempre pode contar comigo para qualquer coisa','Einar: Valeu, é bom ter um amigo como você.','Nemo: Então, como foi sua visita à mamãe harpy hare?','Einar: Harpy o que?','Nemo: Nada não, esquece. Te falta um pouco de cultura às vezes, Einar','Einar: Entendi. Inclusive, só avisando que vou ficar até mais tarde hoje','Nemo: Eita, você teve problemas com o chefinho? ','Einar: sim, digamos que eu cheguei um pouco atrasado hoje e ele não gostou muito.','Nemo: Eu tenho uma teoria que o chefinho só gosta de dinheiro e dele mesmo, qualquer coisa que foge disso ele odeia','Nemo: Tenho que ir, tchau el hermano','Einar; Tchau, até a próxima','Nemo: quase esqueci de falar, mas comprei um livro para tu(Você recebe um livro)'],0,[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,]),
-    fumando: new Criador_de_falas(['Mamãe Harpy hare? Conhecendo o Nemo, ele deve ter pego esse nome de alguma música ou livro.','*dá um trago no cigarro','De qualquer forma, se ele relacionou isso a ela, não deve ser coisa boa.'],0,[false,false,false]),
-    dialog3: new Criador_de_falas(['Nemo: E aí, Einar? Tô vendo que hoje você trouxe sua marmita. A minha comida é tão ruim assim???','Einar: Ei, fica tranquilo, só acordei mais cedo hoje, aí fiz minha marmita para você não esquentar a cabeça comigo.','Nemo: Einar, eu gosto de cozinhar, então eu já acabo trazendo comida a mais sempre, e não me importo nem um pouco em dividir com você, especialmente se significar que você vai poder dormir mais, porque dá pra ver de longe essas suas olheiras','Einar: bom, obrigado, eu acho','Nemo: Cara, acho que você tá muito desanimado esses dias, a gente tem que marcar de sair pra levantar esse ânimo seu aí. Tá livre amanhã depois do trabalho?','Einar: Mas eu tô o mesmo de sempre, e precisa ser amanhã? Queria muito terminar de zerar o Terraria.','Nemo: Não, você não tá, eu tô sentindo, e olha que eu tenho propriedade pra falar isso depois de tantos anos te aturando. E claro que precisa ser amanhã! Já esqueceu que dia é amanhã?','Einar: se você diz.Mas o que tem amanhã de tão importante?','Nemo: O nosso encontro, claro!','Einar: …Tá bom então','Nemo: Então tá marcado, te vejo amanhã no almoço e depois do trabalho. Só lembra que já não estamos mais em 2024, então sem cigarros no nosso passeio de amanhã!','Einar: eu sei, mas nada me impede de fumar antes de ir, ninguém vai falar nada mesmo.','Nemo: Claro que vão, provavelmente vão nos barrar, eu sabia que você estava chegando bem antes de você entrar só sentindo o cheiro do seu cigarro.','Einar: não é pra tanto né, sei que fica um pouco do cheiro, mas não no nível que você tá falando','Nemo: Enfim, falou, Einar, te vejo amanhã','Einar: Até, tchau.'],1,[false]),
-    dialog4: new Criador_de_falas(['Nemo: E aí, Einar, não te vi hoje na cozinha hoje, o que aconteceu?','Einar: só esqueci a marmita, mas acho que consigo aguentar, não tô com tanta fome.','Nemo: Cara, é sério isso? Depois de tantos anos de amizade e você vai mentir na cara dura?Não se preocupa que eu acabei me empolgando e trouxe mais comida hoje, toma aqui sua parte','Einar: Acho que não é empolgação, você quase sempre faz isso na verdade, mas bom, eu agradeço muito','Nemo: Não faço isso quase sempre… Só acontece de ser sempre que você esquece sua marmita.','Einar: então você faz mais por que sabe que eu esqueço?','Nemo: Já disse, tudo coincidência. E outra, eu também gosto de ajudar como posso, então se eu tô ajudando quando preparo seu almoço, com certeza vou continuar com isso. Aí você vai poder se concentrar em outras coisas, como dormir mais. Afinal essas suas olheiras já estão me dando pesadelos de tão grandes que elas estão!','Einar: Sei, coincidência. Mas enfim, muito obrigado, de novo. E sobre as olheiras, não é pra tanto vai.','Nemo: Claro que é, amanhã a gente vai sair depois do trabalho e você vai ver como as criancinhas saem correndo quando te veem','Einar: E desde quando que a gente vai sair que eu não to sabendo?','Nemo: Ora, desde agora, acabamos de combinar','Einar: ah… Odeio quando você faz isso.','Nemo: Se odiasse mesmo você não apareceria. Enfim, te vejo amanhã no almoço e depois do trabalho então, só lembra que já não estamos mais em 2024, então sem cigarros no nosso passeio de amanhã!','Einar: eu sei, mas nada me impede de fumar antes de ir, ninguém vai falar nada mesmo','Nemo: Claro que vão, provavelmente vão nos barrar, eu sabia que você estava chegando bem antes de você entrar só sentindo o cheiro do seu cigarro.','Einar: não é pra tanto né, sei que fica um pouco do cheiro, mas não no nível que você tá falando','Nemo: Enfim, falou, Einar, te vejo amanhã','Einar: Até, tchau.'],1,[false]),
+    dialog1: new Criador_de_falas(['Nemo: Oi, Einar, como você, tá?','Einar: o de sempre, e você?','Nemo: Estou bem, super bem. Tive um excelente final de semana. Viajei bastante.', 'Nemo: E você, foi visitar a mamãe harpy hare como sempre?','Einar: Quê?','Nemo: Poxa, pensei que você conhecesse considerando o tempo que você passa na internet.', 'Nemo: Mas enfim, no sábado eu dei um passeio na cidade vizinha e encontei uma ótima livraria.', 'Até mesmo encontrei um novo livro para você.','Einar: Sério mesmo? Qual livro você comprou?','Nemo: O mito de Sísifo. É de filosofia, fala um pouco sobre a falta de sentido na vida e na rotina, e como ou porquê devemos continuar a viver apesar dessa falta.', '*Você recebe um livro','Einar: Não curto muito filosofia, mas parece interessante.','Nemo: Eu já cheguei a ler e é super a sua cara curtir esse tipo de coisa.', 'Nemo: Bem eu espero, pelo menos. Um dia ainda vou descobrir qual gênero de livro você gosta.','Einar: Ah, mas eu nem sou chato pra esse tipo de coisa, você que não sabe recomendar livro.','Nemo: Não é como se você colaborasse, você se cansa de ler no primeiro capítulo!','Nemo: Mas sério, um dia ainda farei você gostar de ler, Einar.','Einar: boa sorte Nemo','*O sinal toca','Nemo: Enfim, hermano, tenho que ir agora, te vejo amanhã!'],0,[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]),
+    dialog2: new Criador_de_falas(['Nemo: Ei cara, está tudo bem? Você não foi na cozinha hoje.','Einar: Ah, sim, é que eu esqueci a marmita, por isso não passei lá.','Nemo: Nossa, cara, de novo? Mas pode ficar tranquilo, eu por acaso trouxe uma marmita a mais','Einar: Por acaso?','Sei.','Nemo: Eu gosto de cozinhar, e por acaso trouxe uma marmita a mais. Toma aqui.','(Você recebe uma marmita)','Einar: Uou, muito obrigado, já estava ficando com fome para ser sincero.','Einar: Você sempre me salva nessas horas','Nemo: Sem problemas, Einar, amigos são para isso.','Einar: Valeu, é bom ter um amigo como você.','Nemo: Mas então, como foi seu fim de semana? Visitou a mamãe harpy hare?','Einar: Harpy o que?','Nemo: Nada não, esquece. Te falta um pouco de cultura às vezes, Einar','Einar: Entendi. Inclusive, só avisando que vou ficar até mais tarde hoje','Nemo: Eita, problemas com o chefinho? ','Einar: Só cheguei um pouco atrasado hoje mesmo e ele não gostou muito.','Nemo: Eu tenho uma teoria que o chefinho só gosta de dinheiro e dele mesmo, qualquer coisa que foge disso ele odeia','*O sinal toca','Nemo: Agora tenho que ir. Mas antes, já estava quase esquecendo, tenho um presente para você, espero que goste.','*Você recebe um livro', 'Nemo: Tchau hermano','Einar; Tchau, até a próxima, obrigado pelo livro.'],0,[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,]),
+    fumando: new Criador_de_falas(['Mamãe Harpy hare? Conhecendo o Nemo, ele deve ter pego esse nome de algum filme ou música.','*Dá um trago no cigarro','De qualquer forma, se ele relacionou isso a ela, não deve ser coisa boa.'],0,[false,false,false]),
+    dialog3: new Criador_de_falas(['Nemo: E aí, Einar? Tô vendo que hoje você trouxe sua marmita.','Nemo: A minha comida é tão ruim assim???','Einar: Ei, fica tranquilo, só acordei mais cedo hoje, aí fiz minha marmita para você não esquentar a cabeça comigo.','Nemo: Einar, eu gosto de cozinhar, então eu já acabo trazendo comida a mais sempre, e não me importo nem um pouco em dividir com você, especialmente se significar que você vai poder dormir mais, porque dá pra ver de longe essas suas olheiras','Einar: Bom, obrigado, eu acho','Nemo: Cara, acho que você tá muito desanimado esses dias, a gente tem que marcar de sair pra levantar esse ânimo seu aí.','Tá livre amanhã depois do trabalho?','Einar: Mas eu tô o mesmo de sempre, e precisa ser amanhã? Queria muito terminar de zerar o Terraria.','Nemo: Não, você não tá, eu tô sentindo, e olha que eu tenho propriedade pra falar isso depois de tantos anos te aturando. E claro que precisa ser amanhã! Já esqueceu que dia é amanhã?','Einar: se você diz.Mas o que tem amanhã de tão importante?','Nemo: O nosso encontro, claro!','Einar: …Tá bom então','Nemo: Então tá marcado, te vejo amanhã no almoço e depois do trabalho. Só lembra que já não estamos mais em 2024, então sem cigarros no nosso passeio de amanhã!','Einar: eu sei, mas nada me impede de fumar antes de ir, ninguém vai falar nada mesmo.','Nemo: Claro que vão, provavelmente vão nos barrar, eu sabia que você estava chegando bem antes de você entrar só sentindo o cheiro do seu cigarro.','Einar: não é pra tanto né, sei que fica um pouco do cheiro, mas não no nível que você tá falando','Nemo: Enfim, falou, Einar, te vejo amanhã','Einar: Até, tchau.'],1,[false]),
+    dialog4: new Criador_de_falas(['Nemo: E aí, Einar, não te vi hoje na cozinha hoje, o que aconteceu?','Einar: só esqueci a marmita, mas acho que consigo aguentar, não tô com tanta fome.','Nemo: Cara, é sério isso? Depois de tantos anos de amizade e você vai mentir na cara dura? Não se preocupa que eu acabei me empolgando e trouxe mais comida hoje, toma aqui sua parte','Einar: Acho que não é empolgação, você quase sempre faz isso na verdade, mas bom, eu agradeço muito','Nemo: Não faço isso quase sempre… Só acontece de ser sempre que você esquece sua marmita.','Einar: então você faz mais por que sabe que eu esqueço?','Nemo: Já disse, tudo coincidência. E outra, eu também gosto de ajudar como posso, então se eu tô ajudando quando preparo seu almoço, com certeza vou continuar com isso. Aí você vai poder se concentrar em outras coisas, como dormir mais. Afinal essas suas olheiras já estão me dando pesadelos de tão grandes que elas estão!','Einar: Sei, coincidência. Mas enfim, muito obrigado, de novo. E sobre as olheiras, não é pra tanto vai.','Nemo: Claro que é, amanhã a gente vai sair depois do trabalho e você vai ver como as criancinhas saem correndo quando te veem','Einar: E desde quando que a gente vai sair que eu não to sabendo?','Nemo: Ora, desde agora, acabamos de combinar','Einar: ah… Odeio quando você faz isso.','Nemo: Se odiasse mesmo você não apareceria. Enfim, te vejo amanhã no almoço e depois do trabalho então, só lembra que já não estamos mais em 2024, então sem cigarros no nosso passeio de amanhã!','Einar: eu sei, mas nada me impede de fumar antes de ir, ninguém vai falar nada mesmo','Nemo: Claro que vão, provavelmente vão nos barrar, eu sabia que você estava chegando bem antes de você entrar só sentindo o cheiro do seu cigarro.','Einar: não é pra tanto né, sei que fica um pouco do cheiro, mas não no nível que você tá falando','Nemo: Enfim, falou, Einar, te vejo amanhã','Einar: Até, tchau.'],1,[false]),
     reflexao: new Criador_de_falas(['Bom, o passeio é só amanhã, então acho que não tem problema fumar agora','*dá um trago','Passeio… não poder fumar é o único problema de ter que sair, mas acho que dar uma pausa por um momento não é tão ruim, afinal, é pelo Nemo.','*se mantém fumando em silêncio'],1,[false]),
     insonia: new Criador_de_falas(['Mas que droga, não consigo pegar no sono.','*tenta dormir de novo','Eu tô tão cansado, só queria dormir um pouco…É, acho que as noites de jogatina tiveram seu preço.','*Tenta dormir até o horário que normalmente levanta.'],1,[false]),
     dialog5: new Criador_de_falas(['Nemo: Boa tarde, Einar, como você está? Fez muitas coisas produtivas hoje?','Einar: Ah, Nemo. Boa tarde, eu tô o mesmo de sempre, até que tá sendo um dia normal, consegui fazer algumas coisas.','Nemo: Ohh que bom que seu dia tá sendo tão produtivo quanto o meu. Inclusive, mudando completamente de assunto, você viu que essa semana a máxima não vai ficar abaixo de 40 graus?','Einar: Acho que não vi, mas bom, pelo menos a gente tem ar-condicionado aqui na fábrica.','Nemo: Meu Deus, Einar, você precisa se noticiar mais. Não é todo mundo que tem um ar-condicionado em casa, além de que não é meramente uma questão de sentir calor ou não. Tudo tem causa e consequência.','Einar: Ah, Nemo, vai se ferrar vai.','Nemo: Seu chico sin educación, às vezes esqueço que você é bem cabeça oca','Einar: Sem educação? É o que?','Nemo:  Esquece isso. Está tudo certo para hoje?','Einar: Ah, já ia me esquecendo, hoje vou estar ocupado depois do trabalho e não vou poder ir, foi mal.','Nemo: Aconteceu alguma coisa?','Einar: Tava pensando em ir ao médico','Nemo: Ahh, então é justificável você não ir, mas que bom finalmente você está se cuidando.','Einar: Sim, com certeza','Nemo: Boa consulta meu amigo, adeus','Einar: Obrigado, e até amanhã',],2,[false]),
@@ -355,24 +355,25 @@ function escritaText(ObjetoDeFala,xes,helpea){
     escritaD++
 }
 //quadros
+
+let id = -1
 class Quadrinhos {
     constructor(scrs,id) {
         this.image = new Image()
-        this.image.src = scrs
+        this.src = scrs
         this.id = id
     }
-    load(active,){
+    load(active){
         this.image.onload = ()=>{
-            if (active) {
-                a('loaded')
-                cxt.drawImage(this.image,1360,765)
-            }
+            
         }
+        this.image.src = this.src
     }
-    DrawIt(active){
-        if (active) {
-            cxt.drawImage(this.image,1360,765)
+    DrawIt(active,id){
+        if (active&&id===this.id) {
+            cxt.drawImage(this.image,0,0,1360,765)
         }
+        this.image.src = this.src
     }
 }
 let quadro_fumando = new Quadrinhos('images/fumaste.png',0)
@@ -400,6 +401,26 @@ personagem.onload = function(){
             console.log(personagemX)
             console.log(personagemY)
         }
+        quadro_fumando.load(star)
+        quadro_fumando.DrawIt(star,id)
+        quadro_jogando.load(star)
+        quadro_jogando.DrawIt(star,id)
+        quadro_Homo.load(star)
+        quadro_Homo.DrawIt(star,id)
+        quadro_psciquico.load(star)
+        quadro_psciquico.DrawIt(star,id)
+        quadro_nemo1.load(star)
+        quadro_nemo1.DrawIt(star,id)
+        quadro_nemo2.load(star)
+        quadro_nemo2.DrawIt(star,id)
+        quadro_nemo3.load(star)
+        quadro_nemo3.DrawIt(star,id)
+        Final_suic_falho.load(star)
+        Final_suic_falho.DrawIt(star,id)
+        Final_Suic.load(star)
+        Final_Suic.DrawIt(star,id)
+        Final_cafezinho.load(star)
+        Final_cafezinho.DrawIt(star,id)
         if (star===false) {
             quarto.animeteImg()
             quarto_cama.animeteImg()
@@ -857,6 +878,7 @@ personagem.onload = function(){
         if(enterPlace&&ponto_volta.Collider(HitboxInfo) && room[6]&&trasiType===0&&countdown){
             onibus[0] = true
             cronos = false
+            countdown = false
         }
         if(enterPlace&&porta_fabrica.Collider(HitboxInfo)&&room[6]&&countdown){
             room[8] = true
@@ -1034,7 +1056,7 @@ personagem.onload = function(){
         if (onibus[0]) {
             countdown = false
             if (onibusX<=(personagemX-609)) {
-                onibusX+=3
+                onibusX+=6
             }else{
                 if (onibus[2]===false) {
                     setTimeout(() => {
@@ -1102,7 +1124,7 @@ personagem.onload = function(){
                         countdown=true
                     }
                 }else{
-                    onibusX+=3
+                    onibusX+=6
                 }
             }
             if (onibus[3]===true&&onibus[4]===false) {
@@ -1463,11 +1485,9 @@ personagem.onload = function(){
                     pilha[2] = false
                 }else{
                     star = true
-                    quadro_fumando.load(star)
-                    quadro_fumando.DrawIt(star)
+                    id = 0
                     dialogos.fumando.escrita(true,help,dialogoHelper-1)
                     if (pressingM[5]) {
-                        console.log(dialogoHelper)
                         if (dialogoHelper<3) {
                             dialogoHelper++
                             help = 0
@@ -1476,6 +1496,7 @@ personagem.onload = function(){
                             escritaMD(false)
                         }else{
                             star = false
+                            id = -1
                             dialogoHelper = 0
                             pilha[3] = false
                             help = 0
@@ -1508,33 +1529,35 @@ personagem.onload = function(){
             if (DECISIONS[5]===undefined) {
                 Falas_Geral.Falas_Segunda.Falas_Sala.escrita(true,help,2)
             }else{
-                if (pilha[5]) {
-                    help = 0
-                    text = ''
-                    chageMd(false)
-                    escritaMD(false)
-                    dialogoHelper = 0
-                    pilha[5] = false
-                }
-                /*Falas_Geral.Falas_Segunda.Falas_Sala.escrita(true,help,3)
-                if (pressingM[5]) {
-                    semana === 1
+                if (DECISIONS[5]!==undefined) {
+                    if (pilha[5]) {
+                        help = 0
+                        text = ''
+                        chageMd(false)
+                        escritaMD(false)
+                        dialogoHelper = 0
+                        pilha[5] = false
+                    }
+                    /*Falas_Geral.Falas_Segunda.Falas_Sala.escrita(true,help,3)
+                    if (pressingM[5]) {
+                        semana === 1
+                        cronos = true
+                        personagemX,personagemY = 295,289
+                        pilha[4] = false
+                    }*/
+                   star = true
+                   id = 1
+                   if (pressingM[5]) {
+                    personagemX = 295
+                    personagemY = 289+70
+                    semana = 1
                     cronos = true
-                    personagemX,personagemY = 295,289
-                    pilha[4] = false
-                }*/
-               star = true
-               quadro_jogando.load(star)
-               quadro_jogando.DrawIt(star)
-               if (pressingM[5]) {
-                personagemX = 295
-                personagemY = 289+70
-                semana = 1
-                cronos = true
-                cronologia[4] = true
-                played[1]=true
-                star = false
-               }
+                    cronologia[4] = true
+                    played[1]=true
+                    star = false
+                    id = -1
+                   }
+                }
             }
         }
         if (BOXes.sala&&semana===1&&cronologia[4]) {
@@ -1722,8 +1745,7 @@ personagem.onload = function(){
                     cronos=false
                     if (pilha[14]) {
                         star = true
-                        quadro_fumando.load(star)
-                        quadro_fumando.DrawIt(star)
+                        id=0
                         dialogos.reflexao.escrita(true,help,dialogoHelper)
                         if (dialogoHelper<dialogos.reflexao.fala.length&&pressingM[5]&&escritaTermina&&dialogos.reflexao.fala[dialogoHelper]!==undefined) {
                             dialogoHelper++
@@ -1734,6 +1756,7 @@ personagem.onload = function(){
                         }else{
                             if (pressingM[5]&&dialogoHelper>=dialogos.reflexao.fala.length) {
                                 star = false
+                                id = -1
                                 help = 0
                                 text = ''
                                 chageMd(false)
@@ -1778,12 +1801,12 @@ personagem.onload = function(){
                 countdown = false
                 setTimeout(function(){countdown = true},1000)
                 star = true
-                quadro_jogando.load(star)
-                quadro_jogando.DrawIt(star)
+                id=1
                 if (pressingM[5]) {
                     semana = 2
                     cronos=true
                     star = false
+                    id=-1
                 }
             }else{
                 pilha[17]=false
@@ -1900,10 +1923,10 @@ personagem.onload = function(){
             if (((THECISIONS.qua[2]===false&&pilha[23])||(THECISIONS.qua[4]===false&&pilha[23]===false))&&pilha[26]===false) {
                 star = true
                 cronos = false
-                quadro_Homo.load(star)
-                quadro_Homo.DrawIt(star)
+                id=2
                 if (pressingM[5]) {
                     star=false
+                    id=-1
                     cronos=true
                 }
             }
@@ -2025,8 +2048,7 @@ personagem.onload = function(){
                 setTimeout(function(){countdown = true},1000)
                 cronos=false
                 star = true
-                quadro_fumando.load(star)
-                quadro_fumando.DrawIt(star)
+                id=0
                 dialogos.fumandaQA.escrita(true,help,dialogoHelper)
                 if (dialogoHelper<dialogos.fumandaQA.fala.length&&pressingM[5]&&escritaTermina&&dialogos.fumandaQA.fala[dialogoHelper]!==undefined) {
                     dialogoHelper++
@@ -2037,6 +2059,7 @@ personagem.onload = function(){
                 }else{
                     if (pressingM[5]&&dialogoHelper>=dialogos.fumandaQA.fala.length) {
                         star = false
+                        id=-1
                         help = 0
                         text = ''
                         chageMd(false)
@@ -2072,11 +2095,11 @@ personagem.onload = function(){
             if (pilha[33]) {
                 star = true
                 cronos= false
-                quadro_jogando.load(star)
-                quadro_jogando.DrawIt(star)
+                id=1
                 if (pressingM[5]) {
                     cronos=true
                     star=false
+                    id=-1
                 }
             }
             if (BOXes.quarto) {
@@ -2375,8 +2398,7 @@ personagem.onload = function(){
                 setTimeout(function(){countdown = true},1000)
                 cronos=false
                 star = true
-                quadro_fumando.load(star)
-                quadro_fumando.DrawIt(star)
+                id=0
                 if (THECISIONS.qui[2]) {
                     cronos = false
                     if(k){
@@ -2392,6 +2414,7 @@ personagem.onload = function(){
                         pilha[48] = false
                         pilha[50] = false
                         star = false
+                        id=-1
                     }
                 } else {
                     dialogos.alivio.escrita(true,help,dialogoHelper)
@@ -2997,10 +3020,10 @@ personagem.onload = function(){
                     }
                     cronos = false
                     star = true
-                    quadro_psciquico.load(star)
-                    quadro_psciquico.DrawIt(star)
+                    id=4
                     if (pressingM[5]) {
                         star = false
+                        id=-1
                         k = true
                         help = 0
                         text = ''
@@ -3060,10 +3083,10 @@ personagem.onload = function(){
                     }
                     cronos=false
                     star = true
-                    quadro_nemo1.load(star)
-                    quadro_nemo1.DrawIt(star)
+                    id=5
                     if (pressingM[5]) {
                         k=true
+                        id=-1
                         pilha[70] = false
                     }
                 }
@@ -3077,10 +3100,10 @@ personagem.onload = function(){
                     }
                     cronos=false
                     star = true
-                    quadro_nemo2.load(star)
-                    quadro_nemo2.DrawIt(star)
+                    id=6
                     if (pressingM[5]) {
                         k=true
+                        id=-1
                         pilha[71] = false
                     }
                 }
@@ -3094,8 +3117,7 @@ personagem.onload = function(){
                     }
                     cronos=false
                     star = true
-                    quadro_nemo3.load(star)
-                    quadro_nemo3.DrawIt(star)
+                    id=7
                 }
                 if (pilha[71]===false&&pilha[73]) {
                     cronos = false
@@ -3485,18 +3507,15 @@ personagem.onload = function(){
                 }
                 if (pilha[84]===false) {
                     star=true
-                    Final_suic_falho.load(star)
-                    Final_suic_falho.DrawIt(star)
+                    id=8
                 }
                 if (pilha[85]===false) {
+                    id=9
                     star=true
-                    Final_Suic.load(star)
-                    Final_Suic.DrawIt(star)
                 }
                 if (pilha[86]===false) {
+                    id=10
                     star=true
-                    Final_cafezinho.load(star)
-                    Final_cafezinho.DrawIt(star)
                 }
             }
         }
